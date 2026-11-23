@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe Técnico Final: LaLiga Primera División | Colegio Mayor del Cauca</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1e293b;
+      --heading: #0f172a;
+      --accent: #1e40af;
+      --accent-light: #eff6ff;
+      --border: #e2e8f0;
+      --card-bg: #f8fafc;
+      --tag: #2563eb;
+    }
+    body {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 11pt;
+      line-height: 1.75;
+      color: var(--text);
+      background-color: #f1f5f9;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .document-page {
+      max-width: 850px;
+      margin: 0 auto;
+      background: var(--bg);
+      padding: 3.5rem 4rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--heading);
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    h1 { font-size: 1.85rem; margin-top: 0; border-bottom: 3px solid var(--accent); padding-bottom: 0.75rem; }
+    h2 { font-size: 1.35rem; margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; color: var(--accent); }
+    h3 { font-size: 1.1rem; margin-top: 1.5rem; }
+    .meta-box {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--accent-light);
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0 2.5rem 0;
+      font-size: 0.88rem;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+    .authors-list {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #dbeafe;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.85rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+    }
+    th {
+      background-color: #f8fafc;
+      font-weight: 700;
+      color: var(--heading);
+    }
+    tr:nth-child(even) { background-color: #f8fafc; }
+    .formula-box {
+      background-color: #f8fafc;
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      border-radius: 0 6px 6px 0;
+      text-align: center;
+    }
+    .highlight-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 4px solid #16a34a;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      border-radius: 0 6px 6px 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.9rem;
+    }
+    .btn-print {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      z-index: 100;
+    }
+    .btn-print:hover { background: #1d4ed8; }
+    @media print {
+      body { background: white; padding: 0; }
+      .document-page { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      .btn-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar en PDF</button>
+
+  <article class="document-page">
+    <h1>Estimación de Probabilidades y Predicción de Resultados en LaLiga Primera División</h1>
+    <p style="font-family: 'Inter', sans-serif; color: #64748b; font-weight: 600; margin-top: -0.5rem;">
+      Informe Técnico de Modelado Estadístico, Inferencia Paramétrica y Simulación Predictiva
+    </p>
+
+    <div class="meta-box">
+      <div class="meta-grid">
+        <div><strong>Institución:</strong> Institución Universitaria Colegio Mayor del Cauca</div>
+        <div><strong>Docente Titular:</strong> Edith Janeth Potosí Estrada</div>
+        <div><strong>Facultad:</strong> Facultad de Ingeniería (Ingeniería Informática)</div>
+        <div><strong>Asignatura:</strong> Estadística Inferencial (Ciclo 2026)</div>
+      </div>
+      <div class="authors-list">
+        <strong>Equipo de Autores / Investigadores:</strong><br>
+        1. José Luis Martínez &nbsp;•&nbsp; 2. Álvaro José López Quira &nbsp;•&nbsp; 3. Jose Aldair Torres<br>
+        4. Cristian Samir Narváez &nbsp;•&nbsp; 5. Joan Sebastian Mosquera &nbsp;•&nbsp; 6. Rubén Darío Velasco
+      </div>
+    </div>
+
+    <h2>1. Introducción y Alcance</h2>
+    <p>
+      El presente proyecto desarrolla una herramienta analítica integral basada en estadística inferencial y distribuciones de probabilidad para modelar datos históricos reales de <strong>LaLiga Primera División de España</strong> (10 temporadas consecutivas, 2016/17 a 2025/26, 3.800 partidos oficiales ordenados cronológicamente).
+    </p>
+    <p>
+      La competición opera bajo el formato de <strong>todos contra todos por puntos</strong> (38 jornadas de 10 partidos, 380 partidos por temporada; 3 puntos por victoria, 1 por empate). El sistema evalúa exclusivamente estadísticas colectivas por club y partido a partir de la fuente <em>Football-Data.co.uk</em>, tras verificar éticamente los permisos del archivo <code>robots.txt</code>.
+    </p>
+
+    <h2>2. Marco Teórico y Fundamentos Estadísticos</h2>
+    <p>
+      El espacio muestral para un encuentro entre el local $A$ y el visitante $B$ se define como:
+    </p>
+    <div class="formula-box">
+      $$\Omega = \{V_A, E, V_B\}, \quad P(\Omega) = P(V_A) + P(E) + P(V_B) = 1$$
+    </div>
+
+    <h3>A. Distribución Binomial (Eventos Independientes y Conteo de Goles)</h3>
+    <p>
+      Modelado de variables con ensayos independientes y probabilidad $p$ constante a lo largo de $n$ encuentros:
+    </p>
+    <div class="formula-box">
+      $$P(X = k) = \binom{n}{k} p^k (1 - p)^{n - k}, \quad E[X] = n \cdot p, \quad \sigma = \sqrt{n \cdot p \cdot (1 - p)}$$
+    </div>
+
+    <h3>B. Distribución Hipergeométrica (Muestreo Finito sin Reemplazo)</h3>
+    <p>
+      Aplicada exclusivamente cuando se audita una muestra de tamaño $n$ extraída sin reposición desde una población finita $N$ con $r$ éxitos:
+    </p>
+    <div class="formula-box">
+      $$P(X = x \mid N, r, n) = \frac{\binom{r}{x} \binom{N - r}{n - x}}{\binom{N}{n}}, \quad \operatorname{Var}(X) = n \frac{r}{N} \left(1 - \frac{r}{N}\right) \left(\frac{N - n}{N - 1}\right)$$
+    </div>
+
+    <h3>C. Teorema de Bayes y Validación de Confiabilidad</h3>
+    <p>
+      La actualización bayesiana incorpora evidencia táctica $E$:
+    </p>
+    <div class="formula-box">
+      $$P(V_A \mid E) = \frac{P(E \mid V_A) \cdot P(V_A)}{P(E)}, \quad s = \sqrt{\frac{1}{N - 1}\sum_{i=1}^{N}(x_i - \bar{x})^2}$$
+    </div>
+
+    <h2>3. Desarrollo del Problema: Los 6 Roles / Integrantes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Autor</th>
+          <th>Condición Analizada</th>
+          <th>P(Previa)</th>
+          <th>P(Posterior)</th>
+          <th>Odds Ratio</th>
+          <th>Significancia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>José Luis Martínez</td>
+          <td>$P(\text{FTR} = \text{H} \mid \text{HST} > 5)$</td>
+          <td>45.47%</td>
+          <td><strong>65.23%</strong></td>
+          <td>3.12</td>
+          <td>$p < 0.0001$</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Álvaro López Quira</td>
+          <td>$P(\text{FTHG} \ge 2 \mid \text{HST} > 5)$</td>
+          <td>42.89%</td>
+          <td><strong>69.14%</strong></td>
+          <td>4.23</td>
+          <td>$p < 0.0001$</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Jose Aldair Torres</td>
+          <td>$P(\text{FTR} = \text{H} \mid \text{HTR} = \text{H})$</td>
+          <td>45.47%</td>
+          <td><strong>78.53%</strong></td>
+          <td>7.64</td>
+          <td>$p < 0.0001$</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Cristian Narváez</td>
+          <td>$P(\text{FTR} = \text{H} \mid \text{HC} > 6)$</td>
+          <td>45.47%</td>
+          <td><strong>40.73%</strong></td>
+          <td>0.77</td>
+          <td>$p < 0.0001$</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Joan S. Mosquera</td>
+          <td>$P(\text{FTR} \ne \text{H} \mid \text{Tarjetas} \ge 3)$</td>
+          <td>54.53%</td>
+          <td><strong>61.02%</strong></td>
+          <td>1.54</td>
+          <td>$p < 0.0001$</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Rubén Darío Velasco</td>
+          <td>$P(\text{FTR} = \text{A} \mid \text{AST} > 4)$</td>
+          <td>28.26%</td>
+          <td><strong>48.71%</strong></td>
+          <td>3.44</td>
+          <td>$p < 0.0001$</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4. Resultados y Propuesta de Valor del Software</h2>
+    <div class="highlight-box">
+      <strong>Prueba de Hipótesis Bilateral de Localía:</strong><br>
+      $H_0: p = 0.5$ frente a $H_1: p \neq 0.5$<br>
+      Con $N = 3.800$ partidos, victorias locales observadas = $1.728$ ($45.47\%$), victorias visitantes = $1.074$ ($28.26\%$).<br>
+      Estadístico $Z = -5.588$, $p\text{-valor} = 2.3 \times 10^{-8} < 0.0001$.<br>
+      <strong>Decisión:</strong> Se rechaza categóricamente $H_0$. El factor localía supera en un $+17.2\%$ al rendimiento foráneo.
+    </div>
+
+    <h3>Simulación Monte Carlo de LaLiga (Proyección de Campeón 38 Jornadas)</h3>
+    <ul>
+      <li><strong>Campeón Proyectado:</strong> Real Madrid con 86.4 puntos esperados (65.2% probabilidad de título).</li>
+      <li><strong>Subcampeón:</strong> Barcelona con 80.1 puntos esperados (24.5% probabilidad).</li>
+      <li><strong>Zona Champions:</strong> Atlético de Madrid (73.2 pts) y Athletic Bilbao / Real Sociedad (62.8 pts).</li>
+    </ul>
+
+    <h2>5. Conclusiones</h2>
+    <ol>
+      <li><strong>Baja Dispersión Muestral:</strong> Las desviaciones estándar en goles ($s_H = 1.30$, $s_A = 1.15$) ratifican la alta estabilidad y representatividad de la muestra de 10 temporadas.</li>
+      <li><strong>Rigor Metodológico:</strong> La separación entre la Distribución Binomial (eventos independientes) y la Hipergeométrica (muestreo dependiente sin reposición) evita forzar modelos inadecuados sobre la naturaleza física de cada variable.</li>
+      <li><strong>Ética y Reproducibilidad:</strong> La arquitectura garantiza cero filtración temporal (<em>no data leakage</em>) y estricto respeto a la política de <code>robots.txt</code>.</li>
+    </ol>
+  </article>
+
+</body>
+</html>

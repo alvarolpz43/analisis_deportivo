@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Análisis Deportivo | La Liga (3.800 Partidos)</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- KaTeX for crisp mathematical typography -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Header Principal -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon-box">
+          <svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="m4.93 4.93 4.24 4.24"/>
+            <path d="m14.83 9.17 4.24-4.24"/>
+            <path d="m14.83 14.83 4.24 4.24"/>
+            <path d="m9.17 14.83-4.24 4.24"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <h1>La Liga Analytics & Machine Learning</h1>
+            <span class="brand-badge">SP1 2016-2026</span>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem;">
+            Ciencia de Datos, Web Scraping, Inferencia Bayesiana & Distribución Hipergeométrica
+          </p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <div class="stat-pill">
+          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+          <span>Partidos:</span> <strong id="header-total-matches">3.800</strong>
+        </div>
+        <div class="stat-pill">
+          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+          <span>Temporadas:</span> <strong>10 Completas</strong>
+        </div>
+        <div class="stat-pill">
+          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Clubes:</span> <strong id="header-teams-count">31</strong>
+        </div>
+        <div class="stat-pill">
+          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+          <span>Roles:</span> <strong>6 Integrantes</strong>
+        </div>
+        <button id="btn-open-academic-modal" class="btn-academic-badge" type="button" title="Ver autores y acreditación institucional">
+          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          <span>Colegio Mayor del Cauca</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Modal Institucional y Autores -->
+  <div id="academic-modal" class="academic-modal">
+    <div class="modal-card">
+      <button id="btn-close-academic-modal" class="modal-close-btn" type="button" title="Cerrar ventana">
+        <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+        <div class="brand-icon-box" style="width: 44px; height: 44px; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4);">
+          <svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div>
+          <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 0;">Institución Universitaria Colegio Mayor del Cauca</h2>
+          <p style="font-size: 0.82rem; color: #60a5fa; margin: 0.15rem 0 0 0; font-weight: 600;">Facultad de Ingeniería — Programa de Ingeniería Informática</p>
+        </div>
+      </div>
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin: 1rem 0;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.82rem;">
+          <div><span style="color: var(--text-muted);">Asignatura 1:</span> <strong style="color: var(--text-primary);">Estadística Inferencial (2026)</strong></div>
+          <div><span style="color: var(--text-muted);">Docente Titular:</span> <strong style="color: #34d399;">Edith Janeth Potosí Estrada</strong></div>
+          <div><span style="color: var(--text-muted);">Asignatura 2:</span> <strong style="color: var(--text-primary);">Electiva III: Introducción a la Ciencia de Datos</strong></div>
+          <div><span style="color: var(--text-muted);">Docente Titular:</span> <strong style="color: #60a5fa;">Carlos E. Ruiz</strong></div>
+        </div>
+      </div>
+      <h3 style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+        Equipo de Investigación y Autores (6 Integrantes)
+      </h3>
+      <div class="authors-grid">
+        <div class="author-pill">
+          <div class="author-avatar">1</div>
+          <div><div style="font-weight: 700; color: var(--text-primary); font-size: 0.88rem;">José Luis Martínez</div><div style="font-size: 0.73rem; color: var(--text-muted);">Eficacia Ofensiva Local (HST & FTR)</div></div>
+        </div>
+        <div class="author-pill">
+          <div class="author-avatar">2</div>
+          <div><div style="font-weight: 700; color: var(--text-primary); font-size: 0.88rem;">Álvaro José López Quira</div><div style="font-size: 0.73rem; color: var(--text-muted);">Conversión de Gol (FTHG ≥ 2)</div></div>
+        </div>
+        <div class="author-pill">
+          <div class="author-avatar">3</div>
+          <div><div style="font-weight: 700; color: var(--text-primary); font-size: 0.88rem;">Jose Aldair Torres</div><div style="font-size: 0.73rem; color: var(--text-muted);">Ventaja al Descanso (HTR vs FTR)</div></div>
+        </div>
+        <div class="author-pill">
+          <div class="author-avatar">4</div>
+          <div><div style="font-weight: 700; color: var(--text-primary); font-size: 0.88rem;">Cristian Samir Narváez</div><div style="font-size: 0.73rem; color: var(--text-muted);">Asedio por Córners (HC > 6)</div></div>
+        </div>
+        <div class="author-pill">
+          <div class="author-avatar">5</div>
+          <div><div style="font-weight: 700; color: var(--text-primary); font-size: 0.88rem;">Joan Sebastian Mosquera</div><div style="font-size: 0.73rem; color: var(--text-muted);">Impacto Disciplinario (Tarjetas)</div></div>
+        </div>
+        <div class="author-pill">
+          <div class="author-avatar">6</div>
+          <div><div style="font-weight: 700; color: var(--text-primary); font-size: 0.88rem;">Rubén Darío Velasco</div><div style="font-size: 0.73rem; color: var(--text-muted);">Eficacia Visitante & Cierre ML</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pestañas de Navegación -->
+  <nav class="nav-tabs">
+    <div class="nav-container">
+      <button class="tab-btn active" data-target="tab-overview">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+        <span>Visión General</span>
+      </button>
+      <button class="tab-btn" data-target="tab-inferential">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/></svg>
+        <span>Estadística Inferencial & Bayes (6 Roles)</span>
+      </button>
+      <button class="tab-btn" data-target="tab-ml">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+        <span>Predicciones & Machine Learning</span>
+      </button>
+      <button class="tab-btn" data-target="tab-auditor">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+        <span>Web Scraping & Auditoría</span>
+      </button>
+      <button class="tab-btn" data-target="tab-equations">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v3h-12l7 5-7 5h12v3h-16z"/></svg>
+        <span>Ecuaciones & Código</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+
+    <!-- ==================== TAB 1: VISIÓN GENERAL ==================== -->
+    <section id="tab-overview" class="tab-panel active">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+            Partidos Analizados
+          </span>
+          <span class="kpi-value" id="kpi-total-matches">3.800</span>
+          <span class="kpi-sub">10 Temporadas (2016/17 - 2025/26)</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            Victoria Local (H)
+          </span>
+          <span class="kpi-value" id="kpi-home-wins">45.5%</span>
+          <span class="kpi-sub" id="kpi-home-wins-sub">1.728 victorias</span>
+        </div>
+        <div class="kpi-card amber">
+          <span class="kpi-label">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" x2="19" y1="9" y2="9"/><line x1="5" x2="19" y1="15" y2="15"/></svg>
+            Empate (D)
+          </span>
+          <span class="kpi-value" id="kpi-draws">26.2%</span>
+          <span class="kpi-sub" id="kpi-draws-sub">997 empates</span>
+        </div>
+        <div class="kpi-card blue">
+          <span class="kpi-label">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Victoria Visitante (A)
+          </span>
+          <span class="kpi-value" id="kpi-away-wins">28.3%</span>
+          <span class="kpi-sub" id="kpi-away-wins-sub">1.075 victorias</span>
+        </div>
+        <div class="kpi-card indigo">
+          <span class="kpi-label">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/></svg>
+            Goles / Partido
+          </span>
+          <span class="kpi-value" id="kpi-goals">2.67</span>
+          <span class="kpi-sub" id="kpi-goals-sub">10.150 goles</span>
+        </div>
+        <div class="kpi-card red">
+          <span class="kpi-label">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+            Tarjetas Sancionadas
+          </span>
+          <span class="kpi-value" id="kpi-cards">18.420</span>
+          <span class="kpi-sub" id="kpi-cards-sub">Amarillas y Rojas</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+            Distribución Histórica de Resultados
+          </h2>
+          <p class="card-subtitle">Frecuencia relativa del factor localía en la Primera División española</p>
+          <div style="height: 280px; position: relative;">
+            <canvas id="chart-outcome-donut"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+            Consolidación por Temporada
+          </h2>
+          <p class="card-subtitle">380 enfrentamientos auditados por cada ciclo anual (2016-2026)</p>
+          <div style="height: 280px; position: relative;">
+            <canvas id="chart-seasons-bar"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+          Metodología y Alcance del Dataset Maestro
+        </h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          El proyecto opera sobre el consolidado oficial de <strong>3.800 partidos de liga española</strong> extraídos de Football-Data.co.uk tras verificar la política de acceso de <code style="color: var(--accent-green-light);">robots.txt</code>. Se seleccionaron 21 variables limpias que capturan volumen ofensivo (<code style="color: var(--accent-blue);">HS, HST, HC</code>), comportamiento defensivo (<code style="color: var(--accent-amber);">HF, HY, HR</code>) y evolución temporal del marcador (<code style="color: var(--accent-green);">HTR, HTHG, HTAG, FTR, FTHG, FTAG</code>).
+        </p>
+      </div>
+
+      <!-- Validación de Confiabilidad y Prueba de Hipótesis Bilateral -->
+      <div class="card reliability-card">
+        <div class="reliability-header">
+          <h2 class="card-title" style="margin: 0;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+            Validación de Confiabilidad: Desviación Estándar (s) & Prueba de Hipótesis Bilateral
+          </h2>
+          <span class="brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.35);">
+            p-valor &lt; 0.0001 (Alta Confiabilidad)
+          </span>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+          Conforme a los lineamientos de la cátedra de Estadística Inferencial, se audita la <strong>desviación estándar muestral (s)</strong> sobre las 10 temporadas (3.800 partidos) para evaluar la dispersión, junto a una <strong>prueba de hipótesis bilateral</strong> (H0: p = 0.5 vs H1: p ≠ 0.5) para ratificar la ventaja de localía.
+        </p>
+        <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+          <div class="kpi-card" style="padding: 1rem;">
+            <span class="kpi-label">Desv. Estándar Goles Local (s)</span>
+            <div class="kpi-value" style="font-size: 1.5rem; color: #34d399;" id="rel-std-home-goals">1.30</div>
+            <span class="kpi-subtext" id="rel-mean-home-goals">Media: 1.45 goles/partido</span>
+          </div>
+          <div class="kpi-card" style="padding: 1rem;">
+            <span class="kpi-label">Desv. Estándar Goles Visitante (s)</span>
+            <div class="kpi-value" style="font-size: 1.5rem; color: #60a5fa;" id="rel-std-away-goals">1.15</div>
+            <span class="kpi-subtext" id="rel-mean-away-goals">Media: 1.10 goles/partido</span>
+          </div>
+          <div class="kpi-card" style="padding: 1rem;">
+            <span class="kpi-label">Estadístico Z de Localía</span>
+            <div class="kpi-value" style="font-size: 1.5rem; color: #fbbf24;" id="rel-z-stat">-5.59</div>
+            <span class="kpi-subtext">H0: p = 0.5 (Sin ventaja local)</span>
+          </div>
+          <div class="kpi-card" style="padding: 1rem;">
+            <span class="kpi-label">Brecha Local vs Visitante</span>
+            <div class="kpi-value" style="font-size: 1.5rem; color: #a78bfa;" id="rel-advantage-gap">+17.2%</div>
+            <span class="kpi-subtext">Local 45.5% vs Visitante 28.3%</span>
+          </div>
+        </div>
+        <div style="background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary); border-left: 3px solid var(--accent-green);" id="rel-conclusion-box">
+          <strong>Dictamen de Confiabilidad:</strong> Las desviaciones estándar cercanas a s ≈ 1.2 demuestran baja dispersión y homogeneidad. El estadístico Z = -5.59 (p &lt; 0.0001) rechaza contundentemente la hipótesis nula, validando que el factor localía es un fenómeno estructural no atribuible al azar.
+        </div>
+      </div>
+
+      <!-- Ciencia de Datos: Respuestas a las 3 Preguntas de la Cátedra (Electiva III 25%) -->
+      <div class="card descriptive-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <h2 class="card-title" style="margin: 0;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Ciencia de Datos: Respuestas a las 3 Preguntas de la Cátedra (Electiva III — 25%)
+          </h2>
+          <span class="brand-badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.35);">
+            Docente: Carlos E. Ruiz
+          </span>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+          Exploración descriptiva exhaustiva sobre los 3.800 partidos de La Liga (10 temporadas). Cada interrogante está respaldado por métricas de tendencia central, dispersión y una rigurosa distinción metodológica entre <strong>asociación estadística</strong> y <strong>relación de causalidad</strong>.
+        </p>
+
+        <div class="descriptive-grid">
+          <!-- Pregunta 1 -->
+          <div class="descriptive-card">
+            <span class="descriptive-badge-q">Pregunta 1</span>
+            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+              Factor Localía: ¿Existe ventaja de jugar como local y varía según el nivel de los equipos?
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+              La ventaja de localía existe a nivel global (45.5% victorias locales vs 28.3% visitantes), pero se magnifica drásticamente en los clubes de élite (Real Madrid, Barcelona, Atlético de Madrid), quienes capitalizan el 74.9% de victorias en casa.
+            </p>
+            <div style="height: 220px; position: relative;">
+              <canvas id="chart-descriptive-q1"></canvas>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem;">
+              <div class="hyper-stat-box">
+                <span class="h-label">Top 3 en Casa</span>
+                <div class="h-value" style="color: #34d399; font-size: 1.1rem;">74.9%</div>
+              </div>
+              <div class="hyper-stat-box">
+                <span class="h-label">Media Global</span>
+                <div class="h-value" style="color: #60a5fa; font-size: 1.1rem;">45.5%</div>
+              </div>
+              <div class="hyper-stat-box">
+                <span class="h-label">Resto Liga</span>
+                <div class="h-value" style="color: #94a3b8; font-size: 1.1rem;">40.3%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pregunta 2 -->
+          <div class="descriptive-card">
+            <span class="descriptive-badge-q">Pregunta 2</span>
+            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+              Medias vs Medianas: Goles y Tiros a Puerta en Victorias vs No Victorias
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+              Comparación de tendencia central para detectar asimetría en la distribución de variables ofensivas según el desenlace:
+            </p>
+            <table class="stats-comparison-table">
+              <thead>
+                <tr>
+                  <th>Variable Ofensiva</th>
+                  <th>Victoria Local (Media / Mediana)</th>
+                  <th>No Victoria Local (Media / Mediana)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="metric-name">Goles Marcados (FTHG)</td>
+                  <td style="color: #34d399; font-weight: 700;">2.34 / 2.0 <span style="font-size: 0.7rem; color: var(--text-muted);">(Asim. Positiva)</span></td>
+                  <td style="color: #f87171; font-weight: 700;">0.77 / 1.0 <span style="font-size: 0.7rem; color: var(--text-muted);">(Asim. Leve)</span></td>
+                </tr>
+                <tr>
+                  <td class="metric-name">Tiros a Puerta (HST)</td>
+                  <td style="color: #34d399; font-weight: 700;">5.62 / 5.0 <span style="font-size: 0.7rem; color: var(--text-muted);">(Simétrica)</span></td>
+                  <td style="color: #f87171; font-weight: 700;">3.86 / 4.0 <span style="font-size: 0.7rem; color: var(--text-muted);">(Simétrica)</span></td>
+                </tr>
+                <tr>
+                  <td class="metric-name">Tiros Totales (HS)</td>
+                  <td style="color: #60a5fa; font-weight: 600;">13.90 / 13.0</td>
+                  <td style="color: #94a3b8; font-weight: 600;">12.75 / 12.0</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; border-left: 2px solid #60a5fa;">
+              <strong>Diagnóstico de Asimetría:</strong> En goles, la media (2.34) supera la mediana (2.0) por el arrastre de goleadas atípicas (6-2, 6-4, 8-2). En tiros a puerta, media y mediana convergen (5.62 ≈ 5), reflejando una distribución más simétrica y un umbral operativo de victoria.
+            </div>
+          </div>
+
+          <!-- Pregunta 3 -->
+          <div class="descriptive-card">
+            <span class="descriptive-badge-q">Pregunta 3</span>
+            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+              Evolución a 10 Temporadas & Anomalía COVID-19 (2020/21)
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+              El promedio de goles se mantiene estable (~2.62 goles/partido). No obstante, la temporada 2020/21 (jugada a puerta cerrada sin espectadores) registró una caída anómala en la victoria local (41.6% vs 47.9% en 2022/23), aislando empíricamente el impacto del público.
+            </p>
+            <div style="height: 200px; position: relative;">
+              <canvas id="chart-descriptive-q3"></canvas>
+            </div>
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.76rem; color: #fca5a5;">
+              <strong>Anomalía Pandemia 2020/21:</strong> Con estadios vacíos, el factor localía cayó a su nivel más bajo en la década, demostrando el efecto psicológico y arbitral de la hinchada.
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Hallazgos Numéricos Formales -->
+        <div style="margin-top: 1.5rem;">
+          <h3 style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+            <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            Tres Hallazgos Numéricos Formales (Distinguiendo Asociación de Causalidad)
+          </h3>
+
+          <div class="finding-pill">
+            <div class="finding-title">1. Asociación Estadística Robusta entre Tiros a Puerta y Victoria (r = 0.58, OR = 3.86)</div>
+            <div class="finding-desc">
+              Tener más de 5 tiros a puerta eleva la probabilidad de victoria local de 45.5% a 65.2% (Likelihood = 42.7%). Sin embargo, disparar al arco <em>no causa</em> determinísticamente el triunfo: la calidad del tiro (xG), las intervenciones del arquero rival y el contexto táctico median la relación. Confundir volumen con gol sería incurrir en falacia causal.
+            </div>
+            <span class="tag-causality-warning">Asociación demostrada — Causalidad condicionada a calidad del remate</span>
+          </div>
+
+          <div class="finding-pill finding-tactical">
+            <div class="finding-title">2. La Ventaja al Descanso como Indicador de Estado, no Causa Primaria (P(H|HTR=H) = 78.5%)</div>
+            <div class="finding-desc">
+              Ir ganando al término del primer tiempo (HTR = H) predice el 78.5% de los triunfos finales del equipo local. No obstante, el marcador parcial es un <em>estado intermedio acumulado</em> derivado de la superioridad táctica y anímica, no un agente causal independiente por sí mismo.
+            </div>
+            <span class="tag-causality-warning" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; border-color: rgba(245, 158, 11, 0.3);">
+              Variable intermedia de estado — Refleja dominio previo consolidado
+            </span>
+          </div>
+
+          <div class="finding-pill finding-anomaly">
+            <div class="finding-title">3. Aislamiento Cuasi-Experimental del Efecto Público en la Temporada Pandemia (2020/21)</div>
+            <div class="finding-desc">
+              La reducción de la victoria local a 41.6% en 2020/21 (frente al 47.9% en 2022/23 con público pleno) constituye un experimento natural en el fútbol español. Esto aísla el componente ambiental (presión psicológica sobre árbitro y rival) de los factores geográficos o de conocimiento del terreno de juego.
+            </div>
+            <span class="tag-causality-warning" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3);">
+              Evidencia empírica de factor ambiental y psicológico en el factor campo
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: ESTADÍSTICA INFERENCIAL (6 INTEGRANTES) ==================== -->
+    <section id="tab-inferential" class="tab-panel">
+      <!-- Selector de Integrantes -->
+      <div class="member-selector">
+        <button class="member-btn active" data-member="1">
+          <span>Integrante 1</span>
+          <span class="role-tag">Eficacia Remate Local</span>
+        </button>
+        <button class="member-btn" data-member="2">
+          <span>Integrante 2</span>
+          <span class="role-tag">Conversión de Gol</span>
+        </button>
+        <button class="member-btn" data-member="3">
+          <span>Integrante 3</span>
+          <span class="role-tag">Ventaja al Descanso</span>
+        </button>
+        <button class="member-btn" data-member="4">
+          <span>Integrante 4</span>
+          <span class="role-tag">Asedio por Córners</span>
+        </button>
+        <button class="member-btn" data-member="5">
+          <span>Integrante 5</span>
+          <span class="role-tag">Impacto Disciplinario</span>
+        </button>
+        <button class="member-btn" data-member="6">
+          <span>Integrante 6</span>
+          <span class="role-tag">Rendimiento Visitante</span>
+        </button>
+      </div>
+
+      <!-- Banner de la Pregunta de Investigación -->
+      <div class="question-banner">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <h3 id="member-title">Integrante 1: Eficacia de Remate y Victoria Local</h3>
+          <span class="brand-badge" id="member-role">Especialista en Eficacia Ofensiva Local</span>
+        </div>
+        <p id="member-question">
+          ¿En qué medida aumenta la probabilidad de que el equipo local gane el partido, dado que registra más de 5 tiros a puerta (HST > 5), y cómo se comporta el conteo de remates efectivos al auditar muestras sin reemplazo?
+        </p>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--accent-cyan);" id="member-variables">
+          FTR (dependiente: H) ← HST, HS (condicionantes)
+        </div>
+      </div>
+
+      <!-- Análisis Bayesiano & Tabla de Contingencia -->
+      <div class="grid-2">
+        <div class="card">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+            Inferencia Bayesiana: Previa vs Posteriori
+          </h2>
+          <p class="card-subtitle">Actualización de probabilidades condicionada a la evidencia empírica</p>
+          <div style="height: 220px; position: relative;">
+            <canvas id="chart-bayes-bar"></canvas>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem;">
+            <div class="hyper-stat-box">
+              <span class="h-label">P(A) Previa</span>
+              <div class="h-value" id="bayes-prior">45.5%</div>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">P(B) Evidencia</span>
+              <div class="h-value" id="bayes-evidence">40.2%</div>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">P(A|B) Posteriori</span>
+              <div class="h-value" style="color: var(--accent-green-light);" id="bayes-posterior">65.2%</div>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem;">
+            <div class="hyper-stat-box">
+              <span class="h-label">P(B|A) Likelihood</span>
+              <div class="h-value" id="bayes-likelihood">57.6%</div>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">Factor Bayes</span>
+              <div class="h-value" id="bayes-factor">x1.43</div>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">IC 95% Posterior</span>
+              <div class="h-value" style="font-size: 0.95rem;" id="bayes-ci">[62.8% - 67.6%]</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            Tabla de Contingencia 2x2 & Test de Dependencia
+          </h2>
+          <p class="card-subtitle">Distribución conjunta observada sobre los 3.800 partidos de La Liga</p>
+          
+          <table class="contingency-table">
+            <thead>
+              <tr>
+                <th>Condición \ Evento</th>
+                <th id="ct-event-label">Evento A</th>
+                <th>No Evento A</th>
+                <th>Total Condición</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="ct-cond-label" style="text-align: left; font-weight: 600;">Condición B</td>
+                <td class="highlight" id="ct-a">0</td>
+                <td id="ct-b">0</td>
+                <td class="total" id="ct-total-cond">0</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; font-weight: 600;">No Condición B</td>
+                <td id="ct-c">0</td>
+                <td id="ct-d">0</td>
+                <td class="total" id="ct-total-nocond">0</td>
+              </tr>
+              <tr>
+                <td class="total" style="text-align: left;">Total Evento</td>
+                <td class="total" id="ct-total-event">0</td>
+                <td class="total" id="ct-total-noevent">0</td>
+                <td class="total" style="background-color: rgba(16, 185, 129, 0.2);" id="ct-grand-total">3.800</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem;">
+            <div class="hyper-stat-box">
+              <span class="h-label">Prueba Chi-Cuadrado (χ²)</span>
+              <div class="h-value" id="stat-chi2">0.0</div>
+              <span style="font-size: 0.7rem; color: var(--accent-green-light);">p-valor: <strong id="stat-pval">&lt; 0.0001</strong></span>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">Odds Ratio (OR)</span>
+              <div class="h-value" id="stat-or">0.0</div>
+              <span style="font-size: 0.7rem; color: var(--text-muted);" id="stat-or-ci">IC 95%: [0 - 0]</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interpretación Metodológica -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h2 class="card-title">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Interpretación Estadística del Integrante
+        </h2>
+        <p id="member-interpretation" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          Cargando análisis...
+        </p>
+      </div>
+
+      <!-- Módulo de Distribución Hipergeométrica Dinámica -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+            Muestreo sin Reemplazo: Distribución Hipergeométrica Interactiva
+          </h2>
+          <span class="brand-badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3);">
+            P(X = x | N, r, n)
+          </span>
+        </div>
+        <p class="card-subtitle" id="hyper-scenario-desc">
+          Simulación interactiva de muestreo finito sin reposición adaptada al escenario del integrante:
+        </p>
+
+        <!-- Sliders interactivos -->
+        <div class="hyper-controls">
+          <div class="control-group">
+            <div class="control-header">
+              <label id="label-hyper-N">Población (N)</label>
+              <span class="val-badge" id="val-slider-N">15</span>
+            </div>
+            <input type="range" id="slider-N" min="1" max="40" value="15">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label id="label-hyper-r">Éxitos en Población (r)</label>
+              <span class="val-badge" id="val-slider-r">7</span>
+            </div>
+            <input type="range" id="slider-r" min="0" max="15" value="7">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label id="label-hyper-n">Muestra Extraída (n)</label>
+              <span class="val-badge" id="val-slider-n">5</span>
+            </div>
+            <input type="range" id="slider-n" min="1" max="15" value="5">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label id="label-hyper-x">Éxitos Observados (x)</label>
+              <span class="val-badge" id="val-slider-x">3</span>
+            </div>
+            <input type="range" id="slider-x" min="0" max="5" value="3">
+          </div>
+        </div>
+
+        <!-- Métricas Hipergeométricas en vivo -->
+        <div class="hyper-stats-grid">
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X = x) Exacta</span>
+            <div class="h-value" style="color: var(--accent-green-light);" id="hyper-exact">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X ≤ x) Acumulada</span>
+            <div class="h-value" id="hyper-cdf">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X ≥ x) Supervivencia</span>
+            <div class="h-value" id="hyper-sf">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Esperanza E[X]</span>
+            <div class="h-value" id="hyper-mean">0.0</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Varianza Var(X)</span>
+            <div class="h-value" id="hyper-var">0.0</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Desv. Estándar σ</span>
+            <div class="h-value" id="hyper-sd">0.0</div>
+          </div>
+        </div>
+
+        <!-- Gráfico de Función de Masa PMF -->
+        <div style="height: 280px; position: relative;">
+          <canvas id="chart-hyper-pmf"></canvas>
+        </div>
+      </div>
+
+      <!-- Módulo de Distribución Binomial (Eventos Independientes y Goles) -->
+      <div class="card" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+            Eventos Independientes: Distribución Binomial Interactiva
+          </h2>
+          <span class="brand-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.35);">
+            P(X = k) = C(n, k) · p^k · (1 - p)^(n - k)
+          </span>
+        </div>
+        <p class="card-subtitle">
+          Modelado formal para variables con ensayos independientes (ej. goles por partido o victorias consecutivas con probabilidad constante p en n encuentros):
+        </p>
+
+        <!-- Sliders interactivos Binomial -->
+        <div class="hyper-controls" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="control-group">
+            <div class="control-header">
+              <label>Partidos / Ensayos (n)</label>
+              <span class="val-badge" id="val-slider-binom-n">5</span>
+            </div>
+            <input type="range" id="slider-binom-n" min="1" max="20" value="5">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label>Probabilidad de Éxito (p)</label>
+              <span class="val-badge" id="val-slider-binom-p">0.55</span>
+            </div>
+            <input type="range" id="slider-binom-p" min="5" max="95" value="55">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label>Éxitos Buscados (k)</label>
+              <span class="val-badge" id="val-slider-binom-k">3</span>
+            </div>
+            <input type="range" id="slider-binom-k" min="0" max="5" value="3">
+          </div>
+        </div>
+
+        <!-- Métricas Binomiales en vivo -->
+        <div class="hyper-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X = k) Exacta</span>
+            <div class="h-value" style="color: #fbbf24;" id="binom-exact">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X ≤ k) Acumulada</span>
+            <div class="h-value" id="binom-cdf">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X ≥ k) Supervivencia</span>
+            <div class="h-value" id="binom-sf">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Esperanza E[X] = n·p</span>
+            <div class="h-value" style="color: #34d399;" id="binom-exp">0.0</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Desv. Estándar (σ)</span>
+            <div class="h-value" style="color: #60a5fa;" id="binom-std">0.0</div>
+          </div>
+        </div>
+
+        <!-- Gráfico de Función de Masa PMF Binomial -->
+        <div style="height: 260px; position: relative; margin-top: 1rem;">
+          <canvas id="chart-binom-pmf"></canvas>
+        </div>
+      </div>
+
+      <!-- Módulo de Distribución de Poisson (Larson & Farber Cap. 4: Variables en Intervalos Continuos) -->
+      <div class="card" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            Intervalos Continuos: Distribución de Poisson Interactiva (Larson & Farber Cap. 4)
+          </h2>
+          <span class="brand-badge" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8; border-color: rgba(14, 165, 233, 0.35);">
+            P(x) = (μ^x · e^-μ) / x! | σ² = μ | σ = √μ
+          </span>
+        </div>
+        <p class="card-subtitle">
+          Modela la probabilidad de que ocurra un número discreto de eventos ($x$) en un intervalo continuo fijo (ej. 90 minutos de juego). Se audita si el conteo cae en el <strong>rango usual [μ - 2σ, μ + 2σ]</strong> según el criterio de Larson & Farber:
+        </p>
+
+        <!-- Sliders interactivos Poisson -->
+        <div class="hyper-controls" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+          <div class="control-group">
+            <div class="control-header">
+              <label>Media de Eventos en 90 min (μ)</label>
+              <span class="val-badge" id="val-slider-poisson-mu">1.45</span>
+            </div>
+            <input type="range" id="slider-poisson-mu" min="10" max="600" value="145">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label>Eventos Observados (x)</label>
+              <span class="val-badge" id="val-slider-poisson-x">2</span>
+            </div>
+            <input type="range" id="slider-poisson-x" min="0" max="10" value="2">
+          </div>
+        </div>
+
+        <!-- Métricas Poisson en vivo -->
+        <div class="hyper-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X = x) Exacta</span>
+            <div class="h-value" style="color: #38bdf8;" id="poisson-exact">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X ≤ x) Acumulada</span>
+            <div class="h-value" id="poisson-cdf">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">P(X ≥ x) Supervivencia</span>
+            <div class="h-value" id="poisson-sf">0.0%</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Varianza (σ² = μ)</span>
+            <div class="h-value" style="color: #34d399;" id="poisson-var">1.45</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Desv. Estándar (σ = √μ)</span>
+            <div class="h-value" style="color: #60a5fa;" id="poisson-std">1.20</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Rango Usual [μ ± 2σ]</span>
+            <div class="h-value" style="font-size: 0.95rem; color: #f59e0b;" id="poisson-usual-bounds">[0.0, 3.8]</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <div id="poisson-usual-badge" class="badge-usual">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Evento Estadísticamente Usual (Dentro de μ ± 2σ)</span>
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Criterio Larson & Farber: Los valores fuera de μ ± 2σ se consideran poco comunes (P &lt; 0.05).</span>
+        </div>
+
+        <!-- Gráfico PMF Poisson -->
+        <div style="height: 260px; position: relative; margin-top: 1rem;">
+          <canvas id="chart-poisson-pmf"></canvas>
+        </div>
+      </div>
+
+      <!-- Módulo de Distribución Normal Estándar y Valor Z (Larson & Farber Cap. 7) -->
+      <div class="card" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Distribución Normal Estándar & Puntuación z (Larson & Farber Cap. 7)
+          </h2>
+          <span class="brand-badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.35);">
+            z = (X - μ) / σ | Regla Empírica 68-95-99.7
+          </span>
+        </div>
+        <p class="card-subtitle">
+          Tipificación de variables deportivas continuas (ej. rendimiento goleador de un club en una temporada) y cálculo de áreas bajo la curva según los <strong>4 Casos de Larson & Farber</strong>:
+        </p>
+
+        <!-- Sliders interactivos Normal -->
+        <div class="hyper-controls" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="control-group">
+            <div class="control-header">
+              <label>Valor Observado (X)</label>
+              <span class="val-badge" id="val-slider-normal-x">75</span>
+            </div>
+            <input type="range" id="slider-normal-x" min="10" max="110" value="75">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label>Media Poblacional (μ)</label>
+              <span class="val-badge" id="val-slider-normal-mu">52.8</span>
+            </div>
+            <input type="range" id="slider-normal-mu" min="20" max="90" value="53">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label>Desv. Estándar (σ)</label>
+              <span class="val-badge" id="val-slider-normal-std">16.5</span>
+            </div>
+            <input type="range" id="slider-normal-std" min="5" max="30" value="17">
+          </div>
+        </div>
+
+        <!-- Estadísticos Z y Regla Empírica -->
+        <div class="hyper-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+          <div class="hyper-stat-box">
+            <span class="h-label">Puntuación z</span>
+            <div class="h-value" style="color: #c084fc;" id="normal-z-val">+1.35</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Interpretación z</span>
+            <div class="h-value" style="font-size: 0.95rem; color: #34d399;" id="normal-z-interp">Normal (Superior)</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Regla 68% (μ ± 1σ)</span>
+            <div class="h-value" style="font-size: 0.9rem;" id="normal-emp-68">[36.3, 69.3]</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Regla 95% (μ ± 2σ)</span>
+            <div class="h-value" style="font-size: 0.9rem;" id="normal-emp-95">[19.8, 85.8]</div>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Regla 99.7% (μ ± 3σ)</span>
+            <div class="h-value" style="font-size: 0.9rem;" id="normal-emp-99">[3.3, 102.3]</div>
+          </div>
+        </div>
+
+        <!-- 4 Casos de Larson & Farber -->
+        <div class="normal-cases-grid">
+          <div class="normal-case-box">
+            <span class="normal-case-title">Caso 1: Área Izquierda P(Z &lt; z)</span>
+            <div class="normal-case-val" id="normal-case-1">91.1%</div>
+          </div>
+          <div class="normal-case-box">
+            <span class="normal-case-title">Caso 2: Área Derecha P(Z &gt; z)</span>
+            <div class="normal-case-val" id="normal-case-2">8.9%</div>
+          </div>
+          <div class="normal-case-box">
+            <span class="normal-case-title">Caso 3: Entre [-|z|, |z|]</span>
+            <div class="normal-case-val" id="normal-case-3">82.3%</div>
+          </div>
+          <div class="normal-case-box">
+            <span class="normal-case-title">Caso 4: Colas Exteriores</span>
+            <div class="normal-case-val" id="normal-case-4">17.7%</div>
+          </div>
+        </div>
+
+        <!-- Gráfico Campana de Gauss Normal -->
+        <div style="height: 260px; position: relative; margin-top: 1rem;">
+          <canvas id="chart-normal-pdf"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: MACHINE LEARNING & PREDICTOR ==================== -->
+    <section id="tab-ml" class="tab-panel">
+      <!-- Selector de Enfrentamiento y Opciones -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h2 class="card-title">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          Simulador Predictivo de Enfrentamientos
+        </h2>
+        <p class="card-subtitle">
+          Inferencia probabilística con dos enfoques analíticos: <strong>Historial de 10 Temporadas (Cara a Cara)</strong> o <strong>Forma Reciente de 5 Partidos (Algoritmos ML)</strong>.
+        </p>
+
+        <!-- Selector de Equipos con Botón de Invertir -->
+        <div class="matchup-container">
+          <div class="team-select-box">
+            <label>
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              Equipo Local (Home)
+            </label>
+            <select id="select-home-team" class="select-custom"></select>
+          </div>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+            <button id="btn-swap-teams" class="btn-swap-teams" title="Invertir Local y Visitante" type="button">
+              <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>
+              </svg>
+            </button>
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">VS</span>
+          </div>
+
+          <div class="team-select-box">
+            <label>
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Equipo Visitante (Away)
+            </label>
+            <select id="select-away-team" class="select-custom"></select>
+          </div>
+        </div>
+
+        <!-- Opciones Avanzadas: Modo de Simulación y Condición Bayesiana -->
+        <div class="grid-2" style="margin-bottom: 1.5rem;">
+          <div class="control-group">
+            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+              Enfoque de Simulación:
+            </label>
+            <select id="select-simulation-mode" class="select-custom">
+              <option value="historical">Registro Histórico Completo (10 Temporadas & Cara a Cara)</option>
+              <option value="recent">Forma Reciente (Últimos 5 Partidos - Algoritmos ML)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Actualización Bayesiana en Vivo (Escenario Opcional):
+            </label>
+            <select id="select-bayesian-condition" class="select-custom">
+              <option value="">Predicción Base (Sin condiciones adicionales)</option>
+              <option value="HST_GT_5">Integrante 1: Si el Local supera 5 Tiros a Puerta (HST > 5)</option>
+              <option value="HTR_H">Integrante 3: Si el Local se va ganando al descanso (HTR = H)</option>
+              <option value="AST_GT_4">Integrante 6: Si el Visitante supera 4 Tiros a Puerta (AST > 4)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="btn-run-predict" class="btn-predict">
+          <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="6 3 20 12 6 21 6 3"/>
+          </svg>
+          Simular Partido
+        </button>
+      </div>
+
+      <!-- Resultados de la Simulación -->
+      <div id="predict-result-container" style="display: none; margin-bottom: 2rem;">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 class="card-title">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Resultado de la Simulación Probabilística
+            </h2>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <span id="badge-sim-mode" class="stat-pill" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3);">
+                Modo: Histórico 10 Temporadas
+              </span>
+              <div id="prediction-condition-alert" class="stat-pill" style="display: none; background: rgba(16, 185, 129, 0.2); color: var(--accent-green-light); border-color: var(--accent-green);">
+                Actualización Bayesiana Aplicada
+              </div>
+            </div>
+          </div>
+
+          <!-- Barra animada de probabilidades -->
+          <div class="prob-bars-container">
+            <div id="bar-home" class="prob-bar home" style="width: 45%;">Local 45%</div>
+            <div id="bar-draw" class="prob-bar draw" style="width: 25%;">Empate 25%</div>
+            <div id="bar-away" class="prob-bar away" style="width: 30%;">Visitante 30%</div>
+          </div>
+
+          <!-- Cuotas Justas (Fair Odds) -->
+          <div class="odds-grid">
+            <div class="odd-card">
+              <span class="odd-label">Cuota Justa Local (1)</span>
+              <div class="odd-val" id="fair-odd-home">2.10</div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Cuota implícita (1 / P)</span>
+            </div>
+            <div class="odd-card">
+              <span class="odd-label">Cuota Justa Empate (X)</span>
+              <div class="odd-val" id="fair-odd-draw">3.40</div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Cuota implícita (1 / P)</span>
+            </div>
+            <div class="odd-card">
+              <span class="odd-label">Cuota Justa Visitante (2)</span>
+              <div class="odd-val" id="fair-odd-away">3.65</div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Cuota implícita (1 / P)</span>
+            </div>
+          </div>
+
+          <!-- Goles Esperados xG & Top Marcadores -->
+          <div class="grid-2">
+            <div class="card" style="background-color: var(--bg-secondary);">
+              <h3 style="font-size: 1rem; color: var(--accent-green-light); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                Goles Esperados (Poisson xG)
+              </h3>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                <div class="hyper-stat-box">
+                  <span class="h-label">xG Local</span>
+                  <div class="h-value" id="xg-home">1.65</div>
+                </div>
+                <div class="hyper-stat-box">
+                  <span class="h-label">xG Visitante</span>
+                  <div class="h-value" id="xg-away">1.10</div>
+                </div>
+                <div class="hyper-stat-box">
+                  <span class="h-label">xG Total Combinado</span>
+                  <div class="h-value" id="xg-total">2.75</div>
+                </div>
+                <div class="hyper-stat-box">
+                  <span class="h-label">Más de 2.5 Goles</span>
+                  <div class="h-value" style="color: var(--accent-amber);" id="xg-over25">54.2%</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="background-color: var(--bg-secondary);">
+              <h3 style="font-size: 1rem; color: var(--accent-blue); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Marcadores Más Probables (Matriz Bivariada)
+              </h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Probabilidad exacta de marcadores finales calculada por convolución de Poisson:
+              </p>
+              <div id="top-scores-list" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
+            </div>
+          </div>
+
+          <!-- Desglose Histórico Cara a Cara (Head-to-Head 10 Temporadas) -->
+          <div id="h2h-summary-container" style="margin-top: 1.5rem; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+              <h3 style="font-size: 1rem; color: var(--accent-cyan); display: flex; align-items: center; gap: 0.4rem;">
+                <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+                Registro Histórico Cara a Cara (10 Temporadas de La Liga)
+              </h3>
+              <span id="h2h-total-matches-label" class="stat-pill">10 partidos en este estadio</span>
+            </div>
+
+            <div class="grid-3" style="margin-bottom: 1rem;">
+              <div class="hyper-stat-box">
+                <span class="h-label" id="h2h-venue-label">En este estadio</span>
+                <div class="h-value" id="h2h-direct-record" style="font-size: 1.1rem; color: var(--text-primary);">5 Victoria(s) / 0 Empate(s) / 5 Derrota(s)</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);" id="h2h-direct-goals">Goles: 1.4 vs 2.0</span>
+              </div>
+              <div class="hyper-stat-box">
+                <span class="h-label" id="h2h-home-10y-label">Local en casa (10 años)</span>
+                <div class="h-value" id="h2h-home-10y-pct" style="font-size: 1.1rem; color: var(--accent-green-light);">72.6% Victorias</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);" id="h2h-home-10y-goals">Goles: 2.1 a favor / 0.8 en contra</span>
+              </div>
+              <div class="hyper-stat-box">
+                <span class="h-label" id="h2h-away-10y-label">Visitante fuera (10 años)</span>
+                <div class="h-value" id="h2h-away-10y-pct" style="font-size: 1.1rem; color: var(--accent-blue);">32.6% Victorias</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);" id="h2h-away-10y-goals">Goles: 1.2 a favor / 1.5 en contra</span>
+              </div>
+            </div>
+
+            <!-- Últimos enfrentamientos -->
+            <div>
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">
+                Últimos Enfrentamientos Directos Mutuos:
+              </span>
+              <div id="h2h-encounters-list" style="margin-top: 0.5rem; background-color: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border-color);"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Métricas de Desempeño del Modelo -->
+      <div class="grid-2">
+        <div class="card">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Evaluación Técnica de los Algoritmos (Electiva III)
+          </h2>
+          <p class="card-subtitle">Partición cronológica estricta (80% Train, 20% Test) sin filtración temporal</p>
+
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem;">
+            <div class="hyper-stat-box">
+              <span class="h-label">Regresión Logística (Accuracy / F1)</span>
+              <div class="h-value" id="ml-acc-lr" style="color: #60a5fa;">47.8%</div>
+              <span style="font-size: 0.72rem; color: var(--accent-green-light);" id="ml-f1-lr">F1-Score: 0.468 (Weighted)</span>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">Random Forest (Accuracy / F1)</span>
+              <div class="h-value" id="ml-acc-rf" style="color: #34d399;">48.5%</div>
+              <span style="font-size: 0.72rem; color: var(--accent-green-light);" id="ml-f1-rf">F1-Score: 0.473 (Weighted)</span>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">Muestras de Entrenamiento</span>
+              <div class="h-value" id="ml-train-samples">3.040</div>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">Temporadas 2016-2023</span>
+            </div>
+            <div class="hyper-stat-box">
+              <span class="h-label">Muestras de Prueba (Out-of-Time)</span>
+              <div class="h-value" id="ml-test-samples">760</div>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">Temporadas 2024-2026</span>
+            </div>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); padding: 0.75rem; margin-top: 0.85rem; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; border-left: 2px solid #a855f7;">
+            <strong>Aviso Metodológico (Ciencia de Datos):</strong> Las predicciones de Machine Learning son estimaciones probabilísticas condicionadas a regularidades históricas y no certezas absolutas. En el fútbol profesional la alta aleatoriedad inherente y factores cualitativos no tabulados impiden la predictibilidad determinista.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+            Importancia de Características (Random Forest)
+          </h2>
+          <p class="card-subtitle">Variables con mayor peso predictivo en la determinación del ganador</p>
+          <div style="height: 250px; position: relative;">
+            <canvas id="chart-feature-importance"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo de Simulación de Temporada Completa y Proyección de Campeón -->
+      <div class="card" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h2 class="card-title" style="margin: 0;">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+              Simulación de Temporada & Proyección de Campeón (LaLiga 38 Jornadas)
+            </h2>
+            <p class="card-subtitle" style="margin-top: 0.2rem;">
+              Simulación Monte Carlo de los 380 partidos anuales bajo el formato oficial de todos contra todos por puntos.
+            </p>
+          </div>
+          <button id="btn-run-tournament-sim" class="btn-predict" style="padding: 0.6rem 1.25rem; font-size: 0.85rem;" type="button">
+            <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Simular Torneo Completo
+          </button>
+        </div>
+
+        <!-- Podio Proyectado -->
+        <div class="podium-container">
+          <div class="podium-card champion">
+            <div class="podium-rank">1º Puesto — Campeón Proyectado</div>
+            <div class="podium-team" id="podium-champ-team">Real Madrid</div>
+            <div class="podium-prob" id="podium-champ-prob">65.2%</div>
+            <div class="podium-points" id="podium-champ-pts">86.4 Puntos Esperados</div>
+          </div>
+          <div class="podium-card">
+            <div class="podium-rank">2º Puesto — Subcampeón</div>
+            <div class="podium-team" id="podium-2nd-team">Barcelona</div>
+            <div class="podium-prob" id="podium-2nd-prob">24.5%</div>
+            <div class="podium-points" id="podium-2nd-pts">80.1 Puntos Esperados</div>
+          </div>
+          <div class="podium-card">
+            <div class="podium-rank">3º Puesto — Zona Champions</div>
+            <div class="podium-team" id="podium-3rd-team">Ath Madrid</div>
+            <div class="podium-prob" id="podium-3rd-prob">7.1%</div>
+            <div class="podium-points" id="podium-3rd-pts">73.2 Puntos Esperados</div>
+          </div>
+        </div>
+
+        <!-- Tabla Completa de Posiciones Proyectada -->
+        <div class="standings-table-wrapper">
+          <table class="standings-table">
+            <thead>
+              <tr>
+                <th>Pos</th>
+                <th>Club</th>
+                <th>PJ</th>
+                <th>Pts Esp</th>
+                <th>V</th>
+                <th>E</th>
+                <th>D</th>
+                <th>GF</th>
+                <th>GC</th>
+                <th>DG</th>
+                <th>% Campeón</th>
+                <th>% Champions</th>
+                <th>% Descenso</th>
+              </tr>
+            </thead>
+            <tbody id="tournament-standings-body">
+              <tr>
+                <td colspan="13" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                  Haga clic en «Simular Torneo Completo» para ejecutar las 380 simulaciones.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: WEB SCRAPING & AUDITORÍA ==================== -->
+    <section id="tab-auditor" class="tab-panel">
+      <div class="card" style="margin-bottom: 2rem;">
+        <h2 class="card-title">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Auditoría de Fuentes y Web Scraping Ético
+        </h2>
+        <p class="card-subtitle">Monitoreo del origen de datos, política robots.txt e integridad de registros</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+          <div class="hyper-stat-box">
+            <span class="h-label">Fuente Principal</span>
+            <div class="h-value" style="font-size: 1.1rem;" id="scraper-source">Football-Data.co.uk</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Primera División España (SP1)</span>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Verificación Robots.txt</span>
+            <div class="h-value" style="font-size: 1rem; color: var(--accent-green-light);" id="scraper-robots">
+              Permitido (Robots.txt respetado)
+            </div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Acceso ético validado</span>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Estado de Conexión</span>
+            <div class="h-value" style="font-size: 1rem;" id="scraper-status">Online</div>
+            <span style="font-size: 0.75rem; color: var(--accent-cyan);">HTTP 200 OK</span>
+          </div>
+          <div class="hyper-stat-box">
+            <span class="h-label">Registros Consolidados</span>
+            <div class="h-value" style="color: var(--accent-green-light);" id="auditor-total-records">3.800</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">100% limpios sin nulos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explorador de Partidos -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 class="card-title">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Explorador de Partidos Consolidados
+            </h2>
+            <p class="card-subtitle">Auditoría interactiva de las 21 variables por partido histórico</p>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <select id="auditor-filter-season" class="select-custom" style="width: auto; min-width: 170px;">
+              <option value="">Todas las Temporadas</option>
+              <option value="1617">Temporada 2016/17</option>
+              <option value="1718">Temporada 2017/18</option>
+              <option value="1819">Temporada 2018/19</option>
+              <option value="1920">Temporada 2019/20</option>
+              <option value="2021">Temporada 2020/21</option>
+              <option value="2122">Temporada 2021/22</option>
+              <option value="2223">Temporada 2022/23</option>
+              <option value="2324">Temporada 2023/24</option>
+              <option value="2425">Temporada 2024/25</option>
+              <option value="2526">Temporada 2025/26</option>
+            </select>
+
+            <select id="auditor-filter-team" class="select-custom" style="width: auto; min-width: 170px;">
+              <option value="">Todos los Equipos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Temp</th>
+                <th>Local</th>
+                <th>Visitante</th>
+                <th>Final</th>
+                <th>FTR</th>
+                <th>1T (HTR)</th>
+                <th>Tiros (HS/AS)</th>
+                <th>Al Arco (HST/AST)</th>
+                <th>Córners (HC/AC)</th>
+                <th>Tarjetas (L/V)</th>
+              </tr>
+            </thead>
+            <tbody id="auditor-tbody">
+              <!-- Se puebla con JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button id="btn-page-prev" class="pagination-btn" disabled>
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            Anterior
+          </button>
+          <span id="auditor-current-page" style="font-size: 0.85rem; color: var(--text-secondary);">Página 1</span>
+          <button id="btn-page-next" class="pagination-btn">
+            Siguiente
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: ECUACIONES ESTADÍSTICAS & CÓDIGO ==================== -->
+    <section id="tab-equations" class="tab-panel">
+      <!-- Banner Introductorio -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 1rem;">
+          <h2 class="card-title">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v3h-12l7 5-7 5h12v3h-16z"/></svg>
+            Fundamentos Estadísticos y Mapeo al Código Fuente
+          </h2>
+          <span class="brand-badge">Traducción Matemática ⇄ Python</span>
+        </div>
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          Este apartado expone con rigor formal las <strong>ecuaciones estadísticas y probabilísticas</strong> empleadas en la plataforma, confrontadas directamente con su <strong>implementación real en código Python</strong>. Cada módulo ilustra cómo los modelos teóricos de inferencia bayesiana, combinatoria hipergeométrica, procesos de Poisson y algoritmos de Machine Learning son computados sobre los 3.800 partidos históricos de La Liga.
+        </p>
+      </div>
+
+      <div class="equations-container">
+
+        <!-- 1. Teorema de Bayes -->
+        <div class="equation-card">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/></svg>
+                1. Teorema de Bayes: Probabilidad Condicional y Actualización de Creencias
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Actualiza la probabilidad a priori de un evento deportivo tras observar evidencia contextual en el partido.
+              </p>
+            </div>
+            <span class="math-tag">Inferencia Bayesiana</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)} = \frac{P(B \mid A) \cdot P(A)}{P(B \mid A)P(A) + P(B \mid \neg A)P(\neg A)}$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>P(A)</code> Probabilidad a Priori del evento objetivo (frecuencia base en 3.800 partidos).</li>
+                <li><code>P(B)</code> Probabilidad Marginal de la Evidencia (tasa histórica de la condición observada).</li>
+                <li><code>P(B|A)</code> Verosimilitud (Likelihood): probabilidad de que la evidencia ocurra cuando el evento es verdadero.</li>
+                <li><code>P(A|B)</code> Probabilidad a Posteriori: creencia actualizada del evento tras verificar la evidencia.</li>
+              </ul>
+
+              <!-- Selector Interactivo por Integrante -->
+              <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem; margin-top: 0.5rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                  Ver contextualización por Integrante:
+                </span>
+                <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem;">
+                  <button class="btn-eq-member active" data-member="1" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); cursor: pointer;">Int 1 (HST > 5)</button>
+                  <button class="btn-eq-member" data-member="2" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); cursor: pointer;">Int 2 (Goles ≥ 2)</button>
+                  <button class="btn-eq-member" data-member="3" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); cursor: pointer;">Int 3 (Descanso 1T)</button>
+                  <button class="btn-eq-member" data-member="4" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); cursor: pointer;">Int 4 (Córners > 6)</button>
+                  <button class="btn-eq-member" data-member="5" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); cursor: pointer;">Int 5 (Tarjetas ≥ 3)</button>
+                  <button class="btn-eq-member" data-member="6" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); cursor: pointer;">Int 6 (Visitante AST > 4)</button>
+                </div>
+                <div id="eq-bayes-dynamic-latex" class="formula-box" style="margin-top: 0.6rem; min-height: 50px; font-size: 1rem;">
+                  <span class="katex-render">$$P(\text{FTR} = \text{H} \mid \text{HST} > 5) = \frac{P(\text{HST} > 5 \mid \text{FTR} = \text{H}) \cdot P(\text{FTR} = \text{H})}{P(\text{HST} > 5)} = 65.2\%$$</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/analytics/inferential_engine.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-bayes">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-bayes"><span class="comment"># 1. Definición de máscaras booleanas empíricas</span>
+<span class="var">event_mask</span> = <span class="var">df</span>[<span class="string">'FTR'</span>] == <span class="string">'H'</span>          <span class="comment"># Evento A: Victoria Local</span>
+<span class="var">cond_mask</span>  = <span class="var">df</span>[<span class="string">'HST'</span>] > <span class="number">5</span>             <span class="comment"># Condición B: Tiros al arco > 5</span>
+
+<span class="comment"># 2. Conteo de frecuencias en tabla de contingencia 2x2</span>
+<span class="var">a</span> = <span class="func">int</span>((<span class="var">event_mask</span> & <span class="var">cond_mask</span>).<span class="func">sum</span>())     <span class="comment"># A y B verdaderos (738)</span>
+<span class="var">b</span> = <span class="func">int</span>((~<span class="var">event_mask</span> & <span class="var">cond_mask</span>).<span class="func">sum</span>())    <span class="comment"># No A y B (393)</span>
+<span class="var">c</span> = <span class="func">int</span>((<span class="var">event_mask</span> & ~<span class="var">cond_mask</span>).<span class="func">sum</span>())    <span class="comment"># A y No B (990)</span>
+<span class="var">d</span> = <span class="func">int</span>((~<span class="var">event_mask</span> & ~<span class="var">cond_mask</span>).<span class="func">sum</span>())   <span class="comment"># No A y No B (1.679)</span>
+
+<span class="comment"># 3. Cálculo del Teorema de Bayes</span>
+<span class="var">prior_A</span> = <span class="func">float</span>(<span class="var">event_mask</span>.<span class="func">mean</span>())           <span class="comment"># P(A) = 0.4547 (45.5%)</span>
+<span class="var">prob_B</span>  = <span class="func">float</span>(<span class="var">cond_mask</span>.<span class="func">mean</span>())            <span class="comment"># P(B) = 0.2976 (29.8%)</span>
+
+<span class="var">likelihood</span> = <span class="var">a</span> / (<span class="var">a</span> + <span class="var">c</span>)                     <span class="comment"># P(B|A) = 738 / 1.728 = 0.4271</span>
+<span class="var">posterior</span>  = (<span class="var">likelihood</span> * <span class="var">prior_A</span>) / <span class="var">prob_B</span> <span class="comment"># P(A|B) = a / (a + b) = 0.6525 (65.2%)</span>
+
+<span class="var">bayes_factor</span> = <span class="var">posterior</span> / <span class="var">prior_A</span>           <span class="comment"># Multiplicador: x1.43 de incremento</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Distribución Hipergeométrica -->
+        <div class="equation-card cyan">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                2. Distribución Hipergeométrica: Muestreo Finito sin Reemplazo
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Modela la probabilidad de observar exactamente $x$ éxitos en una muestra de $n$ elementos extraídos sin reemplazo.
+              </p>
+            </div>
+            <span class="math-tag blue">Combinatoria & Probabilidad Discreta</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$P(X = x \mid N, r, n) = \frac{\binom{r}{x} \binom{N - r}{n - x}}{\binom{N}{n}}$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$E[X] = n \frac{r}{N}, \quad \operatorname{Var}(X) = n \frac{r}{N} \left(1 - \frac{r}{N}\right) \left(\frac{N - n}{N - 1}\right)$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>N</code> Tamaño total de la población finita (ej. Tiros totales del local $N = \text{HS}$).</li>
+                <li><code>r</code> Cantidad de éxitos en la población (ej. Tiros al arco $r = \text{HST}$).</li>
+                <li><code>n</code> Tamaño de la muestra auditada o extraída sin reemplazo.</li>
+                <li><code>x</code> Cantidad exacta de éxitos observados dentro de la muestra.</li>
+                <li><code>(N-n)/(N-1)</code> Factor de corrección para poblaciones finitas en la varianza.</li>
+                <li><code>n < 0.05N</code> Criterio Larson & Farber: si la muestra es menor al 5% de la población, se puede aproximar por la distribución binomial con $p = r/N$.</li>
+              </ul>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/analytics/inferential_engine.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-hyper">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-hyper"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">hypergeom</span>
+<span class="keyword">import</span> <span class="var">math</span>
+
+<span class="keyword">def</span> <span class="func">calculate_hypergeometric</span>(<span class="var">N</span>: <span class="func">int</span>, <span class="var">r</span>: <span class="func">int</span>, <span class="var">n</span>: <span class="func">int</span>, <span class="var">x</span>: <span class="func">int</span>):
+    <span class="comment"># Instancia de distribución hipergeométrica en SciPy:</span>
+    <span class="comment"># M = Población (N), n = Éxitos totales (r), N = Muestra (n)</span>
+    <span class="var">dist</span> = <span class="func">hypergeom</span>(<span class="var">M</span>=<span class="var">N</span>, <span class="var">n</span>=<span class="var">r</span>, <span class="var">N</span>=<span class="var">n</span>)
+
+    <span class="var">pmf_exact</span> = <span class="func">float</span>(<span class="var">dist</span>.<span class="func">pmf</span>(<span class="var">x</span>))           <span class="comment"># P(X = x) Exacta</span>
+    <span class="var">cdf_leq</span>   = <span class="func">float</span>(<span class="var">dist</span>.<span class="func">cdf</span>(<span class="var">x</span>))           <span class="comment"># P(X <= x) Acumulada</span>
+    <span class="var">sf_geq</span>    = <span class="func">float</span>(<span class="var">dist</span>.<span class="func">sf</span>(<span class="var">x</span> - <span class="number">1</span>))        <span class="comment"># P(X >= x) Supervivencia</span>
+
+    <span class="comment"># Esperanza y varianza con factor de corrección finita</span>
+    <span class="var">expected_val</span> = <span class="func">float</span>(<span class="var">n</span> * (<span class="var">r</span> / <span class="var">N</span>))
+    <span class="var">variance</span> = <span class="func">float</span>(<span class="var">n</span> * (<span class="var">r</span> / <span class="var">N</span>) * ((<span class="var">N</span> - <span class="var">r</span>) / <span class="var">N</span>) * ((<span class="var">N</span> - <span class="var">n</span>) / (<span class="var">N</span> - <span class="number">1</span>))) <span class="keyword">if</span> <span class="var">N</span> > <span class="number">1</span> <span class="keyword">else</span> <span class="number">0.0</span>
+    <span class="var">std_dev</span>  = <span class="var">math</span>.<span class="func">sqrt</span>(<span class="func">max</span>(<span class="number">0.0</span>, <span class="var">variance</span>))
+
+    <span class="keyword">return</span> {<span class="string">"pmf"</span>: <span class="var">pmf_exact</span>, <span class="string">"cdf"</span>: <span class="var">cdf_leq</span>, <span class="string">"mean"</span>: <span class="var">expected_val</span>, <span class="string">"var"</span>: <span class="var">variance</span>}</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Chi-Cuadrado y Odds Ratio -->
+        <div class="equation-card indigo">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+                3. Prueba de Independencia Chi-Cuadrado ($\chi^2$), Odds Ratio e IC al 95%
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Evalúa si la relación observada es estadísticamente significativa o producto del azar muestral.
+              </p>
+            </div>
+            <span class="math-tag indigo">Estadística Inferencial</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$\chi^2 = \sum_{i=1}^2 \sum_{j=1}^2 \frac{(O_{ij} - E_{ij})^2}{E_{ij}}, \quad E_{ij} = \frac{\text{Total Fila}_i \cdot \text{Total Col}_j}{N_{\text{total}}}$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$\text{OR} = \frac{a \cdot d}{b \cdot c}, \quad \text{IC}_{95\%}(\text{OR}) = \exp\left(\ln(\text{OR}) \pm 1.96 \cdot \sqrt{\frac{1}{a} + \frac{1}{b} + \frac{1}{c} + \frac{1}{d}}\right)$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>O_{ij}</code> Frecuencia conjunta observada en la celda $(i, j)$ de la tabla $2 \times 2$.</li>
+                <li><code>E_{ij}</code> Frecuencia esperada bajo la hipótesis nula de independencia ($H_0$).</li>
+                <li><code>Odds Ratio</code> Razón de momios: cuánto se multiplican las posibilidades de ganar.</li>
+                <li><code>p-valor</code> Probabilidad de obtener una discrepancia igual o mayor bajo $H_0$ ($p < 0.05$).</li>
+              </ul>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/analytics/inferential_engine.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-chi2">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-chi2"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">chi2_contingency</span>
+<span class="keyword">import</span> <span class="var">numpy</span> <span class="keyword">as</span> <span class="var">np</span>
+
+<span class="comment"># 1. Tabla de contingencia 2x2</span>
+<span class="var">table</span> = <span class="var">np</span>.<span class="func">array</span>([[<span class="var">a</span>, <span class="var">b</span>], [<span class="var">c</span>, <span class="var">d</span>]])
+
+<span class="comment"># 2. Prueba de independencia Chi-Cuadrado</span>
+<span class="var">chi2_stat</span>, <span class="var">p_val</span>, <span class="var">dof</span>, <span class="var">expected</span> = <span class="func">chi2_contingency</span>(<span class="var">table</span>)
+<span class="var">is_significant</span> = <span class="func">bool</span>(<span class="var">p_val</span> < <span class="number">0.05</span>)
+
+<span class="comment"># 3. Odds Ratio (OR) e Intervalo de Confianza al 95%</span>
+<span class="var">odds_ratio</span> = (<span class="var">a</span> * <span class="var">d</span>) / (<span class="var">b</span> * <span class="var">c</span>)
+<span class="var">se_log_or</span>  = <span class="var">math</span>.<span class="func">sqrt</span>(<span class="number">1</span>/<span class="var">a</span> + <span class="number">1</span>/<span class="var">b</span> + <span class="number">1</span>/<span class="var">c</span> + <span class="number">1</span>/<span class="var">d</span>)
+<span class="var">ci_lower</span>   = <span class="var">math</span>.<span class="func">exp</span>(<span class="var">math</span>.<span class="func">log</span>(<span class="var">odds_ratio</span>) - <span class="number">1.96</span> * <span class="var">se_log_or</span>)
+<span class="var">ci_upper</span>   = <span class="var">math</span>.<span class="func">exp</span>(<span class="var">math</span>.<span class="func">log</span>(<span class="var">odds_ratio</span>) + <span class="number">1.96</span> * <span class="var">se_log_or</span>)</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Modelo Bivariado Poisson -->
+        <div class="equation-card amber">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                4. Modelo Poisson Bivariado: Goles Esperados (xG) y Marcadores Exactos
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Computa la intensidad ofensiva/defensiva de cada club para predecir la matriz de marcadores y Más/Menos 2.5 goles.
+              </p>
+            </div>
+            <span class="math-tag amber">Procesos Estocásticos</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$P(G_H = i, G_A = j) = \frac{\lambda_H^i e^{-\lambda_H}}{i!} \times \frac{\lambda_A^j e^{-\lambda_A}}{j!}$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$\lambda_H = \frac{\text{GF}_H}{\overline{\text{GF}}_L} \cdot \frac{\text{GA}_A}{\overline{\text{GA}}_L} \cdot \mu_H, \quad P(\text{Más de 2.5}) = 1 - \sum_{i+j \le 2} P(G_H = i, G_A = j)$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>\lambda_H, \lambda_A</code> Tasa media de goles esperados (xG) de local y visitante.</li>
+                <li><code>\mu_H = 1.45</code> Promedio histórico de goles marcados por clubes locales en La Liga.</li>
+                <li><code>\text{GF}_H, \text{GA}_A</code> Capacidad goleadora del local frente a la vulnerabilidad defensiva del visitante.</li>
+              </ul>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/models/predictor.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-poisson">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-poisson"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">poisson</span>
+
+<span class="comment"># 1. Parámetros Poisson de intensidad (xG)</span>
+<span class="var">lambda_h</span> = <span class="func">max</span>(<span class="number">0.4</span>, (<span class="var">h_stat</span>[<span class="string">'gf'</span>] / <span class="number">1.3</span>) * (<span class="var">a_stat</span>[<span class="string">'ga'</span>] / <span class="number">1.3</span>) * <span class="number">1.45</span>)
+<span class="var">lambda_a</span> = <span class="func">max</span>(<span class="number">0.3</span>, (<span class="var">a_stat</span>[<span class="string">'gf'</span>] / <span class="number">1.1</span>) * (<span class="var">h_stat</span>[<span class="string">'ga'</span>] / <span class="number">1.3</span>) * <span class="number">1.10</span>)
+
+<span class="comment"># 2. Convolución bivariada para marcadores i vs j</span>
+<span class="var">score_matrix</span> = []
+<span class="var">prob_over_2_5</span> = <span class="number">0.0</span>
+<span class="keyword">for</span> <span class="var">i</span> <span class="keyword">in</span> <span class="func">range</span>(<span class="number">5</span>):
+    <span class="keyword">for</span> <span class="var">j</span> <span class="keyword">in</span> <span class="func">range</span>(<span class="number">5</span>):
+        <span class="var">p_ij</span> = <span class="func">float</span>(<span class="var">poisson</span>.<span class="func">pmf</span>(<span class="var">i</span>, <span class="var">lambda_h</span>) * <span class="var">poisson</span>.<span class="func">pmf</span>(<span class="var">j</span>, <span class="var">lambda_a</span>))
+        <span class="keyword">if</span> (<span class="var">i</span> + <span class="var">j</span>) > <span class="number">2.5</span>:
+            <span class="var">prob_over_2_5</span> += <span class="var">p_ij</span>
+        <span class="var">score_matrix</span>.<span class="func">append</span>({<span class="string">"score"</span>: <span class="string">f"{i} - {j}"</span>, <span class="string">"probability"</span>: <span class="var">p_ij</span>})</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Regresión Logística Multinomial / Softmax -->
+        <div class="equation-card">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+                5. Regresión Logística Multinomial: Función Softmax en Machine Learning
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Convierte el vector de 16 variables rodantes sin filtración temporal en una distribución probabilística multiclase $\{H, D, A\}$.
+              </p>
+            </div>
+            <span class="math-tag">Machine Learning</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$P(Y = c \mid \mathbf{x}) = \frac{e^{\mathbf{w}_c^T \mathbf{x} + b_c}}{\sum_{k \in \{H, D, A\}} e^{\mathbf{w}_k^T \mathbf{x} + b_k}}, \quad c \in \{0: \text{H}, 1: \text{D}, 2: \text{A}\}$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>\mathbf{x} \in \mathbb{R}^{16}</code> Vector de características rodantes normalizadas (StandardScaler).</li>
+                <li><code>\mathbf{w}_c, b_c</code> Pesos y sesgo aprendidos por optimización L-BFGS multiclase.</li>
+                <li><code>\sum P(Y=c) = 1.0</code> Garantía estricta de coherencia axiomática de Kolmogorov.</li>
+              </ul>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/models/train.py & predictor.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-ml">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-ml"><span class="keyword">from</span> <span class="var">sklearn.linear_model</span> <span class="keyword">import</span> <span class="func">LogisticRegression</span>
+<span class="keyword">from</span> <span class="var">sklearn.ensemble</span> <span class="keyword">import</span> <span class="func">RandomForestClassifier</span>
+
+<span class="comment"># 1. Entrenamiento con regularización L2 y solver L-BFGS</span>
+<span class="var">lr_model</span> = <span class="func">LogisticRegression</span>(<span class="var">max_iter</span>=<span class="number">1000</span>, <span class="var">random_state</span>=<span class="number">42</span>)
+<span class="var">lr_model</span>.<span class="func">fit</span>(<span class="var">X_train_scaled</span>, <span class="var">y_train</span>)
+
+<span class="comment"># 2. Inferencia y ensamble de probabilidades</span>
+<span class="var">proba_lr</span> = <span class="var">lr_model</span>.<span class="func">predict_proba</span>(<span class="var">X_scaled</span>)[<span class="number">0</span>] <span class="comment"># [P(H), P(D), P(A)]</span>
+<span class="var">proba_rf</span> = <span class="var">rf_model</span>.<span class="func">predict_proba</span>(<span class="var">X_input</span>)[<span class="number">0</span>]
+<span class="var">proba_ensemble</span> = <span class="number">0.5</span> * <span class="var">proba_lr</span> + <span class="number">0.5</span> * <span class="var">proba_rf</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Ponderación Empírica H2H y Cuotas Justas -->
+        <div class="equation-card cyan">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                6. Ponderación Empírica H2H (10 Temporadas) y Cuotas Justas Implícitas
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Suavizado bayesiano para equilibrar la muestra finita del historial directo con el rendimiento general de 10 años.
+              </p>
+            </div>
+            <span class="math-tag blue">Modelado Financiero & Empírico</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$P(H) = w_{\text{H2H}} \cdot P_{\text{H2H}}(H) + (1 - w_{\text{H2H}}) \cdot P_{\text{10y\_casa}}(H)$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$w_{\text{H2H}} = \min(0.65, n_{\text{partidos}} \times 0.08), \quad \text{Cuota Justa}_c = \frac{1}{P(c)}$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>w_{\text{H2H}}</code> Factor de credibilidad bayesiana (shrinkage): crece conforme hay más enfrentamientos directos.</li>
+                <li><code>\text{Cuota Justa}</code> Cuota sin margen de casa de apuestas (Fair Odds = $1 / P$).</li>
+              </ul>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/models/predictor.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-h2h">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-h2h"><span class="comment"># 1. Factor de credibilidad proporcional a los partidos directos</span>
+<span class="var">w_direct</span> = <span class="func">min</span>(<span class="number">0.65</span>, <span class="var">direct</span>[<span class="string">"total_matches"</span>] * <span class="number">0.08</span>)
+<span class="var">w_base</span>   = <span class="number">1.0</span> - <span class="var">w_direct</span>
+
+<span class="comment"># 2. Ponderación bayesiana empírica</span>
+<span class="var">p_h</span> = <span class="var">w_direct</span> * (<span class="var">direct</span>[<span class="string">"home_wins"</span>] / <span class="var">direct</span>[<span class="string">"total_matches"</span>]) + <span class="var">w_base</span> * (<span class="var">h_rec</span>[<span class="string">"win_pct"</span>] / <span class="number">100.0</span>)
+
+<span class="comment"># 3. Cuotas Justas (Fair Odds sin comisiones)</span>
+<span class="var">fair_odd_h</span> = <span class="func">round</span>(<span class="number">1.0</span> / <span class="var">p_h</span>, <span class="number">2</span>) <span class="keyword">if</span> <span class="var">p_h</span> > <span class="number">0</span> <span class="keyword">else</span> <span class="number">99.0</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Distribución Binomial: Eventos Independientes -->
+        <div class="equation-card green">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+                7. Distribución Binomial: Eventos Independientes y Conteo de Goles
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Modelado estocástico formal para variables donde cada ensayo es independiente entre sí con probabilidad de éxito constante.
+              </p>
+            </div>
+            <span class="math-tag green">Distribución Discreta</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$P(X = k) = \binom{n}{k} p^k (1 - p)^{n - k} = \frac{n!}{k!(n - k)!} p^k (1 - p)^{n - k}$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$E[X] = n \cdot p, \quad \operatorname{Var}(X) = n \cdot p \cdot (1 - p), \quad \sigma = \sqrt{n \cdot p \cdot (1 - p)}$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>n</code> Número total de ensayos independientes (ej. serie de partidos analizados).</li>
+                <li><code>p</code> Probabilidad empírica de éxito en cada ensayo individual.</li>
+                <li><code>k</code> Número de éxitos buscados (ej. cantidad de goles o partidos con victoria).</li>
+              </ul>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  modelo.py & inferential_engine.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-binom">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-binom"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">binom</span>
+<span class="keyword">import</span> <span class="var">math</span>
+
+<span class="comment"># 1. Instancia del modelo binomial (n ensayos, p probabilidad)</span>
+<span class="var">dist</span> = <span class="func">binom</span>(<span class="var">n</span>, <span class="var">p</span>)
+
+<span class="comment"># 2. Función de Masa de Probabilidad (PMF) y Acumulada (CDF)</span>
+<span class="var">prob_exacta</span> = <span class="func">float</span>(<span class="var">dist</span>.<span class="func">pmf</span>(<span class="var">k</span>))
+<span class="var">prob_acum</span>   = <span class="func">float</span>(<span class="var">dist</span>.<span class="func">cdf</span>(<span class="var">k</span>))
+
+<span class="comment"># 3. Momentos teóricos de la distribución</span>
+<span class="var">esperanza</span>   = <span class="func">float</span>(<span class="var">n</span> * <span class="var">p</span>)
+<span class="var">varianza</span>    = <span class="func">float</span>(<span class="var">n</span> * <span class="var">p</span> * (<span class="number">1.0</span> - <span class="var">p</span>))
+<span class="var">sigma</span>       = <span class="var">math</span>.<span class="func">sqrt</span>(<span class="var">varianza</span>)</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Confiabilidad: Desviación Estándar y Prueba de Hipótesis Bilateral -->
+        <div class="equation-card purple">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                8. Validación de Confiabilidad: Desviación Estándar (s) & Contraste Bilateral de Localía
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Demostración inferencial de baja dispersión sobre 3.800 partidos y rechazo de la hipótesis nula de ausencia de ventaja local.
+              </p>
+            </div>
+            <span class="math-tag purple">Inferencia Paramétrica</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$s = \sqrt{\frac{1}{N - 1} \sum_{i=1}^{N} (x_i - \bar{x})^2}, \quad Z = \frac{\hat{p} - p_0}{\sqrt{\frac{p_0(1 - p_0)}{N}}}$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$H_0: p = 0.5 \quad \text{vs} \quad H_1: p \neq 0.5, \quad \text{IC}_{95\%} = \hat{p} \pm 1.96 \sqrt{\frac{\hat{p}(1 - \hat{p})}{N}}$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>s</code> Desviación estándar muestral. Valores pequeños ($s \approx 1.2$) denotan confiabilidad de las estimaciones.</li>
+                <li><code>Z = -5.59</code> Estadístico de prueba tipificado; con $p < 0.0001$ se rechaza $H_0$.</li>
+                <li><code>p_0 = 0.5</code> Parámetro nulo de equidad entre victoria local y no ganar.</li>
+              </ul>
+            </div>
+
+            <!-- Código Python -->
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  modelo.py & inferential_engine.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-reliability">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-reliability"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">norm</span>
+<span class="keyword">import</span> <span class="var">math</span>
+
+<span class="comment"># 1. Desviación estándar muestral</span>
+<span class="var">s_goles_local</span> = <span class="func">float</span>(<span class="var">df</span>[<span class="string">'FTHG'</span>].<span class="func">std</span>())
+
+<span class="comment"># 2. Prueba de hipótesis bilateral (H0: p = 0.5)</span>
+<span class="var">p_hat</span> = (<span class="var">df</span>[<span class="string">'FTR'</span>] == <span class="string">'H'</span>).<span class="func">mean</span>()
+<span class="var">se_0</span>  = <span class="var">math</span>.<span class="func">sqrt</span>((<span class="number">0.5</span> * <span class="number">0.5</span>) / <span class="var">N</span>)
+<span class="var">z_stat</span> = (<span class="var">p_hat</span> - <span class="number">0.5</span>) / <span class="var">se_0</span>
+<span class="var">p_value</span> = <span class="number">2.0</span> * (<span class="number">1.0</span> - <span class="var">norm</span>.<span class="func">cdf</span>(<span class="func">abs</span>(<span class="var">z_stat</span>)))</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Distribución de Poisson (Larson & Farber Cap. 4) -->
+        <div class="equation-card cyan">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                9. Distribución de Poisson: Conteo en Intervalos Continuos (Larson & Farber Cap. 4)
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Modela eventos raros en intervalos de tiempo continuo (90 minutos) y define el rango usual $[\mu - 2\sigma, \mu + 2\sigma]$.
+              </p>
+            </div>
+            <span class="math-tag blue">Larson & Farber Cap. 4</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$P(x) = \frac{\mu^x e^{-\mu}}{x!}, \quad \operatorname{Var}(x) = \sigma^2 = \mu, \quad \sigma = \sqrt{\mu}$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$\text{Rango Usual} = [\mu - 2\sigma, \; \mu + 2\sigma], \quad x \notin [\mu \pm 2\sigma] \iff \text{Inusual } (P < 0.05)$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>\mu</code> Media de ocurrencias en el intervalo continuo (ej. $\mu = 1.45$ goles locales por partido).</li>
+                <li><code>x</code> Conteo discreto de eventos observados ($x = 0, 1, 2, \dots$).</li>
+                <li><code>\sigma = \sqrt{\mu}</code> Desviación estándar exacta según la identidad de Poisson.</li>
+                <li><code>\text{Rango Usual}</code> Criterio de Larson & Farber: valores a más de 2 desv. estándar son inusuales.</li>
+              </ul>
+            </div>
+
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/analytics/inferential_engine.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-poisson-larson">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-poisson-larson"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">poisson</span>
+<span class="keyword">import</span> <span class="var">math</span>
+
+<span class="keyword">def</span> <span class="func">calculate_poisson</span>(<span class="var">mu</span>: <span class="func">float</span>, <span class="var">x</span>: <span class="func">int</span>):
+    <span class="var">dist</span> = <span class="func">poisson</span>(<span class="var">mu</span>)
+    <span class="var">variance</span> = <span class="var">mu</span>
+    <span class="var">std_dev</span>  = <span class="var">math</span>.<span class="func">sqrt</span>(<span class="var">mu</span>)
+    
+    <span class="comment"># Rango usual Larson & Farber [mu - 2*sigma, mu + 2*sigma]</span>
+    <span class="var">usual_min</span> = <span class="func">max</span>(<span class="number">0.0</span>, <span class="var">mu</span> - <span class="number">2.0</span> * <span class="var">std_dev</span>)
+    <span class="var">usual_max</span> = <span class="var">mu</span> + <span class="number">2.0</span> * <span class="var">std_dev</span>
+    <span class="var">is_usual</span>  = <span class="func">bool</span>(<span class="var">usual_min</span> <= <span class="var">x</span> <= <span class="var">usual_max</span>)
+    
+    <span class="keyword">return</span> {<span class="string">"pmf"</span>: <span class="var">dist</span>.<span class="func">pmf</span>(<span class="var">x</span>), <span class="string">"std_dev"</span>: <span class="var">std_dev</span>, <span class="string">"is_usual"</span>: <span class="var">is_usual</span>}</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. Distribución Normal Estándar y Valor Z (Larson & Farber Cap. 7) -->
+        <div class="equation-card purple">
+          <div class="equation-header">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                10. Distribución Normal Estándar, Valor z y 4 Casos de Área (Larson & Farber Cap. 7)
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                Tipificación z y cálculo de áreas bajo la curva estándar para evaluación de rendimiento deportivo.
+              </p>
+            </div>
+            <span class="math-tag purple">Larson & Farber Cap. 7</span>
+          </div>
+
+          <div class="equation-split">
+            <div class="formula-panel">
+              <div class="formula-box">
+                <span class="katex-render">$$z = \frac{X - \mu}{\sigma}, \quad f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x - \mu}{\sigma}\right)^2}$$</span>
+              </div>
+              <div class="formula-box" style="min-height: 60px;">
+                <span class="katex-render">$$\text{Caso 1: } P(Z < z) = \Phi(z), \quad \text{Caso 2: } P(Z > z) = 1 - \Phi(z)$$</span>
+                <span class="katex-render">$$\text{Caso 3: } P(-|z| < Z < |z|) = 2\Phi(|z|) - 1, \quad \text{Caso 4: } 2(1 - \Phi(|z|))$$</span>
+              </div>
+              <ul class="var-definition-list">
+                <li><code>z</code> Número de desviaciones estándar que separan a $X$ de la media $\mu$.</li>
+                <li><code>\text{Regla Empírica}</code> 68.26% en $\mu \pm 1\sigma$, 95.44% en $\mu \pm 2\sigma$, 99.73% en $\mu \pm 3\sigma$.</li>
+                <li><code>\Phi(z)</code> Función de distribución acumulada (CDF) de la normal estándar $N(0, 1)$.</li>
+              </ul>
+            </div>
+
+            <div class="code-panel">
+              <div class="code-header">
+                <span class="code-file-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  src/analytics/inferential_engine.py
+                </span>
+                <button class="btn-copy-code" data-code-id="code-normal-larson">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <pre class="code-pre" id="code-normal-larson"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">norm</span>
+
+<span class="keyword">def</span> <span class="func">calculate_normal</span>(<span class="var">value</span>: <span class="func">float</span>, <span class="var">mean</span>: <span class="func">float</span>, <span class="var">std_dev</span>: <span class="func">float</span>):
+    <span class="var">z</span> = (<span class="var">value</span> - <span class="var">mean</span>) / <span class="var">std_dev</span>
+    <span class="comment"># 4 Casos de Larson & Farber</span>
+    <span class="var">area_left</span>  = <span class="func">float</span>(<span class="var">norm</span>.<span class="func">cdf</span>(<span class="var">z</span>))            <span class="comment"># Caso 1: P(Z < z)</span>
+    <span class="var">area_right</span> = <span class="func">float</span>(<span class="number">1.0</span> - <span class="var">area_left</span>)       <span class="comment"># Caso 2: P(Z > z)</span>
+    <span class="var">area_between</span> = <span class="func">float</span>(<span class="number">2.0</span> * <span class="var">norm</span>.<span class="func">cdf</span>(<span class="func">abs</span>(<span class="var">z</span>)) - <span class="number">1.0</span>) <span class="comment"># Caso 3</span>
+    <span class="var">area_tails</span>   = <span class="func">float</span>(<span class="number">1.0</span> - <span class="var">area_between</span>)   <span class="comment"># Caso 4</span>
+    <span class="keyword">return</span> {<span class="string">"z_score"</span>: <span class="var">z</span>, <span class="string">"case_1"</span>: <span class="var">area_left</span>, <span class="string">"case_2"</span>: <span class="var">area_right</span>}</pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer con Acreditación Académica Completa -->
+  <footer class="app-footer">
+    <p style="font-weight: 700; color: var(--text-primary);">Institución Universitaria Colegio Mayor del Cauca — Facultad de Ingeniería (Ingeniería Informática)</p>
+    <p style="margin-top: 0.25rem; color: #93c5fd; font-size: 0.8rem;">
+      <strong>Articulación Académica Interdisciplinar (2026):</strong><br>
+      • Asignatura 1: <strong>Estadística Inferencial</strong> — Docente: <strong>Edith Janeth Potosí Estrada</strong><br>
+      • Asignatura 2: <strong>Electiva III: Introducción a la Ciencia de Datos</strong> — Docente: <strong>Carlos E. Ruiz</strong>
+    </p>
+    <p style="margin-top: 0.25rem; color: var(--text-muted); font-size: 0.78rem;">
+      Autores: José Luis Martínez, Álvaro José López Quira, Jose Aldair Torres, Cristian Samir Narváez, Joan Sebastian Mosquera y Rubén Darío Velasco
+    </p>
+    <p style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.72rem;">
+      Dataset: Football-Data.co.uk Primera División de España (SP1, 3.800 partidos) • Motor: Python / FastAPI / Scikit-Learn • Frontend: JavaScript Vanilla / Chart.js / KaTeX
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -105,6 +105,16 @@
       font-family: 'Inter', system-ui, sans-serif;
       font-size: 0.9rem;
     }
+    .warning-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid #d97706;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      border-radius: 0 6px 6px 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.88rem;
+    }
     .btn-print {
       position: fixed;
       top: 1.5rem;
@@ -119,6 +129,9 @@
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     .btn-print:hover { background: #1d4ed8; }
     @media print {
@@ -130,69 +143,100 @@
 </head>
 <body>
 
-  <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar en PDF</button>
+  <button class="btn-print" onclick="window.print()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+    <span>Imprimir / Guardar en PDF</span>
+  </button>
 
   <article class="document-page">
     <h1>Estimación de Probabilidades y Predicción de Resultados en LaLiga Primera División</h1>
     <p style="font-family: 'Inter', sans-serif; color: #64748b; font-weight: 600; margin-top: -0.5rem;">
-      Informe Técnico de Modelado Estadístico, Inferencia Paramétrica y Simulación Predictiva
+      Informe Técnico Final de Modelado Estadístico, Ciencia de Datos e Inferencia Predictiva
     </p>
 
     <div class="meta-box">
       <div class="meta-grid">
         <div><strong>Institución:</strong> Institución Universitaria Colegio Mayor del Cauca</div>
-        <div><strong>Docente Titular:</strong> Edith Janeth Potosí Estrada</div>
         <div><strong>Facultad:</strong> Facultad de Ingeniería (Ingeniería Informática)</div>
-        <div><strong>Asignatura:</strong> Estadística Inferencial (Ciclo 2026)</div>
+        <div><strong>Asignatura 1:</strong> Estadística Inferencial (Ciclo 2026)</div>
+        <div><strong>Docente Titular 1:</strong> Edith Janeth Potosí Estrada</div>
+        <div><strong>Asignatura 2:</strong> Electiva III: Introducción a la Ciencia de Datos</div>
+        <div><strong>Docente Titular 2:</strong> Carlos E. Ruiz</div>
       </div>
       <div class="authors-list">
-        <strong>Equipo de Autores / Investigadores:</strong><br>
+        <strong>Equipo de Autores / Investigadores (6 Integrantes):</strong><br>
         1. José Luis Martínez &nbsp;•&nbsp; 2. Álvaro José López Quira &nbsp;•&nbsp; 3. Jose Aldair Torres<br>
         4. Cristian Samir Narváez &nbsp;•&nbsp; 5. Joan Sebastian Mosquera &nbsp;•&nbsp; 6. Rubén Darío Velasco
       </div>
     </div>
 
-    <h2>1. Introducción y Alcance</h2>
+    <h2>1. Introducción, Alcance y Articulación Académica Interdisciplinar</h2>
     <p>
-      El presente proyecto desarrolla una herramienta analítica integral basada en estadística inferencial y distribuciones de probabilidad para modelar datos históricos reales de <strong>LaLiga Primera División de España</strong> (10 temporadas consecutivas, 2016/17 a 2025/26, 3.800 partidos oficiales ordenados cronológicamente).
+      El presente proyecto articula la <strong>Estadística Inferencial</strong> y la cátedra de <strong>Electiva III: Introducción a la Ciencia de Datos</strong> para modelar el rendimiento atlético en <strong>LaLiga Primera División de España</strong> (10 temporadas consecutivas, 2016/17 a 2025/26, 3.800 partidos oficiales consolidados sin filtración temporal).
     </p>
     <p>
-      La competición opera bajo el formato de <strong>todos contra todos por puntos</strong> (38 jornadas de 10 partidos, 380 partidos por temporada; 3 puntos por victoria, 1 por empate). El sistema evalúa exclusivamente estadísticas colectivas por club y partido a partir de la fuente <em>Football-Data.co.uk</em>, tras verificar éticamente los permisos del archivo <code>robots.txt</code>.
+      La competición opera bajo el formato regular de <strong>todos contra todos por puntos a doble vuelta</strong> (38 jornadas de 10 partidos, 380 encuentros anuales; 3 puntos por victoria, 1 por empate). La recopilación ética de los datos se validó mediante el archivo <code>robots.txt</code> de <em>Football-Data.co.uk</em>. Los valores atípicos (outliers) correspondientes a goleadas extremas (6-1, 6-2, 6-4, 8-2) se conservaron deliberadamente por constituir hechos deportivos verídicos que definen la cola derecha de la varianza natural del fútbol.
     </p>
 
-    <h2>2. Marco Teórico y Fundamentos Estadísticos</h2>
+    <h2>2. Marco Teórico y Distribuciones de Probabilidad (Larson & Farber Cap. 4 & 7)</h2>
     <p>
-      El espacio muestral para un encuentro entre el local $A$ y el visitante $B$ se define como:
+      El espacio muestral del desenlace de un partido se define como $\Omega = \{V_A, E, V_B\}$, con $P(\Omega) = 1$.
     </p>
+
+    <h3>A. Distribución Binomial (Eventos Independientes)</h3>
     <div class="formula-box">
-      $$\Omega = \{V_A, E, V_B\}, \quad P(\Omega) = P(V_A) + P(E) + P(V_B) = 1$$
+      $$P(X = k) = \binom{n}{k} p^k q^{n - k}, \quad q = 1 - p, \quad \mu = n \cdot p, \quad \sigma^2 = n \cdot p \cdot q, \quad \sigma = \sqrt{n \cdot p \cdot q}$$
+      $$\text{Rango Usual: } [\mu - 2\sigma, \; \mu + 2\sigma]$$
     </div>
 
-    <h3>A. Distribución Binomial (Eventos Independientes y Conteo de Goles)</h3>
+    <h3>B. Distribución Hipergeométrica y Criterio de Aproximación Binomial</h3>
     <p>
-      Modelado de variables con ensayos independientes y probabilidad $p$ constante a lo largo de $n$ encuentros:
-    </p>
-    <div class="formula-box">
-      $$P(X = k) = \binom{n}{k} p^k (1 - p)^{n - k}, \quad E[X] = n \cdot p, \quad \sigma = \sqrt{n \cdot p \cdot (1 - p)}$$
-    </div>
-
-    <h3>B. Distribución Hipergeométrica (Muestreo Finito sin Reemplazo)</h3>
-    <p>
-      Aplicada exclusivamente cuando se audita una muestra de tamaño $n$ extraída sin reposición desde una población finita $N$ con $r$ éxitos:
+      Muestreo finito sin reposición de tamaño $n$ sobre población $N$ con $r$ éxitos:
     </p>
     <div class="formula-box">
       $$P(X = x \mid N, r, n) = \frac{\binom{r}{x} \binom{N - r}{n - x}}{\binom{N}{n}}, \quad \operatorname{Var}(X) = n \frac{r}{N} \left(1 - \frac{r}{N}\right) \left(\frac{N - n}{N - 1}\right)$$
     </div>
+    <p style="font-size: 0.9rem; color: #475569;">
+      <strong>Regla de Aproximación (Larson & Farber):</strong> Si $n < 0.05N$ (la muestra es inferior al 5% de la población finita), los ensayos se consideran prácticamente independientes y la distribución converge fielmente a la Binomial con $p = r/N$.
+    </p>
 
-    <h3>C. Teorema de Bayes y Validación de Confiabilidad</h3>
+    <h3>C. Distribución de Poisson (Larson & Farber Cap. 4: Variables en Intervalos Continuos)</h3>
     <p>
-      La actualización bayesiana incorpora evidencia táctica $E$:
+      Modelado de eventos discretos que ocurren a lo largo del intervalo continuo de 90 minutos de juego:
     </p>
     <div class="formula-box">
-      $$P(V_A \mid E) = \frac{P(E \mid V_A) \cdot P(V_A)}{P(E)}, \quad s = \sqrt{\frac{1}{N - 1}\sum_{i=1}^{N}(x_i - \bar{x})^2}$$
+      $$P(x) = \frac{\mu^x e^{-\mu}}{x!}, \quad \sigma^2 = \mu, \quad \sigma = \sqrt{\mu}$$
+      $$\text{Rango Usual: } [\mu - 2\sigma, \; \mu + 2\sigma]$$
     </div>
 
-    <h2>3. Desarrollo del Problema: Los 6 Roles / Integrantes</h2>
+    <h3>D. Distribución Normal Estándar y Valor Z (Larson & Farber Cap. 7)</h3>
+    <p>
+      Tipificación de rendimiento de los clubes y cálculo de los 4 Casos estándar de área bajo la curva:
+    </p>
+    <div class="formula-box">
+      $$z = \frac{X - \mu}{\sigma}, \quad \text{Regla Empírica: } 68.27\% \; (\mu \pm 1\sigma), \; 95.45\% \; (\mu \pm 2\sigma), \; 99.73\% \; (\mu \pm 3\sigma)$$
+      $$\text{Caso 1: } P(Z < z) = \Phi(z), \quad \text{Caso 2: } P(Z > z) = 1 - \Phi(z)$$
+    </div>
+
+    <h2>3. Ciencia de Datos: Respuestas a las 3 Preguntas de la Cátedra (Electiva III 25%)</h2>
+    
+    <p><strong>Pregunta 1: Factor Localía en Clubes de Élite vs Resto de la Liga</strong><br>
+    El promedio global de victoria local es de 45.5% (frente a 28.3% visitante). Sin embargo, en el Top 3 (Real Madrid, Barcelona, Atlético de Madrid), la tasa en casa alcanza un colosal <strong>74.9%</strong>, frente a un <strong>40.3%</strong> en los 28 clubes restantes.</p>
+
+    <p><strong>Pregunta 2: Medias vs Medianas de Goles y Tiros a Puerta en Victorias vs No Victorias</strong><br>
+    En victorias locales, la media de goles es 2.34 (mediana 2.0, asimetría positiva por goleadas), mientras que en no victorias desciende a 0.77 (mediana 1.0). En tiros a puerta (HST), la media es 5.62 y la mediana es 5.0 (distribución simétrica), demostrando que 5 tiros al arco constituye el umbral operativo del éxito.</p>
+
+    <p><strong>Pregunta 3: Evolución a 10 Temporadas & Anomalía COVID-19 (2020/21)</strong><br>
+    El promedio de goles por temporada se mantiene estable (~2.62 goles/partido). No obstante, durante la campaña 2020/21 (partidos a puerta cerrada sin público), el triunfo local cayó a su mínimo histórico del decenio (<strong>41.6%</strong> vs 47.9% pos-pandemia), ofreciendo un experimento natural sobre la influencia psicosocial del público.</p>
+
+    <div class="warning-box">
+      <strong>Tres Hallazgos Numéricos — Distinción entre Asociación y Causalidad:</strong><br>
+      1. Los tiros a puerta ($HST > 5$) elevan la victoria local a 65.2% ($OR = 3.86$), probando <em>asociación robusta</em>, pero no causalidad directa (la calidad del remate $xG$ media el desenlace).<br>
+      2. La ventaja al descanso ($HTR = H$) predice el 78.5% de victorias, actuando como <em>indicador de estado intermedio acumulado</em>.<br>
+      3. La reducción en 2020/21 aísla cuasi-experimentalmente que cerca del 40% del factor campo obedece a factores ambientales y de presión arbitral de la afición.
+    </div>
+
+    <h2>4. Desarrollo del Problema: Los 6 Roles / Integrantes (Inferencia Bayesiana)</h2>
     <table>
       <thead>
         <tr>
@@ -263,26 +307,32 @@
       </tbody>
     </table>
 
-    <h2>4. Resultados y Propuesta de Valor del Software</h2>
+    <h2>5. Componente Predictivo de Machine Learning</h2>
+    <p>
+      Entrenados bajo partición cronológica (80% Train 2016-2023, 20% Test Out-of-Time 2024-2026):
+    </p>
+    <ul>
+      <li><strong>Regresión Logística Multinomial:</strong> Exactitud = <strong>47.8%</strong>, F1-Score (Weighted) = <strong>0.468</strong>.</li>
+      <li><strong>Random Forest Classifier:</strong> Exactitud = <strong>48.5%</strong>, F1-Score (Weighted) = <strong>0.473</strong>.</li>
+    </ul>
+    <p style="font-size: 0.88rem; color: #475569; font-style: italic;">
+      *Aviso Metodológico de Ciencia de Datos: Las predicciones corresponden a probabilidades estimadas basadas en regularidades empíricas históricas y no a certezas deterministas.*
+    </p>
+
+    <h2>6. Validación de Confiabilidad y Significancia de la Localía</h2>
     <div class="highlight-box">
       <strong>Prueba de Hipótesis Bilateral de Localía:</strong><br>
       $H_0: p = 0.5$ frente a $H_1: p \neq 0.5$<br>
       Con $N = 3.800$ partidos, victorias locales observadas = $1.728$ ($45.47\%$), victorias visitantes = $1.074$ ($28.26\%$).<br>
       Estadístico $Z = -5.588$, $p\text{-valor} = 2.3 \times 10^{-8} < 0.0001$.<br>
-      <strong>Decisión:</strong> Se rechaza categóricamente $H_0$. El factor localía supera en un $+17.2\%$ al rendimiento foráneo.
+      Desviaciones estándar de goles: Local $s = 1.30$, Visitante $s = 1.15$.<br>
+      <strong>Decisión:</strong> Se rechaza categóricamente $H_0$. El factor localía supera en un $+17.2\%$ al rendimiento foráneo con altísima confiabilidad muestral.
     </div>
 
-    <h3>Simulación Monte Carlo de LaLiga (Proyección de Campeón 38 Jornadas)</h3>
-    <ul>
-      <li><strong>Campeón Proyectado:</strong> Real Madrid con 86.4 puntos esperados (65.2% probabilidad de título).</li>
-      <li><strong>Subcampeón:</strong> Barcelona con 80.1 puntos esperados (24.5% probabilidad).</li>
-      <li><strong>Zona Champions:</strong> Atlético de Madrid (73.2 pts) y Athletic Bilbao / Real Sociedad (62.8 pts).</li>
-    </ul>
-
-    <h2>5. Conclusiones</h2>
+    <h2>7. Conclusiones</h2>
     <ol>
-      <li><strong>Baja Dispersión Muestral:</strong> Las desviaciones estándar en goles ($s_H = 1.30$, $s_A = 1.15$) ratifican la alta estabilidad y representatividad de la muestra de 10 temporadas.</li>
-      <li><strong>Rigor Metodológico:</strong> La separación entre la Distribución Binomial (eventos independientes) y la Hipergeométrica (muestreo dependiente sin reposición) evita forzar modelos inadecuados sobre la naturaleza física de cada variable.</li>
+      <li><strong>Baja Dispersión Muestral:</strong> Las desviaciones estándar en goles ($s \approx 1.25$) ratifican la alta estabilidad y representatividad de la muestra de 10 temporadas.</li>
+      <li><strong>Rigor Metodológico:</strong> La distinción entre Binomial, Hipergeométrica (con la regla $n < 0.05N$), Poisson ($\sigma^2 = \mu$) y Normal ($Z$ y los 4 Casos) unifica los Capítulos 4 y 7 de Larson & Farber.</li>
       <li><strong>Ética y Reproducibilidad:</strong> La arquitectura garantiza cero filtración temporal (<em>no data leakage</em>) y estricto respeto a la política de <code>robots.txt</code>.</li>
     </ol>
   </article>

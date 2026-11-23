@@ -27,12 +27,16 @@ class TournamentSimulator:
             team_counts = self.df['HomeTeam'].value_counts()
             self.teams = sorted(team_counts.head(20).index.tolist())
 
-    def simulate_season(self, n_simulations: int = 500) -> Dict[str, Any]:
+    def simulate_season(self, n_simulations: int = 500, simulation_mode: str = "recent") -> Dict[str, Any]:
         """
         Ejecuta n_simulations simulaciones completas de LaLiga (380 partidos por temporada)
         y calcula la tabla de posiciones proyectada, puntos esperados y probabilidad de campeón.
+        Permite elegir entre:
+        - "recent": Basado en la forma reciente de 5 partidos mediante Machine Learning (Rolling Form)
+        - "historical": Basado en el registro histórico consolidado de 10 temporadas (3.800 partidos)
         """
         n_simulations = max(50, min(1000, int(n_simulations)))
+        simulation_mode = "historical" if simulation_mode == "historical" else "recent"
         teams = self.teams
         n_teams = len(teams)
         
@@ -42,7 +46,7 @@ class TournamentSimulator:
         for home in teams:
             for away in teams:
                 if home != away:
-                    pred = self.predictor.predict_match(home, away, simulation_mode="recent")
+                    pred = self.predictor.predict_match(home, away, simulation_mode=simulation_mode)
                     p_h = float(pred['probabilities']['home_win'])
                     p_d = float(pred['probabilities']['draw'])
                     p_a = float(pred['probabilities']['away_win'])
@@ -178,9 +182,31 @@ class TournamentSimulator:
         for rank, row in enumerate(table, start=1):
             row['rank'] = rank
 
+        mode_title = (
+            "Forma Reciente (Modelo ML - Ventana 5 Partidos)"
+            if simulation_mode == "recent"
+            else "Registro Histórico Completo (10 Temporadas / 3.800 Partidos)"
+        )
+
         return {
             "competition": "LaLiga Primera División de España",
             "format": "Todos contra todos por puntos (38 jornadas, 380 partidos)",
+            "simulation_mode": simulation_mode,
+            "mode_title": mode_title,
+            "methodology_name": "Simulación Estocástica Monte Carlo sobre 380 Partidos",
+            "methodology_description": (
+                "La proyección del torneo ejecuta una simulación Monte Carlo sobre los 380 partidos que componen "
+                "el calendario oficial a doble vuelta de los 20 clubes. En cada partido individual, el resultado "
+                "y los goles se muestrean estocásticamente a partir de las distribuciones bivariadas de Poisson (xG), "
+                "ponderadas por el modo seleccionado (" + mode_title + "). Tras iterar cientos de campeonatos completos, "
+                "se calcula el promedio esperado de puntos, victorias y la probabilidad empírica de campeonato, "
+                "clasificación a Champions League (Top 4) y descenso (puestos 18-20)."
+            ),
+            "analyzed_variables": {
+                "match_metrics": ["380 partidos por temporada", "Victorias (3 pts)", "Empates (1 pt)", "Derrotas (0 pts)"],
+                "table_metrics": ["Puntos Esperados (Pts)", "Goles a Favor (GF)", "Goles en Contra (GC)", "Diferencia de Goles (DG)"],
+                "probabilistic_metrics": ["Probabilidad de Campeón (% 1º lugar)", "Probabilidad Champions League (% Top 4)", "Riesgo de Descenso (% Puestos 18-20)"]
+            },
             "simulations_count": n_simulations,
             "projected_champion": table[0]['team'],
             "champion_probability": table[0]['champion_prob'],

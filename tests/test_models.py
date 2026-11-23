@@ -57,5 +57,38 @@ class TestMLAndPredictor(unittest.TestCase):
         total_p = probs['home_win'] + probs['draw'] + probs['away_win']
         self.assertAlmostEqual(total_p, 1.0, places=2)
 
+    def test_match_simulation_timeline(self):
+        pred = self.predictor.predict_match('Real Madrid', 'Barcelona', simulation_mode='historical')
+        self.assertIn('match_simulation', pred)
+        sim = pred['match_simulation']
+        self.assertEqual(sim['duration_seconds'], 30)
+        self.assertIn('final_score', sim)
+        self.assertIn('total_stats', sim)
+        self.assertIn('timeline', sim)
+        timeline = sim['timeline']
+        self.assertGreaterEqual(len(timeline), 10)
+
+        # Verificar evento inicial y final
+        self.assertEqual(timeline[0]['minute'], 0)
+        self.assertEqual(timeline[0]['type'], 'kickoff')
+        self.assertEqual(timeline[-1]['minute'], 90)
+        self.assertEqual(timeline[-1]['type'], 'fulltime')
+
+        # Verificar estructura de eventos
+        for ev in timeline:
+            self.assertIn('minute', ev)
+            self.assertIn('type', ev)
+            self.assertIn('title', ev)
+            self.assertIn('description', ev)
+            self.assertIn('pitch_zone', ev)
+            self.assertIn('current_home_score', ev)
+            self.assertIn('current_away_score', ev)
+            self.assertIn('stats_snapshot', ev)
+            self.assertTrue(0 <= ev['minute'] <= 90)
+
+        # Coherencia del marcador final
+        self.assertEqual(sim['final_score']['home'], timeline[-1]['current_home_score'])
+        self.assertEqual(sim['final_score']['away'], timeline[-1]['current_away_score'])
+
 if __name__ == '__main__':
     unittest.main()

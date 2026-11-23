@@ -92,8 +92,8 @@ const SportsAPI = {
     return await res.json();
   },
 
-  async simulateTournament(simulations = 200) {
-    const res = await fetch(`${API_BASE}/api/tournament/simulate?simulations=${simulations}`);
+  async simulateTournament(simulations = 200, mode = 'recent') {
+    const res = await fetch(`${API_BASE}/api/tournament/simulate?simulations=${simulations}&mode=${mode}`);
     if (!res.ok) throw new Error('Error al simular temporada');
     return await res.json();
   },

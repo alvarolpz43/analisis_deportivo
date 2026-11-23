@@ -58,6 +58,9 @@ class TestAPIRoutes(unittest.TestCase):
         self.assertIn('expected_goals', data)
         self.assertIn('top_scores', data)
         self.assertIn('head_to_head', data)
+        self.assertIn('match_simulation', data)
+        self.assertEqual(data['match_simulation']['duration_seconds'], 30)
+        self.assertGreaterEqual(len(data['match_simulation']['timeline']), 10)
 
     def test_model_metrics_endpoint(self):
         r = self.client.get('/api/model/metrics')

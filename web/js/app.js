@@ -122,7 +122,18 @@ const CustomSelectManager = {
 
     const { triggerLabel, optionsContainer, selectEl: sel } = inst;
     const selectedOpt = sel.options[sel.selectedIndex] || sel.options[0];
-    triggerLabel.textContent = selectedOpt ? selectedOpt.textContent : 'Seleccionar...';
+
+    // Mostrar escudo si la opción seleccionada es un club
+    if (selectedOpt && window.TEAM_LOGOS && window.TEAM_LOGOS[selectedOpt.value]) {
+      triggerLabel.innerHTML = `
+        <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <img class="custom-select-logo" src="${window.TEAM_LOGOS[selectedOpt.value]}" alt="">
+          <span>${selectedOpt.textContent}</span>
+        </span>
+      `;
+    } else {
+      triggerLabel.textContent = selectedOpt ? selectedOpt.textContent : 'Seleccionar...';
+    }
 
     optionsContainer.innerHTML = '';
     Array.from(sel.options).forEach(opt => {
@@ -132,8 +143,16 @@ const CustomSelectManager = {
       if (opt.disabled) item.classList.add('disabled');
       item.dataset.value = opt.value;
 
+      let badgeHtml = '';
+      if (window.TEAM_LOGOS && window.TEAM_LOGOS[opt.value]) {
+        badgeHtml = `<img class="custom-select-logo" src="${window.TEAM_LOGOS[opt.value]}" alt="">`;
+      }
+
       item.innerHTML = `
-        <span class="option-text">${opt.textContent}</span>
+        <span class="option-text" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          ${badgeHtml}
+          <span>${opt.textContent}</span>
+        </span>
         <svg class="ui-icon option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
@@ -504,6 +523,25 @@ function setupTournamentSimulator() {
   const btn = document.getElementById('btn-run-tournament-sim');
   if (!btn) return;
 
+  const modeSelect = document.getElementById('select-tournament-mode');
+  if (modeSelect) {
+    modeSelect.addEventListener('change', () => {
+      const mode = modeSelect.value;
+      const methText = document.getElementById('tournament-methodology-text');
+      if (methText) {
+        if (mode === 'historical') {
+          methText.innerHTML = `
+            <strong>Modo Registro Histórico (10 Temporadas / 3.800 Partidos):</strong> Proyecta cada uno de los 380 partidos del calendario oficial utilizando las frecuencias absolutas y parámetros de Poisson derivados de la base de datos histórica consolidada (2016-2026), incluyendo el récord directo mutuo en cada feudo. Cada partido individual otorga <strong>3 puntos por victoria, 1 por empate y 0 por derrota</strong>.
+          `;
+        } else {
+          methText.innerHTML = `
+            <strong>Modo Forma Reciente (Modelos ML - 5 Partidos):</strong> Proyecta la temporada utilizando la ventana móvil reciente de 5 partidos para cada club (<code>gf_5, ga_5, hst_5, pts_5</code>), ponderada por los modelos de Regresión Logística y Random Forest combinados con la tasa Poisson. Refleja el momento competitivo contemporáneo de cada club en el campeonato.
+          `;
+        }
+      }
+    });
+  }
+
   btn.addEventListener('click', async () => {
     const origHtml = btn.innerHTML;
     btn.disabled = true;
@@ -513,7 +551,8 @@ function setupTournamentSimulator() {
     `;
 
     try {
-      const data = await SportsAPI.simulateTournament(250);
+      const mode = document.getElementById('select-tournament-mode')?.value || 'recent';
+      const data = await SportsAPI.simulateTournament(250, mode);
       
       // Actualizar Podio
       if (data.standings && data.standings.length >= 3) {
@@ -521,22 +560,25 @@ function setupTournamentSimulator() {
         const c2 = data.standings[1];
         const c3 = data.standings[2];
 
-        document.getElementById('podium-champ-team').textContent = c1.team;
+        const logoH = typeof getTeamLogo === 'function' ? getTeamLogo : (t => `assets/logos/${t.toLowerCase().replace(/ /g, '_')}.png`);
+
+        document.getElementById('podium-champ-team').innerHTML = `<img class="table-team-logo" src="${logoH(c1.team)}" alt=""> ${c1.team}`;
         document.getElementById('podium-champ-prob').textContent = `${c1.champion_prob}%`;
         document.getElementById('podium-champ-pts').textContent = `${c1.points} Pts Esperados (${c1.goal_diff > 0 ? '+' : ''}${c1.goal_diff} DG)`;
 
-        document.getElementById('podium-2nd-team').textContent = c2.team;
+        document.getElementById('podium-2nd-team').innerHTML = `<img class="table-team-logo" src="${logoH(c2.team)}" alt=""> ${c2.team}`;
         document.getElementById('podium-2nd-prob').textContent = `${c2.champion_prob}%`;
         document.getElementById('podium-2nd-pts').textContent = `${c2.points} Pts Esperados`;
 
-        document.getElementById('podium-3rd-team').textContent = c3.team;
+        document.getElementById('podium-3rd-team').innerHTML = `<img class="table-team-logo" src="${logoH(c3.team)}" alt=""> ${c3.team}`;
         document.getElementById('podium-3rd-prob').textContent = `${c3.champion_prob}%`;
         document.getElementById('podium-3rd-pts').textContent = `${c3.points} Pts Esperados`;
       }
 
-      // Llenar tabla de posiciones
+      // Llenar tabla de posiciones con escudos
       const tbody = document.getElementById('tournament-standings-body');
       tbody.innerHTML = '';
+      const getLogo = typeof getTeamLogo === 'function' ? getTeamLogo : (t => `assets/logos/${t.toLowerCase().replace(/ /g, '_')}.png`);
       data.standings.forEach(row => {
         const tr = document.createElement('tr');
         let rankClass = '';
@@ -545,7 +587,12 @@ function setupTournamentSimulator() {
 
         tr.innerHTML = `
           <td class="rank-cell ${rankClass}"><strong>${row.rank}</strong></td>
-          <td><strong>${row.team}</strong></td>
+          <td>
+            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+              <img class="table-team-logo" src="${getLogo(row.team)}" alt="${row.team}">
+              <strong>${row.team}</strong>
+            </span>
+          </td>
           <td>${row.matches}</td>
           <td><strong style="color: #60a5fa;">${row.points}</strong></td>
           <td>${row.wins}</td>
@@ -763,6 +810,7 @@ function populateTeamSelectors() {
   CustomSelectManager.init(awaySelect, { searchable: true, placeholder: 'Seleccionar Visitante...' });
   CustomSelectManager.init(document.getElementById('select-simulation-mode'));
   CustomSelectManager.init(document.getElementById('select-bayesian-condition'));
+  CustomSelectManager.init(document.getElementById('select-tournament-mode'));
 
   homeSelect.addEventListener('change', () => {
     if (homeSelect.value === awaySelect.value) {
@@ -807,6 +855,17 @@ function updateSelectOptionsDisabled(homeSelect, awaySelect) {
 
   CustomSelectManager.update(homeSelect);
   CustomSelectManager.update(awaySelect);
+
+  // Sincronizar escudos y nombres del marcador en vivo
+  const logoFn = typeof getTeamLogo === 'function' ? getTeamLogo : (t => `assets/logos/${t.toLowerCase().replace(/ /g, '_')}.png`);
+  const hCrest = document.getElementById('sim-home-crest');
+  const aCrest = document.getElementById('sim-away-crest');
+  const hName = document.getElementById('sim-home-name');
+  const aName = document.getElementById('sim-away-name');
+  if (hCrest) hCrest.src = logoFn(hVal);
+  if (aCrest) aCrest.src = logoFn(aVal);
+  if (hName) hName.textContent = hVal;
+  if (aName) aName.textContent = aVal;
 }
 
 function setupPredictor() {
@@ -829,115 +888,150 @@ async function runPrediction() {
 
   const resultContainer = document.getElementById('predict-result-container');
   try {
+    // Ocultar resultados previos mientras corre la simulación en vivo
+    if (resultContainer) resultContainer.style.display = 'none';
+
     const pred = await SportsAPI.predictMatch(homeTeam, awayTeam, cond, simMode);
 
-    resultContainer.style.display = 'block';
-
-    // Badge del modo de simulación
-    const modeBadge = document.getElementById('badge-sim-mode');
-    if (pred.simulation_mode === 'historical') {
-      modeBadge.textContent = 'Modo: Histórico 10 Temporadas & Cara a Cara';
-      modeBadge.style.background = 'rgba(59, 130, 246, 0.15)';
-      modeBadge.style.color = '#60a5fa';
+    // Si está disponible el simulador en vivo, iniciar la experiencia visual de 30 segundos
+    if (window.LiveMatchSimulator && pred.match_simulation) {
+      window.LiveMatchSimulator.start(pred, (finishedPred) => {
+        renderPredictionResults(finishedPred || pred);
+      });
     } else {
-      modeBadge.textContent = 'Modo: Forma Reciente (ML 5 Partidos)';
-      modeBadge.style.background = 'rgba(16, 185, 129, 0.15)';
-      modeBadge.style.color = '#34d399';
+      renderPredictionResults(pred);
     }
-
-    // Barra de probabilidades animada
-    const barH = document.getElementById('bar-home');
-    const barD = document.getElementById('bar-draw');
-    const barA = document.getElementById('bar-away');
-
-    const pH = pred.probabilities.pct_home_win;
-    const pD = pred.probabilities.pct_draw;
-    const pA = pred.probabilities.pct_away_win;
-
-    barH.style.width = `${pH}%`;
-    barH.textContent = `1 (${homeTeam}) ${pH}%`;
-
-    barD.style.width = `${pD}%`;
-    barD.textContent = `X (Empate) ${pD}%`;
-
-    barA.style.width = `${pA}%`;
-    barA.textContent = `2 (${awayTeam}) ${pA}%`;
-
-    // Cuotas Justas (Fair Odds)
-    document.getElementById('fair-odd-home').textContent = pred.fair_odds.home_win;
-    document.getElementById('fair-odd-draw').textContent = pred.fair_odds.draw;
-    document.getElementById('fair-odd-away').textContent = pred.fair_odds.away_win;
-
-    // Goles Esperados (Poisson xG)
-    document.getElementById('xg-home').textContent = pred.expected_goals.home_xG;
-    document.getElementById('xg-away').textContent = pred.expected_goals.away_xG;
-    document.getElementById('xg-total').textContent = pred.expected_goals.total_xG;
-    document.getElementById('xg-over25').textContent = `${pred.expected_goals.pct_over_2_5}%`;
-
-    // Top Marcadores
-    const scoresContainer = document.getElementById('top-scores-list');
-    scoresContainer.innerHTML = '';
-    pred.top_scores.forEach(s => {
-      const chip = document.createElement('div');
-      chip.className = 'stat-pill';
-      chip.innerHTML = `<strong>${s.score}</strong> (${s.pct}%)`;
-      scoresContainer.appendChild(chip);
-    });
-
-    // Desglose Histórico Cara a Cara (Head to Head)
-    if (pred.head_to_head) {
-      const h2h = pred.head_to_head;
-      const direct = h2h.direct_at_venue;
-      document.getElementById('h2h-total-matches-label').textContent = `${direct.total_matches} partidos en este estadio (${h2h.total_mutual_matches} mutuos en 10 años)`;
-      document.getElementById('h2h-venue-label').textContent = `En estadio de ${homeTeam}`;
-      document.getElementById('h2h-direct-record').textContent = `${direct.home_wins} Victoria(s) / ${direct.draws} Empate(s) / ${direct.away_wins} Derrota(s)`;
-      document.getElementById('h2h-direct-goals').textContent = `Goles prom: ${direct.home_goals_avg} vs ${direct.away_goals_avg}`;
-
-      const hRec = h2h.home_team_10y_home_record;
-      document.getElementById('h2h-home-10y-label').textContent = `${homeTeam} en casa (10 años)`;
-      document.getElementById('h2h-home-10y-pct').textContent = `${hRec.win_pct}% Victorias`;
-      document.getElementById('h2h-home-10y-goals').textContent = `Goles: ${hRec.gf_avg} a favor / ${hRec.ga_avg} en contra`;
-
-      const aRec = h2h.away_team_10y_away_record;
-      document.getElementById('h2h-away-10y-label').textContent = `${awayTeam} fuera (10 años)`;
-      document.getElementById('h2h-away-10y-pct').textContent = `${aRec.win_pct}% Victorias`;
-      document.getElementById('h2h-away-10y-goals').textContent = `Goles: ${aRec.gf_avg} a favor / ${aRec.ga_avg} en contra`;
-
-      // Lista de últimos enfrentamientos
-      const encContainer = document.getElementById('h2h-encounters-list');
-      encContainer.innerHTML = '';
-      if (h2h.recent_encounters && h2h.recent_encounters.length > 0) {
-        h2h.recent_encounters.forEach(m => {
-          const item = document.createElement('div');
-          item.className = 'h2h-match-item';
-          const badgeClass = m.result.toLowerCase();
-          item.innerHTML = `
-            <span style="color: var(--text-muted);">${m.date} (Temp ${m.season})</span>
-            <span><strong>${m.home}</strong> <span style="color: var(--accent-cyan); font-weight: 700;">${m.score}</span> <strong>${m.away}</strong></span>
-            <span class="badge-result ${badgeClass}">${m.result}</span>
-          `;
-          encContainer.appendChild(item);
-        });
-      } else {
-        encContainer.innerHTML = '<div style="padding: 0.75rem; color: var(--text-muted); font-size: 0.85rem;">No se registran enfrentamientos previos en las 10 temporadas.</div>';
-      }
-    }
-
-    // Condición Bayesiana aplicada
-    const condAlert = document.getElementById('prediction-condition-alert');
-    if (pred.applied_condition) {
-      condAlert.style.display = 'block';
-      condAlert.textContent = `Actualización Bayesiana Aplicada: ${pred.applied_condition}`;
-    } else {
-      condAlert.style.display = 'none';
-    }
-
-    // Scroll suave hacia los resultados
-    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
   } catch (err) {
     alert(err.message);
   }
+}
+
+function renderPredictionResults(pred) {
+  const resultContainer = document.getElementById('predict-result-container');
+  if (!resultContainer) return;
+
+  resultContainer.style.display = 'block';
+
+  const homeTeam = pred.home_team;
+  const awayTeam = pred.away_team;
+
+  // Badge del modo de simulación
+  const modeBadge = document.getElementById('badge-sim-mode');
+  if (pred.simulation_mode === 'historical') {
+    modeBadge.textContent = 'Modo: Histórico 10 Temporadas & Cara a Cara';
+    modeBadge.style.background = 'rgba(59, 130, 246, 0.15)';
+    modeBadge.style.color = '#60a5fa';
+  } else {
+    modeBadge.textContent = 'Modo: Forma Reciente (ML 5 Partidos)';
+    modeBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+    modeBadge.style.color = '#34d399';
+  }
+
+  // Marcador Estocástico Simulado (Monte Carlo)
+  if (pred.sampled_score) {
+    const alertScore = document.getElementById('label-sampled-score');
+    const alertProb = document.getElementById('label-sampled-prob');
+    if (alertScore) alertScore.textContent = pred.sampled_score.score;
+    if (alertProb) alertProb.textContent = `Probabilidad Poisson Bivariada: ${pred.sampled_score.pct}% (Muestreo Estocástico)`;
+  }
+
+  // Barra de probabilidades animada con escudos
+  const barH = document.getElementById('bar-home');
+  const barD = document.getElementById('bar-draw');
+  const barA = document.getElementById('bar-away');
+
+  const pH = pred.probabilities.pct_home_win;
+  const pD = pred.probabilities.pct_draw;
+  const pA = pred.probabilities.pct_away_win;
+
+  const logoFn = typeof getTeamLogo === 'function' ? getTeamLogo : (t => `assets/logos/${t.toLowerCase().replace(/ /g, '_')}.png`);
+
+  barH.style.width = `${pH}%`;
+  barH.innerHTML = `<img class="table-team-logo" src="${logoFn(homeTeam)}" alt=""> 1 (${homeTeam}) ${pH}%`;
+
+  barD.style.width = `${pD}%`;
+  barD.textContent = `X (Empate) ${pD}%`;
+
+  barA.style.width = `${pA}%`;
+  barA.innerHTML = `<img class="table-team-logo" src="${logoFn(awayTeam)}" alt=""> 2 (${awayTeam}) ${pA}%`;
+
+  // Cuotas Justas (Fair Odds)
+  document.getElementById('fair-odd-home').textContent = pred.fair_odds.home_win;
+  document.getElementById('fair-odd-draw').textContent = pred.fair_odds.draw;
+  document.getElementById('fair-odd-away').textContent = pred.fair_odds.away_win;
+
+  // Goles Esperados (Poisson xG)
+  document.getElementById('xg-home').textContent = pred.expected_goals.home_xG;
+  document.getElementById('xg-away').textContent = pred.expected_goals.away_xG;
+  document.getElementById('xg-total').textContent = pred.expected_goals.total_xG;
+  document.getElementById('xg-over25').textContent = `${pred.expected_goals.pct_over_2_5}%`;
+
+  // Top Marcadores
+  const scoresContainer = document.getElementById('top-scores-list');
+  scoresContainer.innerHTML = '';
+  pred.top_scores.forEach(s => {
+    const chip = document.createElement('div');
+    chip.className = 'stat-pill';
+    chip.innerHTML = `<strong>${s.score}</strong> (${s.pct}%)`;
+    scoresContainer.appendChild(chip);
+  });
+
+  // Desglose Histórico Cara a Cara (Head to Head)
+  if (pred.head_to_head) {
+    const h2h = pred.head_to_head;
+    const direct = h2h.direct_at_venue;
+    document.getElementById('h2h-total-matches-label').textContent = `${direct.total_matches} partidos en este estadio (${h2h.total_mutual_matches} mutuos en 10 años)`;
+    document.getElementById('h2h-venue-label').textContent = `En estadio de ${homeTeam}`;
+    document.getElementById('h2h-direct-record').textContent = `${direct.home_wins} Victoria(s) / ${direct.draws} Empate(s) / ${direct.away_wins} Derrota(s)`;
+    document.getElementById('h2h-direct-goals').textContent = `Goles prom: ${direct.home_goals_avg} vs ${direct.away_goals_avg}`;
+
+    const hRec = h2h.home_team_10y_home_record;
+    document.getElementById('h2h-home-10y-label').textContent = `${homeTeam} en casa (10 años)`;
+    document.getElementById('h2h-home-10y-pct').textContent = `${hRec.win_pct}% Victorias`;
+    document.getElementById('h2h-home-10y-goals').textContent = `Goles: ${hRec.gf_avg} a favor / ${hRec.ga_avg} en contra`;
+
+    const aRec = h2h.away_team_10y_away_record;
+    document.getElementById('h2h-away-10y-label').textContent = `${awayTeam} fuera (10 años)`;
+    document.getElementById('h2h-away-10y-pct').textContent = `${aRec.win_pct}% Victorias`;
+    document.getElementById('h2h-away-10y-goals').textContent = `Goles: ${aRec.gf_avg} a favor / ${aRec.ga_avg} en contra`;
+
+    // Lista de últimos enfrentamientos
+    const encContainer = document.getElementById('h2h-encounters-list');
+    encContainer.innerHTML = '';
+    if (h2h.recent_encounters && h2h.recent_encounters.length > 0) {
+      h2h.recent_encounters.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'h2h-match-item';
+        const badgeClass = m.result.toLowerCase();
+        item.innerHTML = `
+          <span style="color: var(--text-muted);">${m.date} (Temp ${m.season})</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <img class="table-team-logo" src="${logoFn(m.home)}" alt="">
+            <strong>${m.home}</strong>
+            <span style="color: var(--accent-cyan); font-weight: 700; margin: 0 0.3rem;">${m.score}</span>
+            <img class="table-team-logo" src="${logoFn(m.away)}" alt="">
+            <strong>${m.away}</strong>
+          </span>
+          <span class="badge-result ${badgeClass}">${m.result}</span>
+        `;
+        encContainer.appendChild(item);
+      });
+    } else {
+      encContainer.innerHTML = '<div style="padding: 0.75rem; color: var(--text-muted); font-size: 0.85rem;">No se registran enfrentamientos previos en las 10 temporadas.</div>';
+    }
+  }
+
+  // Condición Bayesiana aplicada
+  const condAlert = document.getElementById('prediction-condition-alert');
+  if (pred.applied_condition) {
+    condAlert.style.display = 'block';
+    condAlert.textContent = `Actualización Bayesiana Aplicada: ${pred.applied_condition}`;
+  } else {
+    condAlert.style.display = 'none';
+  }
+
+  // Scroll suave hacia los resultados analíticos
+  resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 async function loadMLMetrics() {
@@ -1033,6 +1127,7 @@ async function loadAuditorTable() {
 
     const tbody = document.getElementById('auditor-tbody');
     tbody.innerHTML = '';
+    const logoFn = typeof getTeamLogo === 'function' ? getTeamLogo : (t => `assets/logos/${t.toLowerCase().replace(/ /g, '_')}.png`);
 
     data.matches.forEach(m => {
       const tr = document.createElement('tr');
@@ -1040,8 +1135,18 @@ async function loadAuditorTable() {
       tr.innerHTML = `
         <td>${m.Date}</td>
         <td>Temp ${m.Temporada}</td>
-        <td><strong>${m.HomeTeam}</strong></td>
-        <td><strong>${m.AwayTeam}</strong></td>
+        <td>
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <img class="table-team-logo" src="${logoFn(m.HomeTeam)}" alt="">
+            <strong>${m.HomeTeam}</strong>
+          </span>
+        </td>
+        <td>
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <img class="table-team-logo" src="${logoFn(m.AwayTeam)}" alt="">
+            <strong>${m.AwayTeam}</strong>
+          </span>
+        </td>
         <td>${m.FTHG} - ${m.FTAG}</td>
         <td><span class="badge-result ${badgeClass}">${m.FTR}</span></td>
         <td>${m.HTHG} - ${m.HTAG} (${m.HTR})</td>

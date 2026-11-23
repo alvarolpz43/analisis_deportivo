@@ -134,10 +134,13 @@ def get_reliability():
     return engine.get_reliability_metrics()
 
 @app.get("/api/tournament/simulate")
-def simulate_tournament(simulations: int = Query(200, description="Número de simulaciones Monte Carlo")):
+def simulate_tournament(
+    simulations: int = Query(200, description="Número de simulaciones Monte Carlo"),
+    mode: str = Query("recent", description="Modo de simulación: 'recent' (ML forma reciente 5 partidos) o 'historical' (10 temporadas)")
+):
     """Simula una temporada completa de LaLiga (380 partidos) y proyecta al campeón y tabla final."""
     try:
-        return tournament_simulator.simulate_season(n_simulations=simulations)
+        return tournament_simulator.simulate_season(n_simulations=simulations, simulation_mode=mode)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

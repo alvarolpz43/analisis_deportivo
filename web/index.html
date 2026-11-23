@@ -969,6 +969,356 @@
         </button>
       </div>
 
+      <!-- ==================== ARENA DE SIMULACIÓN EN VIVO (30 SEGUNDOS) ==================== -->
+      <div id="live-match-arena" class="match-arena-wrapper" style="display: none; margin-bottom: 2rem;">
+        <div class="card match-arena-card">
+          <!-- Arena Header con Estado, Reloj y Controles -->
+          <div class="arena-header">
+            <div class="arena-title-group">
+              <span class="live-status-pill status-live" id="sim-status-badge">
+                <span class="live-pulse-dot"></span>
+                <span id="sim-status-text">EN VIVO • 1T</span>
+              </span>
+              <span class="arena-subtitle">Simulador Táctico en Tiempo Real (30s)</span>
+            </div>
+
+            <!-- Controles de Simulación: Pausar/Reanudar, Velocidad 1x/2x, Saltar al Final -->
+            <div class="arena-controls">
+              <button id="sim-btn-pause" class="btn-arena-ctrl" title="Pausar / Reanudar simulación" type="button">
+                <svg id="sim-icon-pause" class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="6" y="4" width="4" height="16"/>
+                  <rect x="14" y="4" width="4" height="16"/>
+                </svg>
+                <svg id="sim-icon-play" class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span id="sim-btn-pause-text">Pausar</span>
+              </button>
+
+              <button id="sim-btn-speed" class="btn-arena-ctrl" title="Alternar velocidad de simulación" type="button">
+                <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 19 22 12 13 5 13 19"/>
+                  <polygon points="2 19 11 12 2 5 2 19"/>
+                </svg>
+                <span id="sim-speed-val">1x</span>
+              </button>
+
+              <button id="sim-btn-skip" class="btn-arena-ctrl btn-arena-skip" title="Saltar simulación e ir directo a los resultados analíticos" type="button">
+                <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5 4 15 12 5 20 5 4"/>
+                  <line x1="19" y1="5" x2="19" y2="19"/>
+                </svg>
+                <span>Saltar al Final</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Marcador Central Digital Tipo Transmisión TV con Escudos Oficiales -->
+          <div class="tv-scoreboard">
+            <div class="team-score-side home-side">
+              <img id="sim-home-crest" class="tv-team-crest" src="assets/logos/real_madrid.png" alt="Escudo Local">
+              <div class="team-meta">
+                <div class="team-name" id="sim-home-name">Real Madrid</div>
+                <span class="team-role-tag">LOCAL</span>
+              </div>
+            </div>
+
+            <div class="center-score-display">
+              <div class="scoreboard-digits">
+                <span class="score-num" id="sim-score-home">0</span>
+                <span class="score-sep">-</span>
+                <span class="score-num" id="sim-score-away">0</span>
+              </div>
+              <div class="match-clock-box">
+                <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span class="match-clock" id="sim-clock">00:00</span>
+              </div>
+            </div>
+
+            <div class="team-score-side away-side">
+              <div class="team-meta">
+                <div class="team-name" id="sim-away-name">Barcelona</div>
+                <span class="team-role-tag">VISITANTE</span>
+              </div>
+              <img id="sim-away-crest" class="tv-team-crest" src="assets/logos/barcelona.png" alt="Escudo Visitante">
+            </div>
+          </div>
+
+          <!-- Alerta de Gol Emergente -->
+          <div id="sim-goal-alert" class="goal-alert-banner" style="display: none;">
+            <div class="goal-alert-content">
+              <img id="sim-goal-crest" class="goal-alert-crest" src="assets/logos/real_madrid.png" alt="Goleador">
+              <div class="goal-alert-text">
+                <div class="goal-title">¡GOOOOOOL!</div>
+                <div class="goal-desc" id="sim-goal-desc">Anotación del encuentro</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid: Estadio LaLiga Completo con Gradería y Feed de Comentarios -->
+          <div class="sim-grid-layout">
+            <!-- Contenedor del Estadio LaLiga -->
+            <div class="stadium-outer-wrapper">
+              <!-- Fila de Controles de Modo de Estadio (3D vs 2D) y Cámaras -->
+              <div class="stadium-view-switch-row">
+                <div class="view-switch-pill">
+                  <button id="sim-btn-view-3d" class="btn-view-switch active" type="button" title="Estadio 3D con Three.js & WebGL">
+                    <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.12 6.4-6.05-4.06a2 2 0 0 0-2.17-.05L2.9 8.04A2 2 0 0 0 2 9.71v7.6a2 2 0 0 0 .93 1.7l6.05 4.06a2 2 0 0 0 2.17.05l9.95-5.75A2 2 0 0 0 22 15.69V8.1a2 2 0 0 0-.88-1.7Z"/></svg>
+                    Estadio 3D
+                  </button>
+                  <button id="sim-btn-view-2d" class="btn-view-switch" type="button" title="Cancha 2D Táctica">
+                    <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                    2D Táctico
+                  </button>
+                </div>
+
+                <!-- Controles de Cámara 3D (Perspectivas dentro del estadio) -->
+                <div id="stadium-cam-selector-group" class="cam-switch-pill">
+                  <span class="cam-selector-label">Cámara:</span>
+                  <button id="cam-btn-broadcast" class="btn-cam-switch active" type="button" title="Cámara Oficial de Transmisión TV">
+                    📺 Transmisión
+                  </button>
+                  <button id="cam-btn-pitchside" class="btn-cam-switch btn-cam-highlight" type="button" title="¡Dentro del Estadio! A pie de campo con jugadores y tribunas">
+                    👤 A Pie de Campo (Dentro)
+                  </button>
+                  <button id="cam-btn-goalcam" class="btn-cam-switch" type="button" title="Detrás de la Portería">
+                    🥅 Detrás del Arco
+                  </button>
+                  <button id="cam-btn-aerial" class="btn-cam-switch" type="button" title="Vista Táctica Aérea Cenital">
+                    🦅 Aérea
+                  </button>
+                </div>
+
+                <!-- Botón de Sonido del Estadio -->
+                <button id="sim-btn-audio-toggle" class="btn-audio-toggle" type="button" title="Activar/Silenciar Efectos de Estadio">
+                  <svg id="audio-icon-unmuted" class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                  <span id="audio-text-label">Sonido ON</span>
+                </button>
+
+                <span id="stadium-3d-hint" class="stadium-mode-tag">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                  WebGL 3D • Arrastra para rotar 360° • Zoom con rueda
+                </span>
+              </div>
+
+              <!-- Contenedor del Estadio 3D WebGL (Three.js) -->
+              <div id="stadium-3d-wrapper" class="stadium-3d-container">
+                <canvas id="stadium-3d-canvas"></canvas>
+                <div class="stadium-3d-hud-badge">
+                  <span id="stadium-hud-cam-name">★ ESTADIO LALIGA 3D • BROADCAST • 60 FPS ★</span>
+                </div>
+              </div>
+
+              <!-- Contenedor 2D Táctico Clásico (Ocultable) -->
+              <div class="stadium-bowl" id="stadium-2d-bowl" style="display: none;">
+                <!-- Focos de Estadio / Reflectores en las 4 Esquinas -->
+                <div class="stadium-floodlight fl-nw"><div class="floodlight-beam beam-nw"></div></div>
+                <div class="stadium-floodlight fl-ne"><div class="floodlight-beam beam-ne"></div></div>
+                <div class="stadium-floodlight fl-sw"><div class="floodlight-beam beam-sw"></div></div>
+                <div class="stadium-floodlight fl-se"><div class="floodlight-beam beam-se"></div></div>
+
+                <!-- Gradería Superior (Tribuna Norte) -->
+                <div class="stadium-stand stand-north">
+                  <div class="stand-roof-trim"></div>
+                  <div class="stand-tiers">
+                    <div class="stand-tier tier-upper"></div>
+                    <div class="stand-tier tier-middle"></div>
+                    <div class="stand-tier tier-lower"></div>
+                  </div>
+                  <div class="stand-crowd-shimmer"></div>
+                </div>
+
+                <!-- Sección Central: Graderías de Fondo (Goles) + Cancha de Césped -->
+                <div class="stadium-pitch-mid-row">
+                  <!-- Gradería Lateral Oeste (Fondo Gol Local) -->
+                  <div class="stadium-stand stand-west">
+                    <div class="stand-tiers-vertical">
+                      <div class="stand-tier tier-side"></div>
+                    </div>
+                    <div class="stand-crowd-shimmer"></div>
+                  </div>
+
+                  <!-- Cancha de Fútbol con Vallas LED y Porterías 3D -->
+                  <div class="stadium-pitch-enclosure">
+                    <!-- Valla LED Publicitaria Superior -->
+                    <div class="stadium-led-board led-top">
+                      <div class="led-ticker-inner">
+                        <span>★ LALIGA EA SPORTS ★ CIENCIA DE DATOS & ESTADÍSTICA INFERENCIAL ★ TEMPORADA 2026 ★ COLEGIO MAYOR DEL CAUCA ★</span>
+                      </div>
+                    </div>
+
+                    <div class="tactical-pitch" id="tactical-pitch">
+                      <!-- Franjas de césped cortado alternado -->
+                      <div class="pitch-stripes-bg"></div>
+
+                      <!-- Porterías 3D con Redes que vibran -->
+                      <div class="pitch-goal-3d goal-left" id="goal-net-left">
+                        <div class="goal-crossbar"></div>
+                        <div class="goal-net-mesh" id="net-mesh-home"></div>
+                      </div>
+                      <div class="pitch-goal-3d goal-right" id="goal-net-right">
+                        <div class="goal-crossbar"></div>
+                        <div class="goal-net-mesh" id="net-mesh-away"></div>
+                      </div>
+
+                      <!-- Banderines de Córner -->
+                      <div class="corner-flag cf-nw"></div>
+                      <div class="corner-flag cf-ne"></div>
+                      <div class="corner-flag cf-sw"></div>
+                      <div class="corner-flag cf-se"></div>
+
+                      <!-- Líneas oficiales de juego -->
+                      <div class="pitch-half-line"></div>
+                      <div class="pitch-center-circle"></div>
+                      <div class="pitch-center-spot"></div>
+
+                      <!-- Áreas de penal y metas -->
+                      <div class="pitch-penalty-box home-box"></div>
+                      <div class="pitch-goal-area home-goal"></div>
+                      <div class="pitch-penalty-spot home-spot"></div>
+
+                      <div class="pitch-penalty-box away-box"></div>
+                      <div class="pitch-goal-area away-goal"></div>
+                      <div class="pitch-penalty-spot away-spot"></div>
+
+                      <!-- Zonas tácticas de visualización -->
+                      <div class="pitch-zone-label zone-home-def" id="lbl-home-team-side">Defensa Local</div>
+                      <div class="pitch-zone-label zone-midfield">Centro del Campo</div>
+                      <div class="pitch-zone-label zone-away-def" id="lbl-away-team-side">Defensa Visitante</div>
+
+                      <!-- Sistema de Vuelo 3D del Balón (Sombra en césped + Balón elevado) -->
+                      <div class="ball-flight-system" id="pitch-ball">
+                        <!-- Sombra sobre el césped -->
+                        <div class="ball-ground-shadow" id="ball-shadow"></div>
+                        <!-- Balón volador en el aire (se eleva y rota en arco parabólico) -->
+                        <div class="ball-flight-core" id="ball-flight">
+                          <div class="ball-leather-sphere"></div>
+                          <div class="ball-flight-trail" id="ball-trail"></div>
+                        </div>
+                      </div>
+
+                      <!-- Marcador de Zona de Acción Activa (Onda) -->
+                      <div class="action-ripple" id="pitch-action-ripple"></div>
+                    </div>
+
+                    <!-- Valla LED Publicitaria Inferior -->
+                    <div class="stadium-led-board led-bottom">
+                      <div class="led-ticker-inner reverse">
+                        <span>★ 3.800 PARTIDOS HISTÓRICOS AUDITADOS ★ PREDICCIÓN POISSON xG ★ MODELOS ML REGRESIÓN LOGÍSTICA & RANDOM FOREST ★</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Gradería Lateral Este (Fondo Gol Visitante) -->
+                  <div class="stadium-stand stand-east">
+                    <div class="stand-tiers-vertical">
+                      <div class="stand-tier tier-side"></div>
+                    </div>
+                    <div class="stand-crowd-shimmer"></div>
+                  </div>
+                </div>
+
+                <!-- Gradería Inferior (Tribuna Sur) -->
+                <div class="stadium-stand stand-south">
+                  <div class="stand-tiers">
+                    <div class="stand-tier tier-lower"></div>
+                    <div class="stand-tier tier-middle"></div>
+                    <div class="stand-tier tier-upper"></div>
+                  </div>
+                  <div class="stand-roof-trim"></div>
+                  <div class="stand-crowd-shimmer"></div>
+                </div>
+              </div>
+
+              <!-- Indicador de Posesión en Vivo -->
+              <div class="live-possession-bar-wrap" style="margin-top: 0.65rem;">
+                <div class="possession-labels">
+                  <span id="sim-poss-h-label">50% Local</span>
+                  <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Posesión de Balón</span>
+                  <span id="sim-poss-a-label">50% Visitante</span>
+                </div>
+                <div class="possession-progress-track">
+                  <div class="possession-bar-home" id="sim-poss-bar-h" style="width: 50%;"></div>
+                  <div class="possession-bar-away" id="sim-poss-bar-a" style="width: 50%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feed de Minuto a Minuto (Play-by-play) -->
+            <div class="feed-container">
+              <div class="feed-header">
+                <span class="feed-title">
+                  <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                  Relato Minuto a Minuto
+                </span>
+                <span class="feed-count-badge" id="sim-event-count">0 eventos</span>
+              </div>
+
+              <div class="feed-events-list" id="sim-events-list" aria-live="polite">
+                <!-- Los eventos se van agregando dinámicamente -->
+                <div class="feed-item feed-initial">
+                  <span class="feed-minute">00'</span>
+                  <div class="feed-body">
+                    <div class="feed-event-title">Esperando pitazo inicial...</div>
+                    <div class="feed-event-desc">Los equipos realizan el calentamiento táctico en el césped.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HUD de Estadísticas Acumuladas en Vivo -->
+          <div class="arena-stats-hud">
+            <div class="hud-stat-box">
+              <span class="hud-stat-label">Remates Totales</span>
+              <div class="hud-stat-val">
+                <span id="hud-stat-hs">0</span>
+                <span class="hud-sep">vs</span>
+                <span id="hud-stat-as">0</span>
+              </div>
+            </div>
+
+            <div class="hud-stat-box">
+              <span class="hud-stat-label">Tiros a Puerta</span>
+              <div class="hud-stat-val">
+                <span id="hud-stat-hst" style="color: var(--accent-cyan);">0</span>
+                <span class="hud-sep">vs</span>
+                <span id="hud-stat-ast" style="color: var(--accent-cyan);">0</span>
+              </div>
+            </div>
+
+            <div class="hud-stat-box">
+              <span class="hud-stat-label">Saques de Esquina</span>
+              <div class="hud-stat-val">
+                <span id="hud-stat-hc" style="color: var(--accent-amber);">0</span>
+                <span class="hud-sep">vs</span>
+                <span id="hud-stat-ac" style="color: var(--accent-amber);">0</span>
+              </div>
+            </div>
+
+            <div class="hud-stat-box">
+              <span class="hud-stat-label">Tarjetas Amarillas</span>
+              <div class="hud-stat-val">
+                <span id="hud-stat-hy" style="color: #fbbf24;">0</span>
+                <span class="hud-sep">vs</span>
+                <span id="hud-stat-ay" style="color: #fbbf24;">0</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Resultados de la Simulación -->
       <div id="predict-result-container" style="display: none; margin-bottom: 2rem;">
         <div class="card">
@@ -985,6 +1335,18 @@
                 Actualización Bayesiana Aplicada
               </div>
             </div>
+          </div>
+
+          <!-- Alerta de Marcador Estocástico Simulado (Monte Carlo) -->
+          <div id="sim-stochastic-score-alert" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg>
+              <div>
+                <span style="font-size: 0.88rem; color: #34d399; font-weight: 700;">Marcador Muestreado Estocásticamente en Simulación:</span>
+                <strong id="label-sampled-score" style="font-size: 1.05rem; color: #ffffff; background: rgba(0,0,0,0.4); padding: 0.2rem 0.6rem; border-radius: 4px; margin-left: 0.4rem;">1 - 0</strong>
+              </div>
+            </div>
+            <span id="label-sampled-prob" style="font-size: 0.82rem; color: var(--text-secondary);">Probabilidad Poisson Bivariada: 8.6%</span>
           </div>
 
           <!-- Barra animada de probabilidades -->
@@ -1141,22 +1503,131 @@
         </div>
       </div>
 
+      <!-- ==================== VARIABLES ANALIZADAS EN EL PROYECTO ==================== -->
+      <div class="card" id="card-analyzed-variables" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <h2 class="card-title" style="margin: 0;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h10"/></svg>
+            Variables Analizadas en el Proyecto (Diccionario Estadístico y Deportivo)
+          </h2>
+          <span class="brand-badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.35);">
+            Auditoría Técnica Completa
+          </span>
+        </div>
+        <p class="card-subtitle">
+          Inventario exhaustivo de las variables oficiales de Football-Data, parámetros inferenciales y variables de Machine Learning utilizadas para modelar el rendimiento, goles esperados y campeonato.
+        </p>
+
+        <div class="vars-dictionary-grid">
+          <!-- Columna 1: Variables de Partido Oficiales -->
+          <div class="var-category-card">
+            <div class="var-category-header">
+              <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg>
+              <h3 class="var-category-title">1. Variables de Partido (Football-Data)</h3>
+            </div>
+            <div class="var-tags-list">
+              <div class="var-tag-row"><span class="var-badge badge-match">FTHG</span><span class="var-desc"><strong>Full Time Home Goals:</strong> Goles convertidos por el equipo local.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">FTAG</span><span class="var-desc"><strong>Full Time Away Goals:</strong> Goles convertidos por el visitante.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">FTR</span><span class="var-desc"><strong>Full Time Result:</strong> Resultado final (H: Local, D: Empate, A: Visitante).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">HTHG / HTAG</span><span class="var-desc"><strong>Half Time Goals:</strong> Goles al término del primer tiempo (descanso).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">HTR</span><span class="var-desc"><strong>Half Time Result:</strong> Resultado parcial al entretiempo (Base del Teorema de Bayes).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">HS / AS</span><span class="var-desc"><strong>Shots:</strong> Tiros totales intentados por local y visitante.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">HST / AST</span><span class="var-desc"><strong>Shots on Target:</strong> Tiros al arco directos y efectivos.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">HC / AC</span><span class="var-desc"><strong>Corners:</strong> Saques de esquina a favor de cada escuadra.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">HY / AY</span><span class="var-desc"><strong>Yellow Cards:</strong> Tarjetas amarillas acumuladas.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-match">HR / AR</span><span class="var-desc"><strong>Red Cards:</strong> Expulsiones directas o doble amonestación.</span></div>
+            </div>
+          </div>
+
+          <!-- Columna 2: Parámetros Inferenciales & Poisson -->
+          <div class="var-category-card">
+            <div class="var-category-header">
+              <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M4 4h16v3h-12l7 5-7 5h12v3h-16z"/></svg>
+              <h3 class="var-category-title">2. Inferencia Estadística & Poisson</h3>
+            </div>
+            <div class="var-tags-list">
+              <div class="var-tag-row"><span class="var-badge badge-poisson">&lambda;<sub>H</sub> (xG Local)</span><span class="var-desc">Tasa esperada Poisson del local calculada por fuerza de ataque y defensa rival.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-poisson">&lambda;<sub>A</sub> (xG Visitante)</span><span class="var-desc">Tasa esperada Poisson del visitante.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-poisson">P(1), P(X), P(2)</span><span class="var-desc">Probabilidades analíticas acumuladas de Victoria Local, Empate y Visitante.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-poisson">P(x, y)</span><span class="var-desc">Matriz de distribución bivariada conjunta para marcadores exactos (0-0 a 4-4).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-poisson">Cuotas Justas</span><span class="var-desc">Inversa de probabilidad O = 1/P para arbitraje probabilístico de mercado.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-poisson">P(A | B) Bayes</span><span class="var-desc">Probabilidad condicionada ante eventos observados (HTR = H o HST > 5).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-poisson">Desv. Estándar (s)</span><span class="var-desc">Dispersión de goles en 3.800 partidos (s<sub>H</sub> = 1.30, s<sub>A</sub> = 1.15).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-poisson">Z-Score Localía</span><span class="var-desc">Prueba de hipótesis bilateral (Z = -5.59, p &lt; 0.0001) que confirma la ventaja de jugar en casa.</span></div>
+            </div>
+          </div>
+
+          <!-- Columna 3: Machine Learning & Ventanas Móviles -->
+          <div class="var-category-card">
+            <div class="var-category-header">
+              <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/></svg>
+              <h3 class="var-category-title">3. Variables de Machine Learning</h3>
+            </div>
+            <div class="var-tags-list">
+              <div class="var-tag-row"><span class="var-badge badge-ml">pts_5 (roll)</span><span class="var-desc">Puntos cosechados en los últimos 5 partidos jugados (forma reciente).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-ml">gf_5 / ga_5</span><span class="var-desc">Goles a favor y en contra en la ventana móvil de los 5 últimos juegos.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-ml">hst_5 / ast_5</span><span class="var-desc">Tiros al arco a favor y concedidos en los últimos 5 encuentros.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-ml">diff_roll_pts</span><span class="var-desc">Diferencial de puntos recientes entre local y visitante (mayor peso en Random Forest).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-ml">diff_roll_gf</span><span class="var-desc">Diferencial de volumen ofensivo reciente entre ambos conjuntos.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-ml">diff_roll_ga</span><span class="var-desc">Diferencial de solidez defensiva reciente.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-ml">h2h_10y</span><span class="var-desc">Histórico directo mutuo en 10 temporadas (2016-2026) en el mismo feudo.</span></div>
+            </div>
+          </div>
+
+          <!-- Columna 4: Variables de Simulación de Torneo -->
+          <div class="var-category-card">
+            <div class="var-category-header">
+              <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+              <h3 class="var-category-title">4. Variables del Torneo LaLiga</h3>
+            </div>
+            <div class="var-tags-list">
+              <div class="var-tag-row"><span class="var-badge badge-tourn">PJ (Partidos)</span><span class="var-desc">38 jornadas oficiales por club (380 partidos totales por simulación).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-tourn">Pts Esperados</span><span class="var-desc">Puntos promedio proyectados (Victoria = 3 pts, Empate = 1 pt, Derrota = 0 pts).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-tourn">GF / GC</span><span class="var-desc">Goles a favor y en contra acumulados mediante muestreo Poisson por fixture.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-tourn">DG (Dif. Goles)</span><span class="var-desc">Diferencia de Goles (DG = GF - GC), primer criterio de desempate clasificatorio.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-tourn">% Campeón</span><span class="var-desc">Frecuencia empírica en que el club terminó 1º tras las N temporadas Monte Carlo.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-tourn">% Champions</span><span class="var-desc">Probabilidad empírica de ubicarse en el Top 4 de la clasificación.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-tourn">% Descenso</span><span class="var-desc">Riesgo porcentual de culminar en los puestos 18º, 19º o 20º (pérdida de categoría).</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Módulo de Simulación de Temporada Completa y Proyección de Campeón -->
       <div class="card" style="margin-top: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.75rem;">
           <div>
             <h2 class="card-title" style="margin: 0;">
               <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
               Simulación de Temporada & Proyección de Campeón (LaLiga 38 Jornadas)
             </h2>
             <p class="card-subtitle" style="margin-top: 0.2rem;">
-              Simulación Monte Carlo de los 380 partidos anuales bajo el formato oficial de todos contra todos por puntos.
+              Simulación estocástica Monte Carlo de los 380 partidos anuales bajo el formato oficial de todos contra todos por puntos.
             </p>
           </div>
-          <button id="btn-run-tournament-sim" class="btn-predict" style="padding: 0.6rem 1.25rem; font-size: 0.85rem;" type="button">
-            <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Simular Torneo Completo
-          </button>
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="min-width: 250px;">
+              <select id="select-tournament-mode" class="select-custom" style="padding: 0.55rem 0.85rem; font-size: 0.82rem;">
+                <option value="recent">Forma Reciente (Modelo ML - 5 Partidos)</option>
+                <option value="historical">Registro Histórico Completo (10 Temporadas / 3.800 Partidos)</option>
+              </select>
+            </div>
+            <button id="btn-run-tournament-sim" class="btn-predict" style="padding: 0.6rem 1.25rem; font-size: 0.85rem; width: auto;" type="button">
+              <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Simular Torneo Completo
+            </button>
+          </div>
+        </div>
+
+        <!-- Caja Explicativa de Metodología del Torneo -->
+        <div class="sim-methodology-card" id="tournament-methodology-box">
+          <h3>
+            <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            ¿En qué se basa la simulación del ganador de temporada? (Metodología Monte Carlo)
+          </h3>
+          <p id="tournament-methodology-text">
+            La simulación proyecta la liga completa ejecutando un <strong>algoritmo Monte Carlo sobre los 380 partidos oficiales</strong> (los 20 clubes se enfrentan todos contra todos a doble vuelta: local y visitante). En cada partido individual, el resultado y los goles se muestrean estocásticamente a partir de las distribuciones bivariadas de Poisson (&lambda;<sub>H</sub>, &lambda;<sub>A</sub>), calibradas según el modo seleccionado (<em>Forma Reciente ML</em> basada en ventanas móviles de 5 partidos o <em>Registro Histórico</em> de 10 temporadas / 3.800 partidos). Cada partido otorga <strong>3 puntos por victoria, 1 por empate y 0 por derrota</strong>. Al iterar cientos de campeonatos completos, el sistema calcula la tabla proyectada, los puntos esperados y la <strong>probabilidad empírica de salir campeón</strong>, clasificar a Champions League (Top 4) o descender (Puestos 18 a 20).
+          </p>
         </div>
 
         <!-- Podio Proyectado -->
@@ -1967,9 +2438,16 @@
     </p>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Scripts 3D WebGL (Three.js & OrbitControls) y Motor de Audio -->
+  <script src="js/three.min.js"></script>
+  <script src="js/OrbitControls.js"></script>
+  <script src="js/stadium_audio.js"></script>
+  <script src="js/stadium_3d.js"></script>
+
+  <!-- Scripts de la Aplicación -->
   <script src="js/api.js"></script>
   <script src="js/charts.js"></script>
+  <script src="js/match_simulator.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

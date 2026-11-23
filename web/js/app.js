@@ -191,6 +191,7 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('DOMContentLoaded', async () => {
   setupNavigation();
   setupAcademicModal();
+  setupAcademicPDFModal();
   setupMemberTabs();
   setupHyperControls();
   setupBinomialControls();
@@ -200,7 +201,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupTournamentSimulator();
   setupAuditor();
   setupEquationsTab();
+  setupAssistantNLQ();
   await loadInitialData();
+  updateRadarComparison();
 });
 
 // 1. Navegación por Pestañas
@@ -232,7 +235,10 @@ function setupNavigation() {
         calculateAndRenderPoisson();
         calculateAndRenderNormal();
       }
-      if (targetId === 'tab-ml') loadMLMetrics();
+      if (targetId === 'tab-ml') {
+        loadMLMetrics();
+        updateRadarComparison();
+      }
       if (targetId === 'tab-auditor') loadAuditorTable();
       if (targetId === 'tab-equations') renderEquationsMath();
     });
@@ -562,6 +568,28 @@ function setupTournamentSimulator() {
 
         const logoH = typeof getTeamLogo === 'function' ? getTeamLogo : (t => `assets/logos/${t.toLowerCase().replace(/ /g, '_')}.png`);
 
+        // Actualizar Showcase Celebratorio de la Copa de Campeón
+        const trophyShowcase = document.getElementById('champion-trophy-showcase');
+        const champTitleEl = document.getElementById('trophy-champ-name');
+        const champMetaEl = document.getElementById('trophy-champ-meta');
+        const champLogoEl = document.getElementById('trophy-club-logo');
+
+        if (champTitleEl) champTitleEl.textContent = `${c1.team}`;
+        if (champMetaEl) champMetaEl.textContent = `${c1.points} Puntos Esperados • ${c1.goal_diff > 0 ? '+' : ''}${c1.goal_diff} Diferencia de Goles • ${c1.champion_prob}% Probabilidad Monte Carlo`;
+        if (champLogoEl) champLogoEl.setAttribute('href', logoH(c1.team));
+
+        if (trophyShowcase) {
+          trophyShowcase.classList.remove('celebrating');
+          void trophyShowcase.offsetWidth;
+          trophyShowcase.classList.add('celebrating');
+          trophyShowcase.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Fanfarria triunfal de campeón con Web Audio API
+        if (window.StadiumAudio && typeof window.StadiumAudio.playVictoryFanfare === 'function') {
+          window.StadiumAudio.playVictoryFanfare();
+        }
+
         document.getElementById('podium-champ-team').innerHTML = `<img class="table-team-logo" src="${logoH(c1.team)}" alt=""> ${c1.team}`;
         document.getElementById('podium-champ-prob').textContent = `${c1.champion_prob}%`;
         document.getElementById('podium-champ-pts').textContent = `${c1.points} Pts Esperados (${c1.goal_diff > 0 ? '+' : ''}${c1.goal_diff} DG)`;
@@ -873,7 +901,29 @@ function setupPredictor() {
   if (btn) {
     btn.addEventListener('click', runPrediction);
   }
+
+  const sHome = document.getElementById('select-home-team');
+  const sAway = document.getElementById('select-away-team');
+  const btnSwap = document.getElementById('btn-swap-teams');
+
+  if (sHome) sHome.addEventListener('change', updateRadarComparison);
+  if (sAway) sAway.addEventListener('change', updateRadarComparison);
+  if (btnSwap) btnSwap.addEventListener('click', () => setTimeout(updateRadarComparison, 100));
 }
+
+async function updateRadarComparison() {
+  const home = document.getElementById('select-home-team')?.value || 'Real Madrid';
+  const away = document.getElementById('select-away-team')?.value || 'Barcelona';
+  if (home === away) return;
+  try {
+    const radarData = await SportsAPI.getRadarComparison(home, away);
+    ChartManager.renderRadarChart('chart-radar-h2h', radarData);
+  } catch (err) {
+    console.error('Error al cargar radar comparativo:', err);
+  }
+}
+window.updateRadarComparison = updateRadarComparison;
+
 
 async function runPrediction() {
   const homeTeam = document.getElementById('select-home-team').value;
@@ -885,6 +935,8 @@ async function runPrediction() {
     alert('Por favor selecciona dos clubes diferentes para el enfrentamiento.');
     return;
   }
+
+  updateRadarComparison();
 
   const resultContainer = document.getElementById('predict-result-container');
   try {
@@ -1029,6 +1081,9 @@ function renderPredictionResults(pred) {
   } else {
     condAlert.style.display = 'none';
   }
+
+  // Actualizar Radar Táctico Head-to-Head
+  updateRadarComparison();
 
   // Scroll suave hacia los resultados analíticos
   resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1245,4 +1300,116 @@ function setupEquationsTab() {
 
   // Render inicial tras carga
   setTimeout(renderEquationsMath, 400);
+}
+
+// Modal y Visor de Dictamen Académico Oficial en Formato Paper Científico
+function setupAcademicPDFModal() {
+  const btnOpen = document.getElementById('btn-open-pdf-report');
+  const modal = document.getElementById('academic-pdf-modal');
+  const btnClose = document.getElementById('btn-close-pdf-modal');
+  const btnPrint = document.getElementById('btn-print-academic-report');
+
+  if (btnOpen && modal) {
+    btnOpen.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+  }
+
+  if (btnClose && modal) {
+    btnClose.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+  }
+
+  if (btnPrint) {
+    btnPrint.addEventListener('click', () => {
+      window.print();
+    });
+  }
+}
+
+// Asistente Analítico en Lenguaje Natural (NLQ)
+function setupAssistantNLQ() {
+  const input = document.getElementById('assistant-input');
+  const btnAsk = document.getElementById('btn-assistant-ask');
+  const container = document.getElementById('assistant-response-container');
+  const chips = document.querySelectorAll('.assistant-chip');
+
+  async function handleQuery(query) {
+    if (!query || !query.trim()) return;
+    if (input) input.value = query;
+
+    try {
+      const data = await SportsAPI.askAssistant(query);
+      if (!container) return;
+
+      container.style.display = 'block';
+      const catBadge = document.getElementById('ast-category-badge');
+      if (catBadge) catBadge.textContent = data.title || 'Inferencia Estadística';
+
+      const echo = document.getElementById('ast-query-echo');
+      if (echo) echo.textContent = `Consulta: "${query}"`;
+
+      const hl = document.getElementById('ast-headline');
+      if (hl) hl.textContent = data.headline || '';
+
+      const exp = document.getElementById('ast-explanation');
+      if (exp) exp.textContent = data.explanation || '';
+
+      const metricsGrid = document.getElementById('ast-metrics-grid');
+      if (metricsGrid) {
+        metricsGrid.innerHTML = '';
+        if (data.metrics) {
+          Object.entries(data.metrics).forEach(([k, v]) => {
+            const box = document.createElement('div');
+            box.className = 'hyper-stat-box';
+            const label = k.replace(/_/g, ' ').toUpperCase();
+            box.innerHTML = `<span class="h-label">${label}</span><div class="h-value" style="font-size: 1.1rem; color: #38bdf8;">${v}</div>`;
+            metricsGrid.appendChild(box);
+          });
+        }
+      }
+
+      const formulaBox = document.getElementById('ast-formula-box');
+      if (formulaBox) {
+        formulaBox.innerHTML = data.formula ? `Fórmula formal: <code>${data.formula}</code>` : '';
+      }
+
+      const btnJump = document.getElementById('btn-ast-jump');
+      if (btnJump && data.target_tab) {
+        btnJump.onclick = () => {
+          const tabBtn = document.querySelector(`.tab-btn[data-target="${data.target_tab}"]`);
+          if (tabBtn) tabBtn.click();
+          if (data.member_id) {
+            const mBtn = document.querySelector(`.member-btn[data-member="${data.member_id}"]`);
+            if (mBtn) mBtn.click();
+          }
+        };
+      }
+
+      container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (err) {
+      console.error('Error al consultar asistente:', err);
+    }
+  }
+
+  if (btnAsk && input) {
+    btnAsk.addEventListener('click', () => handleQuery(input.value));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleQuery(input.value);
+    });
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = chip.dataset.query;
+      handleQuery(q);
+    });
+  });
 }

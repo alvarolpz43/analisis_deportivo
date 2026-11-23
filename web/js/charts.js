@@ -506,5 +506,85 @@ const ChartManager = {
         }
       }
     });
+  },
+
+  renderRadarChart(canvasId, radarData) {
+    this.destroy(canvasId);
+    const ctx = document.getElementById(canvasId)?.getContext('2d');
+    if (!ctx || !radarData) return;
+
+    const t1 = radarData.team1;
+    const t2 = radarData.team2;
+
+    this.instances[canvasId] = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: radarData.axes,
+        datasets: [
+          {
+            label: t1.name,
+            data: t1.scores,
+            backgroundColor: 'rgba(56, 189, 248, 0.25)',
+            borderColor: '#38bdf8',
+            pointBackgroundColor: '#38bdf8',
+            pointBorderColor: '#ffffff',
+            pointHoverBackgroundColor: '#ffffff',
+            pointHoverBorderColor: '#38bdf8',
+            borderWidth: 2.2
+          },
+          {
+            label: t2.name,
+            data: t2.scores,
+            backgroundColor: 'rgba(239, 68, 68, 0.22)',
+            borderColor: '#ef4444',
+            pointBackgroundColor: '#ef4444',
+            pointBorderColor: '#ffffff',
+            pointHoverBackgroundColor: '#ffffff',
+            pointHoverBorderColor: '#ef4444',
+            borderWidth: 2.2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            angleLines: { color: 'rgba(148, 163, 184, 0.2)' },
+            grid: { color: 'rgba(148, 163, 184, 0.15)' },
+            pointLabels: {
+              color: '#cbd5e1',
+              font: { family: 'Inter', size: 11, weight: '600' }
+            },
+            ticks: {
+              backdropColor: 'transparent',
+              color: '#64748b',
+              stepSize: 20,
+              display: false
+            },
+            suggestedMin: 20,
+            suggestedMax: 100
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: '#e2e8f0',
+              font: { family: 'Inter', size: 12, weight: '700' },
+              padding: 12
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (item) => ` ${item.dataset.label}: ${item.raw}/100`
+            }
+          }
+        }
+      }
+    });
   }
 };
+
+window.ChartManager = ChartManager;
+

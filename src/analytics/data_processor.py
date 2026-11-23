@@ -217,3 +217,84 @@ class DataProcessor:
             else:
                 latest_metrics[team] = {'pts': 1.0, 'gf': 1.0, 'ga': 1.0, 'sot': 4.0, 'corners': 4.5, 'cards': 2.0}
         return latest_metrics
+
+    def get_team_radar_comparison(self, team1: str, team2: str) -> Dict[str, Any]:
+        """Calcula métricas normalizadas (0-100) en 8 dimensiones tácticas para dos clubes."""
+        df = self.df
+
+        def calc_team_metrics(team: str):
+            h_matches = df[df['HomeTeam'] == team]
+            a_matches = df[df['AwayTeam'] == team]
+            total_matches = len(h_matches) + len(a_matches)
+            if total_matches == 0:
+                return [50.0] * 8, {}
+
+            # 1. Eficacia ofensiva (Goles / Tiros a puerta)
+            goals = float(h_matches['FTHG'].sum() + a_matches['FTAG'].sum())
+            sot = float(h_matches['HST'].sum() + a_matches['AST'].sum())
+            eff_val = (goals / sot) if sot > 0 else 0.28
+            score_eff = min(98.0, max(20.0, round((eff_val / 0.40) * 100, 1)))
+
+            # 2. Solidez defensiva (menor goles recibidos)
+            goals_conceded = float(h_matches['FTAG'].sum() + a_matches['FTHG'].sum())
+            ga_per_match = goals_conceded / total_matches
+            score_def = min(98.0, max(20.0, round(max(0.0, (2.6 - ga_per_match) / 1.8) * 100, 1)))
+
+            # 3. Asedio por córners
+            corners = float(h_matches['HC'].sum() + a_matches['AC'].sum())
+            corners_per_match = corners / total_matches
+            score_corners = min(98.0, max(20.0, round((corners_per_match / 7.5) * 100, 1)))
+
+            # 4. Disciplina táctica (menor tarjetas amarillas y rojas)
+            cards = float(h_matches['HY'].sum() + a_matches['AY'].sum() + (h_matches['HR'].sum() + a_matches['AR'].sum()) * 2.5)
+            cards_per_match = cards / total_matches
+            score_disc = min(98.0, max(20.0, round(max(0.0, (3.8 - cards_per_match) / 2.5) * 100, 1)))
+
+            # 5. Factor localía (victorias en casa)
+            h_wins = float((h_matches['FTR'] == 'H').sum())
+            h_win_rate = (h_wins / len(h_matches)) if len(h_matches) > 0 else 0.45
+            score_home = min(98.0, max(20.0, round((h_win_rate / 0.75) * 100, 1)))
+
+            # 6. Calidad de remate (tiros a puerta por partido)
+            sot_per_match = sot / total_matches
+            score_sot = min(98.0, max(20.0, round((sot_per_match / 6.5) * 100, 1)))
+
+            # 7. Conversión de goles por partido
+            goals_per_match = goals / total_matches
+            score_goals = min(98.0, max(20.0, round((goals_per_match / 2.6) * 100, 1)))
+
+            # 8. Regularidad / Puntos por partido
+            h_pts = (h_matches['FTR'] == 'H').sum() * 3 + (h_matches['FTR'] == 'D').sum()
+            a_pts = (a_matches['FTR'] == 'A').sum() * 3 + (a_matches['FTR'] == 'D').sum()
+            pts_per_match = float(h_pts + a_pts) / total_matches
+            score_pts = min(98.0, max(20.0, round((pts_per_match / 2.4) * 100, 1)))
+
+            scores = [score_eff, score_def, score_corners, score_disc, score_home, score_sot, score_goals, score_pts]
+            raw = {
+                "matches": total_matches,
+                "goals_per_match": round(goals_per_match, 2),
+                "ga_per_match": round(ga_per_match, 2),
+                "sot_per_match": round(sot_per_match, 2),
+                "corners_per_match": round(corners_per_match, 2),
+                "home_win_rate": round(h_win_rate * 100, 1),
+                "pts_per_match": round(pts_per_match, 2)
+            }
+            return scores, raw
+
+        s1, r1 = calc_team_metrics(team1)
+        s2, r2 = calc_team_metrics(team2)
+
+        return {
+            "axes": [
+                "Eficacia Ofensiva",
+                "Solidez Defensiva",
+                "Asedio por Córners",
+                "Disciplina Táctica",
+                "Factor Localía",
+                "Calidad de Remate",
+                "Conversión de Gol",
+                "Puntos por Partido"
+            ],
+            "team1": {"name": team1, "scores": s1, "raw": r1},
+            "team2": {"name": team2, "scores": s2, "raw": r2}
+        }

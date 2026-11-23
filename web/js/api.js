@@ -105,5 +105,22 @@ const SportsAPI = {
     const res = await fetch(`${API_BASE}/api/matches?${params.toString()}`);
     if (!res.ok) throw new Error('Error al cargar registros de partidos');
     return await res.json();
+  },
+
+  async getRadarComparison(team1 = 'Real Madrid', team2 = 'Barcelona') {
+    const params = new URLSearchParams({ team1, team2 });
+    const res = await fetch(`${API_BASE}/api/teams/radar?${params.toString()}`);
+    if (!res.ok) throw new Error('Error al cargar radar comparativo');
+    return await res.json();
+  },
+
+  async askAssistant(query) {
+    const params = new URLSearchParams({ q: query });
+    const res = await fetch(`${API_BASE}/api/assistant/ask?${params.toString()}`);
+    if (!res.ok) throw new Error('Error al consultar al asistente analítico');
+    return await res.json();
   }
 };
+
+window.SportsAPI = SportsAPI;
+

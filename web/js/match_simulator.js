@@ -176,16 +176,28 @@ const LiveMatchSimulator = (function() {
           }
           if (hudBadge) {
             const labels = {
-              'broadcast': '★ ESTADIO LALIGA 3D • BROADCAST TV • 60 FPS ★',
-              'pitchside': '★ A PIE DE CAMPO (DENTRO DEL ESTADIO) • 60 FPS ★',
-              'goalcam': '★ PERSPECTIVA DETRÁS DEL ARCO • 60 FPS ★',
-              'aerial': '★ VISTA AÉREA CENITAL TÁCTICA • 60 FPS ★'
+              'broadcast': 'ESTADIO LALIGA 3D • BROADCAST TV • 60 FPS',
+              'pitchside': 'A PIE DE CAMPO (DENTRO DEL ESTADIO) • 60 FPS',
+              'goalcam': 'PERSPECTIVA DETRÁS DEL ARCO • 60 FPS',
+              'aerial': 'VISTA AÉREA CENITAL TÁCTICA • 60 FPS'
             };
-            hudBadge.textContent = labels[modeKey] || '★ ESTADIO LALIGA 3D ★';
+            hudBadge.textContent = labels[modeKey] || 'ESTADIO LALIGA 3D • 60 FPS';
           }
         });
       }
     });
+
+    // Control de Mapa de Calor Táctico 3D
+    const btnHeatmap = document.getElementById('btn-toggle-heatmap');
+    if (btnHeatmap && !btnHeatmap.dataset.bound) {
+      btnHeatmap.dataset.bound = 'true';
+      btnHeatmap.addEventListener('click', () => {
+        if (window.Stadium3D) {
+          const isVis = window.Stadium3D.toggleHeatmap();
+          btnHeatmap.classList.toggle('active', isVis);
+        }
+      });
+    }
 
     // Control de Audio Sintetizado (Silbato, Jugadas, Gradería y Gol)
     const btnAudio = document.getElementById('sim-btn-audio-toggle');

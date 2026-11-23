@@ -224,6 +224,42 @@
         this.isAmbientPlaying = false;
       }
     }
+
+    /**
+     * Fanfarria triunfal de campeón de liga (Acordes orquestales sintetizados con Web Audio)
+     */
+    playVictoryFanfare() {
+      if (this.isMuted) return;
+      this.init();
+      if (!this.ctx) return;
+
+      const now = this.ctx.currentTime;
+      // Arpegio mayor triunfal: C4 (261.63Hz), E4 (329.63Hz), G4 (392.00Hz), C5 (523.25Hz)
+      const notes = [
+        { freq: 261.63, start: 0.00, dur: 0.18 },
+        { freq: 329.63, start: 0.18, dur: 0.18 },
+        { freq: 392.00, start: 0.36, dur: 0.20 },
+        { freq: 523.25, start: 0.56, dur: 1.10 }
+      ];
+
+      notes.forEach(n => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(n.freq, now + n.start);
+
+        gain.gain.setValueAtTime(0.001, now + n.start);
+        gain.gain.linearRampToValueAtTime(0.25, now + n.start + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + n.start + n.dur);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now + n.start);
+        osc.stop(now + n.start + n.dur + 0.02);
+      });
+    }
   }
 
   window.StadiumAudio = new StadiumAudio();

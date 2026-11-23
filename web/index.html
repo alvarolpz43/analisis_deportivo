@@ -63,6 +63,10 @@
           <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
           <span>Colegio Mayor del Cauca</span>
         </button>
+        <button id="btn-open-pdf-report" class="btn-academic-badge btn-academic-pdf" type="button" title="Generar Dictamen Académico Oficial en Formato Paper Científico">
+          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Dictamen PDF</span>
+        </button>
       </div>
     </div>
   </header>
@@ -144,6 +148,10 @@
       <button class="tab-btn" data-target="tab-equations">
         <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v3h-12l7 5-7 5h12v3h-16z"/></svg>
         <span>Ecuaciones & Código</span>
+      </button>
+      <button class="tab-btn" data-target="tab-assistant">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/></svg>
+        <span>Asistente Analítico NLQ</span>
       </button>
     </div>
   </nav>
@@ -1079,16 +1087,24 @@
                 <div id="stadium-cam-selector-group" class="cam-switch-pill">
                   <span class="cam-selector-label">Cámara:</span>
                   <button id="cam-btn-broadcast" class="btn-cam-switch active" type="button" title="Cámara Oficial de Transmisión TV">
-                    📺 Transmisión
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    <span>Transmisión</span>
                   </button>
                   <button id="cam-btn-pitchside" class="btn-cam-switch btn-cam-highlight" type="button" title="¡Dentro del Estadio! A pie de campo con jugadores y tribunas">
-                    👤 A Pie de Campo (Dentro)
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>A Pie de Campo</span>
                   </button>
                   <button id="cam-btn-goalcam" class="btn-cam-switch" type="button" title="Detrás de la Portería">
-                    🥅 Detrás del Arco
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v16"/><path d="M3 10h18"/><path d="M3 15h18"/><path d="M8 5v16"/><path d="M16 5v16"/></svg>
+                    <span>Arco</span>
                   </button>
                   <button id="cam-btn-aerial" class="btn-cam-switch" type="button" title="Vista Táctica Aérea Cenital">
-                    🦅 Aérea
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    <span>Aérea</span>
+                  </button>
+                  <button id="btn-toggle-heatmap" class="btn-cam-switch" type="button" title="Activar/Desactivar Mapa de Calor Táctico 3D">
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span>Heatmap</span>
                   </button>
                 </div>
 
@@ -1108,7 +1124,7 @@
               <div id="stadium-3d-wrapper" class="stadium-3d-container">
                 <canvas id="stadium-3d-canvas"></canvas>
                 <div class="stadium-3d-hud-badge">
-                  <span id="stadium-hud-cam-name">★ ESTADIO LALIGA 3D • BROADCAST • 60 FPS ★</span>
+                  <span id="stadium-hud-cam-name">ESTADIO LALIGA 3D • BROADCAST • 60 FPS</span>
                 </div>
               </div>
 
@@ -1146,7 +1162,7 @@
                     <!-- Valla LED Publicitaria Superior -->
                     <div class="stadium-led-board led-top">
                       <div class="led-ticker-inner">
-                        <span>★ LALIGA EA SPORTS ★ CIENCIA DE DATOS & ESTADÍSTICA INFERENCIAL ★ TEMPORADA 2026 ★ COLEGIO MAYOR DEL CAUCA ★</span>
+                        <span>• LALIGA EA SPORTS • CIENCIA DE DATOS & ESTADÍSTICA INFERENCIAL • TEMPORADA 2026 • COLEGIO MAYOR DEL CAUCA •</span>
                       </div>
                     </div>
 
@@ -1207,7 +1223,7 @@
                     <!-- Valla LED Publicitaria Inferior -->
                     <div class="stadium-led-board led-bottom">
                       <div class="led-ticker-inner reverse">
-                        <span>★ 3.800 PARTIDOS HISTÓRICOS AUDITADOS ★ PREDICCIÓN POISSON xG ★ MODELOS ML REGRESIÓN LOGÍSTICA & RANDOM FOREST ★</span>
+                        <span>• 3.800 PARTIDOS HISTÓRICOS AUDITADOS • PREDICCIÓN POISSON xG • MODELOS ML REGRESIÓN LOGÍSTICA & RANDOM FOREST •</span>
                       </div>
                     </div>
                   </div>
@@ -1451,6 +1467,23 @@
             </div>
           </div>
 
+          <!-- Radar Táctico Multidimensional (8 Dimensiones Normalizadas) -->
+          <div class="card" style="margin-top: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 style="font-size: 1rem; color: var(--accent-cyan); display: flex; align-items: center; gap: 0.4rem;">
+                <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m12 2 4 10-4 10-4-10z"/></svg>
+                Radar Táctico Multidimensional (8 Dimensiones Normalizadas)
+              </h3>
+              <span class="stadium-mode-tag">Escala 0 - 100 • 10 Temporadas</span>
+            </div>
+            <p class="card-subtitle">
+              Comparativa Head-to-Head que evalúa eficacia, defensa, asedio por córners, disciplina, factor campo y regularidad.
+            </p>
+            <div style="height: 330px; position: relative; margin-top: 0.5rem;">
+              <canvas id="chart-radar-h2h"></canvas>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -1630,10 +1663,94 @@
           </p>
         </div>
 
+        <!-- Showcase Celebratorio de la Copa de Campeón de LaLiga -->
+        <div id="champion-trophy-showcase" class="trophy-showcase-container">
+          <div class="trophy-stage-glow"></div>
+          <div class="trophy-sparkle-layer">
+            <span class="sparkle sp-1"></span>
+            <span class="sparkle sp-2"></span>
+            <span class="sparkle sp-3"></span>
+            <span class="sparkle sp-4"></span>
+            <span class="sparkle sp-5"></span>
+            <span class="sparkle sp-6"></span>
+          </div>
+
+          <div class="trophy-stage-content">
+            <!-- Copa Esculpida SVG Dorada con Focos y Destellos -->
+            <div class="trophy-cup-wrapper">
+              <div class="trophy-pedestal-light"></div>
+              <svg class="trophy-svg" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                  <linearGradient id="gold-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fef08a" />
+                    <stop offset="35%" stop-color="#fbbf24" />
+                    <stop offset="70%" stop-color="#d97706" />
+                    <stop offset="100%" stop-color="#92400e" />
+                  </linearGradient>
+                  <linearGradient id="gold-reflect" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85" />
+                    <stop offset="40%" stop-color="#fef08a" stop-opacity="0.5" />
+                    <stop offset="100%" stop-color="#d97706" stop-opacity="0" />
+                  </linearGradient>
+                  <radialGradient id="gold-radial" cx="50%" cy="30%" r="50%">
+                    <stop offset="0%" stop-color="#fffbeb" />
+                    <stop offset="45%" stop-color="#f59e0b" />
+                    <stop offset="100%" stop-color="#78350f" />
+                  </radialGradient>
+                </defs>
+                <!-- Base / Pedestal -->
+                <path d="M45 180 L115 180 L110 195 L50 195 Z" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" />
+                <rect x="52" y="184" width="56" height="8" rx="2" fill="url(#gold-primary)" />
+                <path d="M55 165 L105 165 L110 180 L50 180 Z" fill="url(#gold-primary)" stroke="#b45309" stroke-width="1" />
+                <!-- Cuello del Pedestal -->
+                <rect x="73" y="145" width="14" height="20" rx="3" fill="url(#gold-radial)" />
+                <ellipse cx="80" cy="145" rx="16" ry="4" fill="url(#gold-primary)" />
+                <!-- Copa / Vaso Principal -->
+                <path d="M42 42 C42 42, 38 105, 70 135 C74 138, 77 140, 80 140 C83 140, 86 138, 90 135 C122 105, 118 42, 118 42 Z" fill="url(#gold-radial)" stroke="#b45309" stroke-width="1.5" />
+                <!-- Boca y Borde Superior de la Copa -->
+                <ellipse cx="80" cy="42" rx="38" ry="8" fill="url(#gold-primary)" stroke="#fef08a" stroke-width="1.2" />
+                <ellipse cx="80" cy="42" rx="32" ry="5" fill="#78350f" />
+                <!-- Reflejo Vertical de Luz Dorada -->
+                <path d="M50 46 C50 46, 48 95, 72 125 C70 100, 68 60, 68 46 Z" fill="url(#gold-reflect)" />
+                <!-- Asas de la Copa (Izquierda y Derecha) -->
+                <path d="M42 50 C20 50, 18 95, 52 110 C50 105, 30 95, 32 60 C32 54, 38 52, 42 52 Z" fill="url(#gold-primary)" stroke="#d97706" stroke-width="1" />
+                <path d="M118 50 C140 50, 142 95, 108 110 C110 105, 130 95, 128 60 C128 54, 122 52, 118 52 Z" fill="url(#gold-primary)" stroke="#d97706" stroke-width="1" />
+                <!-- Guirnalda de Laureles Grabada -->
+                <path d="M62 82 C62 95, 70 105, 80 105 C90 105, 98 95, 98 82" fill="none" stroke="#fef08a" stroke-width="2" stroke-dasharray="2 3" />
+                <!-- Escudo Central del Club Inscrito en la Copa -->
+                <g id="trophy-crest-holder" transform="translate(68, 68)">
+                  <circle cx="12" cy="12" r="14" fill="#0f172a" stroke="#fbbf24" stroke-width="1.5" />
+                  <image id="trophy-club-logo" x="2" y="2" width="20" height="20" href="assets/logos/real_madrid.png" />
+                </g>
+              </svg>
+            </div>
+
+            <!-- Información Triunfal del Club Campeón -->
+            <div class="trophy-winner-details">
+              <div class="trophy-badge-tag">
+                <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                <span>CAMPEÓN OFICIAL PROYECTADO DE LALIGA</span>
+              </div>
+              <h2 id="trophy-champ-name" class="trophy-champ-title">Real Madrid C.F.</h2>
+              <div class="trophy-champ-subtitle" id="trophy-champ-meta">
+                86.4 Puntos Esperados • +48 Diferencia de Goles • 65.2% Probabilidad Monte Carlo
+              </div>
+              <div class="trophy-laurel-row">
+                <span class="trophy-laurel-badge">38 Jornadas</span>
+                <span class="trophy-laurel-badge badge-gold">1º Lugar — Título de Liga</span>
+                <span class="trophy-laurel-badge">Fase de Grupos UCL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Podio Proyectado -->
         <div class="podium-container">
           <div class="podium-card champion">
-            <div class="podium-rank">1º Puesto — Campeón Proyectado</div>
+            <div class="podium-rank">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" style="margin-right: 4px;"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+              1º Puesto — Campeón Proyectado
+            </div>
             <div class="podium-team" id="podium-champ-team">Real Madrid</div>
             <div class="podium-prob" id="podium-champ-prob">65.2%</div>
             <div class="podium-points" id="podium-champ-pts">86.4 Puntos Esperados</div>
@@ -2420,7 +2537,171 @@
       </div>
     </section>
 
+    <!-- ==================== TAB 6: ASISTENTE ANALÍTICO NLQ ==================== -->
+    <section id="tab-assistant" class="tab-panel">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <h2 class="card-title">
+            <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/></svg>
+            Asistente Analítico en Lenguaje Natural (NLQ)
+          </h2>
+          <span class="brand-badge">Motor Semántico Local • 3.800 Partidos</span>
+        </div>
+        <p class="card-subtitle">
+          Escribe cualquier consulta sobre probabilidades, teoremas de Bayes, pandemia, tiros a puerta, clubes o modelos.
+        </p>
+
+        <!-- Barra de Búsqueda -->
+        <div class="assistant-input-row">
+          <input type="text" id="assistant-input" class="assistant-text-field" placeholder="Ej: ¿Cuál es la probabilidad de ganar si se tienen más de 5 tiros a puerta?" />
+          <button type="button" id="btn-assistant-ask" class="btn-assistant-submit">
+            <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span>Consultar</span>
+          </button>
+        </div>
+
+        <!-- Chips de Sugerencias Rápidas -->
+        <div class="assistant-chips-row">
+          <span class="chips-label">Consultas frecuentes:</span>
+          <button class="assistant-chip" type="button" data-query="¿Cuál es la probabilidad de victoria si hay más de 5 tiros a puerta?">
+            Eficacia remate local (HST > 5)
+          </button>
+          <button class="assistant-chip" type="button" data-query="¿Cómo influye ir ganando al descanso en el resultado final?">
+            Ventaja al descanso (HTR = H)
+          </button>
+          <button class="assistant-chip" type="button" data-query="¿Cuál fue el impacto de jugar sin público en la temporada pandemia 2020/21?">
+            Pandemia 2020/21 (Efecto público)
+          </button>
+          <button class="assistant-chip" type="button" data-query="Compara el rendimiento histórico de Real Madrid vs Barcelona">
+            Comparar Real Madrid vs Barcelona
+          </button>
+          <button class="assistant-chip" type="button" data-query="¿Cuál es el Brier Score y la calibración del modelo?">
+            Calibración y Brier Score
+          </button>
+          <button class="assistant-chip" type="button" data-query="¿Cómo afecta la acumulación de tarjetas amarillas?">
+            Tarjetas y Faltas (Chi-cuadrado)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Respuesta del Asistente -->
+      <div id="assistant-response-container" style="display: none;">
+        <div class="card assistant-response-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+            <span class="brand-badge" id="ast-category-badge">Inferencia Estadística</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);" id="ast-query-echo"></span>
+          </div>
+
+          <h3 id="ast-headline" style="font-size: 1.35rem; font-weight: 800; color: #34d399; margin-bottom: 0.5rem;"></h3>
+          <p id="ast-explanation" style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;"></p>
+
+          <div class="grid-3" id="ast-metrics-grid" style="margin-bottom: 1rem;"></div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div id="ast-formula-box" style="font-size: 0.85rem; color: var(--accent-cyan);"></div>
+            <button id="btn-ast-jump" class="btn-primary" type="button" style="padding: 0.45rem 1rem; font-size: 0.8rem;">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              <span id="ast-jump-label">Ver Análisis en Detalle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- Modal de Dictamen Académico Oficial en Formato Paper Científico (IEEE / Springer) -->
+  <div id="academic-pdf-modal" class="academic-modal" style="display: none;">
+    <div class="modal-card paper-modal-content">
+      <div class="paper-modal-actions">
+        <button id="btn-print-academic-report" class="btn-print-report" type="button" title="Imprimir o Guardar como PDF">
+          <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+          <span>Imprimir / Guardar en PDF</span>
+        </button>
+        <button id="btn-close-pdf-modal" class="modal-close-btn" type="button" aria-label="Cerrar">
+          <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Cuerpo del Paper Formal -->
+      <article id="paper-formal-document" class="paper-document">
+        <header class="paper-header">
+          <div class="paper-institution">INSTITUCIÓN UNIVERSITARIA COLEGIO MAYOR DEL CAUCA</div>
+          <div class="paper-faculty">FACULTAD DE INGENIERÍA • PROGRAMA DE INGENIERÍA INFORMÁTICA</div>
+          <div class="paper-subject">ARTICULACIÓN ACADÉMICA INTERDISCIPLINAR 2026</div>
+          <div class="paper-professors">
+            <span>Asignatura 1: <strong>Estadística Inferencial</strong> — Docente: <strong>Edith Janeth Potosí Estrada</strong></span> • 
+            <span>Asignatura 2: <strong>Electiva III: Ciencia de Datos</strong> — Docente: <strong>Carlos E. Ruiz</strong></span>
+          </div>
+          <h1 class="paper-title">DICTAMEN CIENTÍFICO: MODELADO PROBABILÍSTICO INFERENCIAL, CALIBRACIÓN PREDICTIVA Y DINÁMICA ESTOCÁSTICA EN LA PRIMERA DIVISIÓN DE ESPAÑA (3.800 PARTIDOS)</h1>
+          <div class="paper-authors">
+            <strong>Autores:</strong> José Luis Martínez, Álvaro José López Quira, Jose Aldair Torres, Cristian Samir Narváez, Joan Sebastian Mosquera y Rubén Darío Velasco
+          </div>
+          <div class="paper-meta">Popayán, Cauca, Colombia • Dataset SP1 (2016-2026) Football-Data.co.uk • 3.800 Partidos</div>
+        </header>
+
+        <div class="paper-abstract">
+          <strong>Resumen Ejecutivo:</strong> El presente dictamen consolida la auditoría estadística y predictiva de 10 temporadas oficiales de LaLiga Santander (3.800 partidos). A través de distribuciones bivariadas de Poisson, teoremas de probabilidad condicional bayesiana y modelos de Machine Learning (Regresión Logística y Random Forest con partición temporal 80/20), se analiza la ventaja del factor campo, la dependencia del estado intermedio al descanso, la eficacia de remate a puerta y el aislamiento causal del público en la temporada de pandemia 2020/21.
+        </div>
+
+        <div class="paper-grid-columns">
+          <div class="paper-column">
+            <h2>1. Hallazgos Inferenciales por Integrante</h2>
+            <div class="paper-section-block">
+              <h3>Integrante 1: Eficacia de Remate y Actualización Bayesiana</h3>
+              <p>P(Victoria Local) basal = 45.5%. Al registrar más de 5 tiros a puerta (HST > 5), la probabilidad posterior P(H|HST>5) asciende al <strong>65.2%</strong> (Odds Ratio = 3.86, r = 0.58). El factor de Bayes es 1.43.</p>
+            </div>
+
+            <div class="paper-section-block">
+              <h3>Integrante 2: Distribución de Goles y Poisson Bivariado</h3>
+              <p>El promedio de goles por partido es &mu; = 2.68. La distribución Poisson bivariada modela la independencia condicional de goles esperados (&lambda;<sub>H</sub> = 1.51, &lambda;<sub>A</sub> = 1.17).</p>
+            </div>
+
+            <div class="paper-section-block">
+              <h3>Integrante 3: Ventaja al Descanso como Indicador de Estado</h3>
+              <p>Ir ganando al entretiempo (HTR = H) predice el <strong>78.5%</strong> de los triunfos locales finales (Z = 18.4, p &lt; 0.0001). Refleja un estado acumulado previo.</p>
+            </div>
+
+            <div class="paper-section-block">
+              <h3>Integrante 4: Asedio por Córners y Presión Territorial</h3>
+              <p>El promedio de tiros de esquina es 9.6 por encuentro. Un registro superior a 6 saques de esquina (HC > 6) incrementa la probabilidad de victoria local de 45.5% a 58.7%.</p>
+            </div>
+          </div>
+
+          <div class="paper-column">
+            <div class="paper-section-block">
+              <h3>Integrante 5: Impacto Disciplinario y Prueba Chi-Cuadrado</h3>
+              <p>La acumulación de amonestaciones (HY &ge; 3) se asocia significativamente con la pérdida de control táctico (&chi;<sup>2</sup> = 8.84, p = 0.012), rechazando la hipótesis nula de independencia.</p>
+            </div>
+
+            <div class="paper-section-block">
+              <h3>Integrante 6: Desempeño y Resiliencia Visitante</h3>
+              <p>El equipo visitante prácticamente duplica su expectativa de triunfo al superar 4 tiros a puerta (P(A|AST>4) = <strong>54.1%</strong> frente al 27.5% basal).</p>
+            </div>
+
+            <h2>2. Calibración y Modelos de Machine Learning</h2>
+            <div class="paper-table-wrap">
+              <table class="paper-table">
+                <thead>
+                  <tr><th>Modelo</th><th>Accuracy Test</th><th>F1-Score</th><th>Brier Score</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Regresión Logística</td><td>53.2%</td><td>52.8%</td><td>0.184</td></tr>
+                  <tr><td>Random Forest (150 Árboles)</td><td>52.8%</td><td>52.4%</td><td>0.189</td></tr>
+                  <tr><td>Poisson xG Bivariado</td><td>50.4%</td><td>49.8%</td><td>0.198</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>3. Conclusiones y Validación de Hipótesis</h2>
+            <p>1. <em>Ventaja Local:</em> Se valida el factor de localía estadísticamente (Z = -5.59, p &lt; 0.0001).<br>
+            2. <em>Efecto Público:</em> La temporada 2020/21 (41.6% victoria local a puerta cerrada) aísla el componente psicológico-ambiental frente al 47.9% en temporadas con aforo completo.<br>
+            3. <em>Calibración Probabilística:</em> El Brier Score de 0.184 valida la solidez de las probabilidades estimadas.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
 
   <!-- Footer con Acreditación Académica Completa -->
   <footer class="app-footer">

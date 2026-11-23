@@ -184,6 +184,7 @@
       // Construcción
       this.buildLighting();
       this.buildPitch();
+      this.buildTacticalHeatmap();
       this.buildGrandstands();
       this.buildCrowd();
       this.buildSupporterFlags();
@@ -191,6 +192,7 @@
       this.buildLedPerimeter();
       this.buildPlayers();
       this.buildBall();
+      this.buildBallTracer();
       this.buildCornerFlags();
 
       this.onResize = this.onResize.bind(this);
@@ -345,6 +347,76 @@
       apron.position.y = -0.05;
       apron.rotation.x = -Math.PI / 2;
       this.scene.add(apron);
+    }
+
+    /**
+     * Capa de Mapa de Calor Táctico sobre el césped (Heatmap 3D)
+     */
+    buildTacticalHeatmap() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 340;
+      const ctx = canvas.getContext('2d');
+
+      const drawHeatSpot = (x, y, radius, alpha) => {
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        grad.addColorStop(0, `rgba(239, 68, 68, ${alpha})`);
+        grad.addColorStop(0.35, `rgba(245, 158, 11, ${alpha * 0.8})`);
+        grad.addColorStop(0.7, `rgba(234, 179, 8, ${alpha * 0.4})`);
+        grad.addColorStop(1, 'rgba(16, 185, 129, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      };
+
+      // Densidad táctica ofensiva y distribución en el campo
+      drawHeatSpot(370, 170, 115, 0.75); // Zona de peligro frente al arco rival
+      drawHeatSpot(320, 95, 90, 0.65);   // Extremo derecho
+      drawHeatSpot(320, 245, 90, 0.65);  // Extremo izquierdo
+      drawHeatSpot(235, 170, 95, 0.55);  // Círculo central y pivote
+      drawHeatSpot(145, 120, 75, 0.45);  // Salida defensiva
+
+      const heatTex = new THREE.CanvasTexture(canvas);
+      const heatMat = new THREE.MeshBasicMaterial({
+        map: heatTex,
+        transparent: true,
+        opacity: 0.65,
+        depthWrite: false
+      });
+      this.heatmapMesh = new THREE.Mesh(new THREE.PlaneGeometry(PITCH_L - 2, PITCH_W - 2), heatMat);
+      this.heatmapMesh.rotation.x = -Math.PI / 2;
+      this.heatmapMesh.position.set(0, 0.04, 0);
+      this.heatmapMesh.visible = false;
+      this.scene.add(this.heatmapMesh);
+    }
+
+    /**
+     * Alterna la visibilidad del mapa de calor táctico 3D
+     */
+    toggleHeatmap() {
+      if (!this.heatmapMesh) return false;
+      this.heatmapMesh.visible = !this.heatmapMesh.visible;
+      return this.heatmapMesh.visible;
+    }
+
+    /**
+     * Estela luminosa trazadora de la trayectoria del balón (Ball Tracer)
+     */
+    buildBallTracer() {
+      const maxPts = 24;
+      this.ballTrailPoints = [];
+      for (let i = 0; i < maxPts; i++) {
+        this.ballTrailPoints.push(new THREE.Vector3(0, 0.75, 0));
+      }
+      const geom = new THREE.BufferGeometry().setFromPoints(this.ballTrailPoints);
+      const mat = new THREE.LineBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.75
+      });
+      this.ballTrail = new THREE.Line(geom, mat);
+      this.scene.add(this.ballTrail);
     }
 
     /**
@@ -752,7 +824,7 @@
       ctx.fillRect(0, 0, 1024, 64);
       ctx.fillStyle = '#38bdf8';
       ctx.font = 'bold 26px sans-serif';
-      ctx.fillText('★ LALIGA EA SPORTS ★ CIENCIA DE DATOS & ESTADÍSTICA INFERENCIAL ★ COLEGIO MAYOR DEL CAUCA ★', 20, 42);
+      ctx.fillText('• LALIGA EA SPORTS • CIENCIA DE DATOS & ESTADÍSTICA INFERENCIAL • COLEGIO MAYOR DEL CAUCA •', 20, 42);
 
       const tex = new THREE.CanvasTexture(canvas);
       tex.wrapS = THREE.RepeatWrapping;
@@ -1098,6 +1170,18 @@
         }
 
         if (t >= 1.0) this.ballState.isMoving = false;
+      }
+
+      // Actualizar estela luminosa trazadora del balón (Ball Tracer)
+      if (this.ballMesh && this.ballTrail && this.ballTrailPoints) {
+        if (this.ballState.isMoving) {
+          this.ballTrail.visible = true;
+          this.ballTrailPoints.pop();
+          this.ballTrailPoints.unshift(this.ballMesh.position.clone());
+          this.ballTrail.geometry.setFromPoints(this.ballTrailPoints);
+        } else {
+          this.ballTrail.visible = false;
+        }
       }
 
       // 2. Animación de Jugadores (Carrera de piernas y brazos)

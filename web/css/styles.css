@@ -3943,6 +3943,459 @@ input[type="range"]::-webkit-slider-thumb:hover {
   color: #93c5fd;
 }
 
+/* ==========================================================================
+   DESARROLLO MATEMÁTICO PASO A PASO (EXCLUSIVO INTEGRANTE 1)
+   ========================================================================== */
+.member1-math-section {
+  background: linear-gradient(180deg, rgba(19, 27, 46, 0.85) 0%, rgba(13, 19, 33, 0.98) 100%);
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-lg);
+  padding: 1.6rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+.math-section-header {
+  margin-bottom: 1.35rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.math-header-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.math-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin-bottom: 0.2rem;
+  letter-spacing: -0.01em;
+}
+
+.math-section-subtitle {
+  font-size: 0.84rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.math-header-badges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.math-badge-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.math-badge-cyan {
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Tarjetas Matemáticas */
+.math-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.math-card:hover {
+  transform: translateY(-2px);
+}
+
+.math-card.card-bayes:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.12);
+}
+
+.math-card.card-hyper:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.12);
+}
+
+.math-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.math-card-icon-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.math-pill-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.math-pill-icon.emerald {
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.math-pill-icon.blue {
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.math-card-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.math-card-category {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+.math-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.math-step-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.math-step-label {
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* Event Definition Styles */
+.event-def-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.event-def-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.event-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.badge-event-a {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-event-b {
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.event-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.event-title-line {
+  font-size: 0.8rem;
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.event-title-line code {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+}
+
+.event-prob-calc .katex {
+  font-size: 0.95rem;
+  color: #34d399;
+}
+
+.math-formula-box,
+.math-contingency-verification,
+.math-dynamic-hyper-box {
+  background: #070b13;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 0.75rem 0.65rem;
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow-x: auto;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.math-formula-box .katex,
+.math-contingency-verification .katex,
+.math-dynamic-hyper-box .katex {
+  font-size: 1.05rem;
+  color: #f8fafc;
+}
+
+.math-variables-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  padding-left: 0.2rem;
+}
+
+.math-variables-legend strong {
+  color: #38bdf8;
+}
+
+.math-check-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.74rem;
+  color: #34d399;
+  font-weight: 600;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  margin-top: 0.2rem;
+}
+
+/* Hypergeometric Parameters Grid */
+.hyper-params-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .hyper-params-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.param-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 0.45rem 0.55rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.15rem;
+}
+
+.param-name {
+  font-size: 0.69rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.param-desc {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+.param-desc code {
+  color: #38bdf8;
+}
+
+.param-val {
+  font-size: 0.98rem;
+  color: #60a5fa;
+  font-weight: 800;
+}
+
+.math-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 9999px;
+  padding: 0.15rem 0.5rem;
+}
+
+.pulse-dot-blue {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  box-shadow: 0 0 6px #3b82f6;
+  animation: pulseDot 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.dyn-formula-latex {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.math-dynamic-help {
+  font-size: 0.71rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+  margin-top: 0.35rem;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   BANNERS DE PASOS NARRATIVOS (PASO 1, PASO 2, PASO 3 - INTEGRANTE 1)
+   ========================================================================== */
+.member1-step-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.85rem 0 0.95rem 0;
+  padding: 0.6rem 0.95rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  flex-wrap: wrap;
+}
+
+.step-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.22rem 0.7rem 0.22rem 0.35rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.step-pill {
+  padding: 0.12rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.step-text {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.step-tag-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+.step-tag-emerald .step-pill {
+  background: #10b981;
+  color: #022c22;
+}
+
+.step-tag-cyan {
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  color: #22d3ee;
+}
+.step-tag-cyan .step-pill {
+  background: #06b6d4;
+  color: #083344;
+}
+
+.step-tag-blue {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #60a5fa;
+}
+.step-tag-blue .step-pill {
+  background: #3b82f6;
+  color: #0f172a;
+}
+
+.step-subtitle-hint {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+
 
 
 

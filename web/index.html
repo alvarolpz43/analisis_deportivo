@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-  <link rel="stylesheet" href="css/styles.css?v=20261125c">
+  <link rel="stylesheet" href="css/styles.css?v=20261125_steps_v3">
 </head>
 <body>
 
@@ -643,6 +643,15 @@
         </div>
       </div>
 
+      <!-- PASO 1 (Solo Integrante 1) -->
+      <div class="member1-step-banner" id="step1-header-member1" style="display: flex;">
+        <div class="step-badge-tag step-tag-emerald">
+          <span class="step-pill">PASO 1</span>
+          <span class="step-text">EVIDENCIA EMPÍRICA Y ANÁLISIS GRÁFICO</span>
+        </div>
+        <span class="step-subtitle-hint">Distribución a priori vs posteriori y tabla de contingencia 2×2 (3.800 partidos)</span>
+      </div>
+
       <!-- Análisis Bayesiano & Tabla de Contingencia -->
       <div class="grid-2">
         <div class="card">
@@ -661,14 +670,14 @@
             </div>
             <div class="hyper-stat-box">
               <span class="h-label">P(B) Evidencia</span>
-              <div class="h-value" id="bayes-evidence">40.2%</div>
+              <div class="h-value" id="bayes-evidence">32.0%</div>
             </div>
             <div class="hyper-stat-box">
               <span class="h-label">P(A|B) Posteriori</span>
               <div class="h-value" style="color: var(--accent-green-light);" id="bayes-posterior">65.2%</div>
             </div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem;">
+          <div style="display: none; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem;" id="bayes-secondary-metrics">
             <div class="hyper-stat-box">
               <span class="h-label">P(B|A) Likelihood</span>
               <div class="h-value" id="bayes-likelihood">57.6%</div>
@@ -696,7 +705,7 @@
               <tr>
                 <th>Condición \ Evento</th>
                 <th id="ct-event-label">Evento A</th>
-                <th>No Evento A</th>
+                <th id="ct-noevent-label">No Gana Local (Empate/Derrota)</th>
                 <th>Total Condición</th>
               </tr>
             </thead>
@@ -708,7 +717,7 @@
                 <td class="total" id="ct-total-cond">0</td>
               </tr>
               <tr>
-                <td style="text-align: left; font-weight: 600;">No Condición B</td>
+                <td id="ct-nocond-label" style="text-align: left; font-weight: 600;">5 o menos Tiros a Puerta (HST ≤ 5)</td>
                 <td id="ct-c">0</td>
                 <td id="ct-d">0</td>
                 <td class="total" id="ct-total-nocond">0</td>
@@ -722,7 +731,7 @@
             </tbody>
           </table>
 
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem;">
+          <div style="display: none; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem;" id="ct-secondary-metrics">
             <div class="hyper-stat-box">
               <span class="h-label">Prueba Chi-Cuadrado (χ²)</span>
               <div class="h-value" id="stat-chi2">0.0</div>
@@ -737,8 +746,188 @@
         </div>
       </div>
 
-      <!-- Interpretación Metodológica -->
-      <div class="card" style="margin-bottom: 2rem;">
+      <!-- PASO 2 (Solo Integrante 1) -->
+      <div class="member1-step-banner" id="step2-header-member1" style="display: flex;">
+        <div class="step-badge-tag step-tag-cyan">
+          <span class="step-pill">PASO 2</span>
+          <span class="step-text">SOLUCIÓN ANALÍTICA Y FORMULACIÓN MATEMÁTICA</span>
+        </div>
+        <span class="step-subtitle-hint">Formalización axiomática de Bayes, verificación muestral y dictamen interpretativo</span>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- DESARROLLO MATEMÁTICO PASO A PASO (EXCLUSIVO INTEGRANTE 1) -->
+      <!-- ========================================================================= -->
+      <div id="member1-math-step-by-step" class="member1-math-section" style="margin-bottom: 1.5rem; display: block;">
+        <!-- Header de la Sección -->
+        <div class="math-section-header">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <div class="math-header-icon-box">
+                <svg class="ui-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16v3h-12l7 5-7 5h12v3h-16z"/>
+                </svg>
+              </div>
+              <div>
+                <h2 class="math-section-title">Desarrollo Matemático Paso a Paso (Integrante 1)</h2>
+                <p class="math-section-subtitle">
+                  Formalización axiomática y sustento inferencial en vivo para la Eficacia Ofensiva Local
+                </p>
+              </div>
+            </div>
+            <div class="math-header-badges">
+              <span class="math-badge-emerald">Exclusivo Integrante 1</span>
+              <span class="math-badge-cyan">Sustentación en Vivo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid de 2 Tarjetas Lado a Lado (grid-2) -->
+        <div class="grid-2" style="margin-bottom: 0;">
+
+          <!-- TARJETA 1 — Definición de Eventos y Teorema de Bayes -->
+          <div class="math-card card-bayes">
+            <div class="math-card-header">
+              <div class="math-card-icon-title">
+                <div class="math-pill-icon emerald">
+                  <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                    <line x1="12" x2="12" y1="20" y2="10"/>
+                    <line x1="18" x2="18" y1="20" y2="4"/>
+                    <line x1="6" x2="6" y1="20" y2="16"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="math-card-title">Tarjeta 1 — Definición de Eventos y Teorema de Bayes</h3>
+                  <span class="math-card-category">Probabilidad Condicional &amp; Actualización Bayesiana</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="math-card-body">
+              <!-- Definición Clara de Eventos -->
+              <div class="math-step-block">
+                <span class="math-step-label">1. Definición de Eventos:</span>
+                <div class="event-def-container">
+                  <div class="event-def-item">
+                    <span class="event-badge badge-event-a">Evento A</span>
+                    <div class="event-details">
+                      <div class="event-title-line">Victoria Local (<code>FTR = 'H'</code>)</div>
+                      <div class="event-prob-calc">$$P(A) = \frac{1729}{3800} = 45.5\%$$</div>
+                    </div>
+                  </div>
+                  <div class="event-def-item">
+                    <span class="event-badge badge-event-b">Evento B (Condición)</span>
+                    <div class="event-details">
+                      <div class="event-title-line">Más de 5 tiros al arco (<code>HST &gt; 5</code>)</div>
+                      <div class="event-prob-calc">$$P(B) = \frac{1215}{3800} = 32.0\%$$</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fórmula Base y Reemplazo Numérico -->
+              <div class="math-step-block">
+                <span class="math-step-label">2. Fórmula Base y Reemplazo Numérico:</span>
+                <div class="math-formula-box" id="member1-bayes-formula">
+                  $$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)} = \frac{0.458 \times 0.455}{0.320} = 65.2\%$$
+                </div>
+                <div class="math-variables-legend">
+                  <span><strong>P(A):</strong> 0.455 (Previa)</span>
+                  <span><strong>P(B):</strong> 0.320 (Evidencia)</span>
+                  <span><strong>P(B|A):</strong> 0.458 (Verosimilitud = $\frac{792}{1729}$)</span>
+                </div>
+              </div>
+
+              <!-- Comprobación Directa desde la Tabla 2x2 -->
+              <div class="math-step-block highlight-step-emerald">
+                <span class="math-step-label">3. Comprobación Directa (Tabla 2×2):</span>
+                <div class="math-contingency-verification" id="member1-bayes-verification">
+                  $$P(A \mid B) = \frac{\text{Casos } (A \cap B)}{\text{Total } B} = \frac{792}{1215} = 65.18\%$$
+                </div>
+                <div class="math-check-badge">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Comprobación exacta: El Teorema de Bayes coincide con la frecuencia relativa muestral.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 2 — Distribución Hipergeométrica (Muestreo sin Reemplazo) -->
+          <div class="math-card card-hyper">
+            <div class="math-card-header">
+              <div class="math-card-icon-title">
+                <div class="math-pill-icon blue">
+                  <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                    <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="math-card-title">Tarjeta 2 — Distr. Hipergeométrica (Muestreo sin Reemplazo)</h3>
+                  <span class="math-card-category">Muestreo Finito para Variables Dependientes</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="math-card-body">
+              <!-- Parámetros del Integrante 1 -->
+              <div class="math-step-block">
+                <span class="math-step-label">1. Parámetros del Integrante 1:</span>
+                <div class="hyper-params-grid">
+                  <div class="param-box">
+                    <span class="param-name">Población (N)</span>
+                    <span class="param-desc"><code>HS</code> (Tiros Totales)</span>
+                    <strong class="param-val" id="dyn-state-N">17</strong>
+                  </div>
+                  <div class="param-box">
+                    <span class="param-name">Éxitos Población (r)</span>
+                    <span class="param-desc"><code>HST</code> (Tiros a Puerta)</span>
+                    <strong class="param-val" id="dyn-state-r">8</strong>
+                  </div>
+                  <div class="param-box">
+                    <span class="param-name">Muestra Extraída (n)</span>
+                    <span class="param-desc">Remates auditados</span>
+                    <strong class="param-val" id="dyn-state-n">5</strong>
+                  </div>
+                  <div class="param-box">
+                    <span class="param-name">Éxitos Observados (x)</span>
+                    <span class="param-desc">Aciertos buscados</span>
+                    <strong class="param-val" id="dyn-state-x">3</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fórmulas Base y Sustitución Dinámica en Tiempo Real -->
+              <div class="math-step-block highlight-step-blue">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                  <span class="math-step-label">2. Fórmulas Base y Sustitución Dinámica:</span>
+                  <span class="math-live-pill">
+                    <span class="pulse-dot-blue"></span> En vivo con sliders
+                  </span>
+                </div>
+                <div class="math-dynamic-hyper-box" id="member1-dynamic-hyper-box">
+                  <div id="member1-dyn-pmf-formula" class="dyn-formula-latex">
+                    $$P(X = x) = \frac{\binom{r}{x} \binom{N - r}{n - x}}{\binom{N}{n}} = \frac{\binom{8}{3}\binom{9}{2}}{\binom{17}{5}} = 32.58\%$$
+                  </div>
+                  <div id="member1-dyn-mean-formula" class="dyn-formula-latex" style="margin-top: 0.4rem;">
+                    $$E[X] = n \cdot \left(\frac{r}{N}\right) = 5 \cdot \left(\frac{8}{17}\right) = 2.353$$
+                  </div>
+                </div>
+                <p class="math-dynamic-help">
+                  Al mover los sliders del simulador inferior, esta sustitución y esperanza se recalculan en tiempo real.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Interpretación Metodológica (Integrada en Paso 2) -->
+      <div class="card" id="card-interpretation" style="margin-bottom: 2rem;">
         <h2 class="card-title">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           Interpretación Estadística del Integrante
@@ -746,6 +935,15 @@
         <p id="member-interpretation" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
           Cargando análisis...
         </p>
+      </div>
+
+      <!-- PASO 3 (Solo Integrante 1) -->
+      <div class="member1-step-banner" id="step3-header-member1" style="display: flex;">
+        <div class="step-badge-tag step-tag-blue">
+          <span class="step-pill">PASO 3</span>
+          <span class="step-text">MODELADO DE MUESTREO SIN REEMPLAZO (DISTRIBUCIÓN HIPERGEOMÉTRICA)</span>
+        </div>
+        <span class="step-subtitle-hint">Simulación interactiva y cálculo dinámico de probabilidades finitas sin reposición</span>
       </div>
 
       <!-- Módulo de Distribución Hipergeométrica Dinámica -->
@@ -2479,7 +2677,7 @@
               <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               <span>Descargar .ipynb</span>
             </a>
-            <a id="link-open-google-colab" href="https://colab.research.google.com/github/alvarolpz43/analisis_deportivo/blob/main/LaLigaScrap.ipynb" target="_blank" rel="noopener noreferrer" class="btn-colab-external">
+            <a id="link-open-google-colab" href="https://colab.research.google.com/drive/1tLSmHw77EA01G7AOqRDKQNhNi39eD_Wx?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-colab-external">
               <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               <span>Abrir en Google Colab</span>
             </a>
@@ -2616,6 +2814,6 @@
   <script src="js/api.js?v=20261125c"></script>
   <script src="js/charts.js?v=20261125c"></script>
   <script src="js/match_simulator.js?v=20261125c"></script>
-  <script src="js/app.js?v=20261125c"></script>
+  <script src="js/app.js?v=20261125_steps_v3"></script>
 </body>
 </html>

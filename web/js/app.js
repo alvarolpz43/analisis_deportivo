@@ -587,6 +587,20 @@ async function loadMemberData(memberId) {
     const c = data.stats.contingency_table;
     document.getElementById('ct-event-label').textContent = data.event_label;
     document.getElementById('ct-cond-label').textContent = data.condition_label;
+
+    // Etiquetas mejoradas exclusivas para Integrante 1
+    const noEventEl = document.getElementById('ct-noevent-label');
+    const noCondEl = document.getElementById('ct-nocond-label');
+    if (noEventEl && noCondEl) {
+      if (memberId === 1) {
+        noEventEl.textContent = "No Gana Local (Empate/Derrota)";
+        noCondEl.textContent = "5 o menos Tiros a Puerta (HST ≤ 5)";
+      } else {
+        noEventEl.textContent = "No Evento A";
+        noCondEl.textContent = "No Condición B";
+      }
+    }
+
     document.getElementById('ct-a').textContent = c.a_event_and_cond.toLocaleString();
     document.getElementById('ct-b').textContent = c.b_no_event_and_cond.toLocaleString();
     document.getElementById('ct-c').textContent = c.c_event_and_no_cond.toLocaleString();
@@ -612,6 +626,35 @@ async function loadMemberData(memberId) {
 
     // Renderizar gráfico hipergeométrico
     updateHypergeometricResults(hScenario.calc);
+
+    // Flujo narrativo de ingeniería en 3 pasos: Visibilidad condicional exclusiva para Integrante 1
+    const isMember1 = (memberId === 1);
+
+    // 1. Encabezados de pasos secuenciales (Paso 1, Paso 2, Paso 3)
+    const step1El = document.getElementById('step1-header-member1');
+    const step2El = document.getElementById('step2-header-member1');
+    const step3El = document.getElementById('step3-header-member1');
+    if (step1El) step1El.style.display = isMember1 ? 'flex' : 'none';
+    if (step2El) step2El.style.display = isMember1 ? 'flex' : 'none';
+    if (step3El) step3El.style.display = isMember1 ? 'flex' : 'none';
+
+    // 2. Limpieza visual en Inferencia Bayesiana y Tabla 2x2
+    const bayesSec = document.getElementById('bayes-secondary-metrics');
+    const ctSec = document.getElementById('ct-secondary-metrics');
+    if (bayesSec) bayesSec.style.display = isMember1 ? 'none' : 'grid';
+    if (ctSec) ctSec.style.display = isMember1 ? 'none' : 'grid';
+
+    // 3. Contenedor de Desarrollo Matemático Paso a Paso (Paso 2)
+    const mathBlock = document.getElementById('member1-math-step-by-step');
+    if (mathBlock) {
+      if (isMember1) {
+        mathBlock.style.display = 'block';
+        updateMember1DynamicHyperFormula(hScenario.default_N, hScenario.default_r, hScenario.default_n, hScenario.default_x, hScenario.calc);
+        renderMember1MathFormulas();
+      } else {
+        mathBlock.style.display = 'none';
+      }
+    }
 
   } catch (err) {
     console.error('Error al cargar datos del integrante:', err);
@@ -664,6 +707,10 @@ function syncHyperSliders() {
   document.getElementById('val-slider-r').textContent = r;
   document.getElementById('val-slider-n').textContent = n;
   document.getElementById('val-slider-x').textContent = xEl.value;
+
+  if (currentMemberId === 1) {
+    updateMember1DynamicHyperFormula(N, r, n, parseInt(xEl.value), null);
+  }
 }
 
 async function calculateAndRenderHyper() {
@@ -675,8 +722,93 @@ async function calculateAndRenderHyper() {
   try {
     const calc = await SportsAPI.calculateHypergeometric(N, r, n, x);
     updateHypergeometricResults(calc);
+    if (currentMemberId === 1) {
+      updateMember1DynamicHyperFormula(N, r, n, x, calc);
+    }
   } catch (err) {
     console.error('Error calculando hipergeométrica:', err);
+  }
+}
+
+// =========================================================================
+// Módulo de Desarrollo Matemático Paso a Paso (Exclusivo Integrante 1)
+// =========================================================================
+function combinations(n, k) {
+  if (k < 0 || k > n) return 0;
+  if (k === 0 || k === n) return 1;
+  if (k > n / 2) k = n - k;
+  let c = 1;
+  for (let i = 1; i <= k; i++) {
+    c = (c * (n - (k - i))) / i;
+  }
+  return Math.round(c);
+}
+
+function updateMember1DynamicHyperFormula(N, r, n, x, calc) {
+  if (currentMemberId !== 1) return;
+
+  const dynN = document.getElementById('dyn-state-N');
+  const dynR = document.getElementById('dyn-state-r');
+  const dynNn = document.getElementById('dyn-state-n');
+  const dynX = document.getElementById('dyn-state-x');
+  if (dynN) dynN.textContent = N;
+  if (dynR) dynR.textContent = r;
+  if (dynNn) dynNn.textContent = n;
+  if (dynX) dynX.textContent = x;
+
+  const c1 = combinations(r, x);
+  const c2 = combinations(N - r, n - x);
+  const c3 = combinations(N, n);
+
+  const pmfPct = calc ? (calc.pmf_exact * 100).toFixed(2) : ((c3 > 0 ? (c1 * c2) / c3 : 0) * 100).toFixed(2);
+  const expVal = calc ? calc.expected_value : (N > 0 ? (n * (r / N)).toFixed(3) : 0);
+
+  const pmfContainer = document.getElementById('member1-dyn-pmf-formula');
+  const meanContainer = document.getElementById('member1-dyn-mean-formula');
+
+  const texPmf = `$$P(X = ${x}) = \\frac{\\binom{${r}}{${x}}\\binom{${N - r}}{${n - x}}}{\\binom{${N}}{${n}}} = \\frac{${c1.toLocaleString()} \\times ${c2.toLocaleString()}}{${c3.toLocaleString()}} = ${pmfPct}\\%$$`;
+  const texMean = `$$E[X] = ${n} \\cdot \\left(\\frac{${r}}{${N}}\\right) = ${expVal}$$`;
+
+  if (pmfContainer) {
+    pmfContainer.innerHTML = texPmf;
+  }
+  if (meanContainer) {
+    meanContainer.innerHTML = texMean;
+  }
+
+  const hyperBox = document.getElementById('member1-dynamic-hyper-box');
+  if (hyperBox && typeof renderMathInElement === 'function') {
+    renderMathInElement(hyperBox, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false }
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+function renderMember1MathFormulas() {
+  const mathSection = document.getElementById('member1-math-step-by-step');
+  if (!mathSection) return;
+
+  function doRender() {
+    if (typeof renderMathInElement === 'function') {
+      renderMathInElement(mathSection, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false }
+        ],
+        throwOnError: false
+      });
+    }
+  }
+
+  if (typeof renderMathInElement === 'function') {
+    doRender();
+  } else {
+    setTimeout(doRender, 200);
+    setTimeout(doRender, 800);
   }
 }
 

@@ -21,8 +21,7 @@ import pandas as pd
 
 
 COLAB_GITHUB_URL = (
-    "https://colab.research.google.com/github/alvarolpz43/"
-    "analisis_deportivo/blob/main/LaLigaScrap.ipynb"
+    "https://colab.research.google.com/drive/1tLSmHw77EA01G7AOqRDKQNhNi39eD_Wx?usp=sharing"
 )
 
 

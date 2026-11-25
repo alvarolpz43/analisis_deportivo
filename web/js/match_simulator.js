@@ -161,7 +161,8 @@ const LiveMatchSimulator = (function() {
       'broadcast': document.getElementById('cam-btn-broadcast'),
       'pitchside': document.getElementById('cam-btn-pitchside'),
       'goalcam': document.getElementById('cam-btn-goalcam'),
-      'aerial': document.getElementById('cam-btn-aerial')
+      'aerial': document.getElementById('cam-btn-aerial'),
+      'follow': document.getElementById('cam-btn-follow')
     };
     const hudBadge = document.getElementById('stadium-hud-cam-name');
 
@@ -179,13 +180,24 @@ const LiveMatchSimulator = (function() {
               'broadcast': 'ESTADIO LALIGA 3D • BROADCAST TV • 60 FPS',
               'pitchside': 'A PIE DE CAMPO (DENTRO DEL ESTADIO) • 60 FPS',
               'goalcam': 'PERSPECTIVA DETRÁS DEL ARCO • 60 FPS',
-              'aerial': 'VISTA AÉREA CENITAL TÁCTICA • 60 FPS'
+              'aerial': 'VISTA AÉREA CENITAL TÁCTICA • 60 FPS',
+              'follow': 'CÁMARA DE SEGUIMIENTO AL BALÓN • 60 FPS'
             };
             hudBadge.textContent = labels[modeKey] || 'ESTADIO LALIGA 3D • 60 FPS';
           }
         });
       }
     });
+
+    const btnResetCam = document.getElementById('cam-btn-reset');
+    if (btnResetCam && !btnResetCam.dataset.bound) {
+      btnResetCam.dataset.bound = 'true';
+      btnResetCam.addEventListener('click', () => {
+        if (window.Stadium3D) {
+          window.Stadium3D.resetCamera();
+        }
+      });
+    }
 
     // Control de Mapa de Calor Táctico 3D
     const btnHeatmap = document.getElementById('btn-toggle-heatmap');
@@ -195,6 +207,39 @@ const LiveMatchSimulator = (function() {
         if (window.Stadium3D) {
           const isVis = window.Stadium3D.toggleHeatmap();
           btnHeatmap.classList.toggle('active', isVis);
+        }
+      });
+    }
+
+    // Control de Pines 3D de Tiros y Goles
+    const btnShotMap = document.getElementById('btn-toggle-shotmap');
+    if (btnShotMap && !btnShotMap.dataset.bound) {
+      btnShotMap.dataset.bound = 'true';
+      btnShotMap.addEventListener('click', () => {
+        if (window.Stadium3D && typeof window.Stadium3D.toggleShotMap === 'function') {
+          const isVis = window.Stadium3D.toggleShotMap();
+          btnShotMap.classList.toggle('active', isVis);
+        }
+      });
+    }
+
+    // Selector cíclico de Iluminación / Atmósfera (Noche / Atardecer / Día)
+    const btnLighting = document.getElementById('btn-cycle-lighting');
+    const lightingLbl = document.getElementById('lighting-mode-label');
+    if (btnLighting && !btnLighting.dataset.bound) {
+      btnLighting.dataset.bound = 'true';
+      const modes = [
+        { key: 'night', label: 'Noche' },
+        { key: 'sunset', label: 'Atardecer' },
+        { key: 'day', label: 'Día' }
+      ];
+      let lightIdx = 0;
+      btnLighting.addEventListener('click', () => {
+        lightIdx = (lightIdx + 1) % modes.length;
+        const next = modes[lightIdx];
+        if (lightingLbl) lightingLbl.textContent = next.label;
+        if (window.Stadium3D && typeof window.Stadium3D.setTimeOfDay === 'function') {
+          window.Stadium3D.setTimeOfDay(next.key);
         }
       });
     }
@@ -230,10 +275,29 @@ const LiveMatchSimulator = (function() {
     homeTeamName = predData.home_team || 'Local';
     awayTeamName = predData.away_team || 'Visitante';
 
-    // Inicializar y resetear Estadio 3D WebGL con los colores oficiales de ambos clubes
+    // Preparar elementos de la arena antes de inicializar WebGL para tener dimensiones reales
+    const arena = document.getElementById('live-match-arena');
+    if (arena) {
+      arena.style.display = 'block';
+      arena.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Inicializar y actualizar Estadio 3D WebGL con los colores oficiales de ambos clubes
     if (window.Stadium3D) {
       window.Stadium3D.init('stadium-3d-wrapper', homeTeamName, awayTeamName);
       window.Stadium3D.reset();
+      window.Stadium3D.onResize();
+      const hudBadge = document.getElementById('stadium-hud-cam-name');
+      if (hudBadge) {
+        const modeLabels = {
+          'broadcast': 'ESTADIO LALIGA 3D • BROADCAST TV • 60 FPS',
+          'pitchside': 'A PIE DE CAMPO (DENTRO DEL ESTADIO) • 60 FPS',
+          'goalcam': 'PERSPECTIVA DETRÁS DEL ARCO • 60 FPS',
+          'aerial': 'VISTA AÉREA CENITAL TÁCTICA • 60 FPS',
+          'follow': 'CÁMARA DE SEGUIMIENTO AL BALÓN • 60 FPS'
+        };
+        hudBadge.textContent = modeLabels[window.Stadium3D.cameraMode] || 'ESTADIO LALIGA 3D • 60 FPS';
+      }
     }
 
     // Iniciar ambientación acústica y silbatazo inicial de LaLiga
@@ -263,13 +327,6 @@ const LiveMatchSimulator = (function() {
     // Actualizar controles UI
     updatePauseButtonUI(false);
     updateSpeedButtonUI(1);
-
-    // Preparar elementos de la arena
-    const arena = document.getElementById('live-match-arena');
-    if (arena) {
-      arena.style.display = 'block';
-      arena.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
 
     // Nombres y Escudos oficiales en el marcador
     const hNameEl = document.getElementById('sim-home-name');
@@ -353,9 +410,24 @@ const LiveMatchSimulator = (function() {
 
     currentMinute++;
     updateClock(currentMinute);
+    if (window.Stadium3D && window.Stadium3D.isInitialized && typeof window.Stadium3D.updateClockMinute === 'function') {
+      window.Stadium3D.updateClockMinute(currentMinute);
+    }
 
     // Revisar si hay eventos programados en este minuto
-    processEventsForMinute(currentMinute);
+    const hadEvent = processEventsForMinute(currentMinute);
+
+    // Mantener fluidez realista con pases tácticos en los minutos intermedios
+    if (!hadEvent && currentMinute < TOTAL_MATCH_MINUTES && currentMinute % 2 === 0) {
+      if (window.Stadium3D && window.Stadium3D.isInitialized && !window.Stadium3D.ballState?.isMoving) {
+        const possHomeTxt = document.getElementById('sim-poss-h-label')?.textContent || '50%';
+        const possH = parseInt(possHomeTxt, 10) || 50;
+        const passTeam = (Math.random() * 100 < possH) ? 'home' : 'away';
+        if (typeof window.Stadium3D.playRoutinePass === 'function') {
+          window.Stadium3D.playRoutinePass(passTeam);
+        }
+      }
+    }
 
     // Manejo de medio tiempo
     if (currentMinute === 45) {
@@ -385,11 +457,14 @@ const LiveMatchSimulator = (function() {
    * Procesa los eventos del timeline que coinciden con el minuto actual
    */
   function processEventsForMinute(min) {
+    let processed = false;
     while (currentEventIdx < activeTimeline.length && activeTimeline[currentEventIdx].minute <= min) {
       const ev = activeTimeline[currentEventIdx];
       renderEvent(ev);
       currentEventIdx++;
+      processed = true;
     }
+    return processed;
   }
 
   /**
@@ -437,18 +512,29 @@ const LiveMatchSimulator = (function() {
       let targetZoneKey = ev.pitch_zone || 'midfield';
       if (ev.type === 'goal') {
         targetZoneKey = ev.team === 'home' ? 'away_goal_net' : 'home_goal_net';
-        window.Stadium3D.triggerGoalCelebration(ev.team === 'away');
       } else if (ev.type === 'corner') {
         targetZoneKey = ev.team === 'home' ? 'corner_ne' : 'corner_nw';
       } else if (ev.type === 'kickoff' || ev.type === 'second_half') {
         targetZoneKey = 'midfield';
       }
 
-      window.Stadium3D.animateBallTo(targetZoneKey, {
-        duration: durationMs,
-        isAerial: isAerial,
-        peakY: peakY
-      });
+      if (typeof window.Stadium3D.handleMatchEvent === 'function') {
+        window.Stadium3D.handleMatchEvent(ev, {
+          targetZoneKey,
+          duration: durationMs,
+          isAerial,
+          peakY
+        });
+      } else {
+        if (ev.type === 'goal') {
+          window.Stadium3D.triggerGoalCelebration(ev.team === 'away');
+        }
+        window.Stadium3D.animateBallTo(targetZoneKey, {
+          duration: durationMs,
+          isAerial,
+          peakY
+        });
+      }
     }
 
     // 2. Efecto de onda táctica si es tiro o gol
@@ -770,6 +856,28 @@ const LiveMatchSimulator = (function() {
 
     if (fScore.home !== undefined && fScore.away !== undefined) {
       updateScoreboard(fScore.home, fScore.away);
+      if (window.Stadium3D && typeof window.Stadium3D.updateScoreboardBanner === 'function') {
+        window.Stadium3D.updateScoreboardBanner(homeTeamName, awayTeamName, fScore.home, fScore.away, 90);
+      }
+
+      // Ceremonia 3D de Levantamiento de Copa para el equipo ganador
+      const hudBadge = document.getElementById('stadium-hud-cam-name');
+      if (fScore.home > fScore.away) {
+        if (window.Stadium3D && typeof window.Stadium3D.triggerTrophyCeremony === 'function') {
+          window.Stadium3D.triggerTrophyCeremony('home', homeTeamName);
+        }
+        if (hudBadge) hudBadge.textContent = `CAMPEÓN: ${homeTeamName.toUpperCase()} • LEVANTA LA COPA 3D`;
+      } else if (fScore.away > fScore.home) {
+        if (window.Stadium3D && typeof window.Stadium3D.triggerTrophyCeremony === 'function') {
+          window.Stadium3D.triggerTrophyCeremony('away', awayTeamName);
+        }
+        if (hudBadge) hudBadge.textContent = `CAMPEÓN: ${awayTeamName.toUpperCase()} • LEVANTA LA COPA 3D`;
+      } else {
+        if (window.Stadium3D && typeof window.Stadium3D.triggerDrawSalute === 'function') {
+          window.Stadium3D.triggerDrawSalute();
+        }
+        if (hudBadge) hudBadge.textContent = 'EMPATE FINAL • SALUDO DEPORTIVO 3D';
+      }
     }
 
     if (tStats.home_shots !== undefined) {
@@ -783,7 +891,7 @@ const LiveMatchSimulator = (function() {
         hy: tStats.home_yellow_cards,
         ay: tStats.away_yellow_cards,
         possession_h: tStats.possession_home || 50,
-        possession_away: tStats.possession_away || 50
+        possession_a: tStats.possession_away || 50
       });
     }
 

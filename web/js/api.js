@@ -66,20 +66,6 @@ const SportsAPI = {
     return await res.json();
   },
 
-  async calculatePoisson(mu, x) {
-    const params = new URLSearchParams({ mu, x });
-    const res = await fetch(`${API_BASE}/api/poisson/calculate?${params.toString()}`);
-    if (!res.ok) throw new Error('Error al calcular distribución de Poisson');
-    return await res.json();
-  },
-
-  async calculateNormal(value, mean, stdDev) {
-    const params = new URLSearchParams({ value, mean, std_dev: stdDev });
-    const res = await fetch(`${API_BASE}/api/normal/calculate?${params.toString()}`);
-    if (!res.ok) throw new Error('Error al calcular distribución normal');
-    return await res.json();
-  },
-
   async getDescriptiveQuestions() {
     const res = await fetch(`${API_BASE}/api/descriptive/questions`);
     if (!res.ok) throw new Error('Error al cargar análisis descriptivo');
@@ -114,10 +100,38 @@ const SportsAPI = {
     return await res.json();
   },
 
-  async askAssistant(query) {
-    const params = new URLSearchParams({ q: query });
-    const res = await fetch(`${API_BASE}/api/assistant/ask?${params.toString()}`);
-    if (!res.ok) throw new Error('Error al consultar al asistente analítico');
+  async getNotebook() {
+    const res = await fetch(`${API_BASE}/api/notebook`);
+    if (!res.ok) throw new Error('Error al cargar el cuaderno Colab');
+    return await res.json();
+  },
+
+  async executeNotebookCell(cellIndex, code = null) {
+    const res = await fetch(`${API_BASE}/api/notebook/execute`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cell_index: cellIndex, code })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Error al ejecutar celda del cuaderno');
+    }
+    return await res.json();
+  },
+
+  async executeAllNotebook() {
+    const res = await fetch(`${API_BASE}/api/notebook/execute-all`, {
+      method: 'POST'
+    });
+    if (!res.ok) throw new Error('Error al ejecutar todas las celdas del cuaderno');
+    return await res.json();
+  },
+
+  async resetNotebookKernel() {
+    const res = await fetch(`${API_BASE}/api/notebook/reset`, {
+      method: 'POST'
+    });
+    if (!res.ok) throw new Error('Error al reiniciar el entorno del cuaderno');
     return await res.json();
   }
 };

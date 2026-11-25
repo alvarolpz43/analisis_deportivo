@@ -80,7 +80,7 @@ def run_cli_report():
     pred = predictor.predict_match("Real Madrid", "Barcelona", simulation_mode="recent")
     prob = pred['probabilities']
     print(f"  * Probabilidades: Real Madrid {prob['pct_home_win']}% | Empate {prob['pct_draw']}% | Barcelona {prob['pct_away_win']}%")
-    print(f"  * Goles Esperados (Poisson xG): Real Madrid {pred['expected_goals']['home_xG']} vs Barcelona {pred['expected_goals']['away_xG']}")
+    print(f"  * Goles Esperados (Binomial xG): Real Madrid {pred['expected_goals']['home_xG']} vs Barcelona {pred['expected_goals']['away_xG']}")
 
     print(f"\n[6] PROYECCIÓN DE CAMPEÓN (SIMULACIÓN MONTE CARLO LALIGA 380 PARTIDOS):")
     tourn = sim.simulate_season(n_simulations=100)

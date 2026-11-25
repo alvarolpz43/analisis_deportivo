@@ -1,5 +1,5 @@
 """
-Predictor de Partidos, Cuotas Justas y Simulación de Marcadores Poisson (xG)
+Predictor de Partidos, Cuotas Justas y Simulación de Marcadores Binomial (xG)
 Soporta dos modalidades de simulación:
 1. 'recent': Ensamble Machine Learning (Logistic Regression + Random Forest) basado en forma rodante de 5 partidos.
 2. 'historical': Inferencia empírica y bayesiana basada en el historial de 10 temporadas (Head-to-Head directo y rendimiento en casa/fuera).
@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 import math
 from typing import Dict, Any, List, Optional
-from scipy.stats import poisson
+from scipy.stats import binom
 
 from ..analytics.data_processor import DataProcessor
 from .train import ModelTrainer, FEATURE_COLS, LABEL_MAP, INV_LABEL_MAP
@@ -151,7 +151,7 @@ class MatchPredictor:
             sum_hist = p_h + p_d + p_a
             p_h, p_d, p_a = p_h / sum_hist, p_d / sum_hist, p_a / sum_hist
 
-            # Goles esperados históricos Poisson
+            # Goles esperados históricos (xG)
             lambda_h = (direct["home_goals_avg"] * 0.5 + h_rec["gf_avg"] * 0.25 + a_rec["ga_avg"] * 0.25)
             lambda_a = (direct["away_goals_avg"] * 0.5 + a_rec["gf_avg"] * 0.25 + h_rec["ga_avg"] * 0.25)
             lambda_h = max(0.4, float(lambda_h))
@@ -219,29 +219,35 @@ class MatchPredictor:
         fair_odd_d = round(1.0 / p_d, 2) if p_d > 0 else 99.0
         fair_odd_a = round(1.0 / p_a, 2) if p_a > 0 else 99.0
 
-        # Matriz Poisson (0 a 4 goles)
+        # Matriz Binomial Independiente (n = 6 ocasiones por equipo, mostrando marcadores 0 a 4 goles)
+        n_goal_trials = 6
+        p_goal_h = min(0.95, max(0.01, lambda_h / n_goal_trials))
+        p_goal_a = min(0.95, max(0.01, lambda_a / n_goal_trials))
+
         score_matrix = []
         prob_over_2_5 = 0.0
-        for i in range(5):
-            for j in range(5):
-                prob_ij = float(poisson.pmf(i, lambda_h) * poisson.pmf(j, lambda_a))
+        for i in range(n_goal_trials + 1):
+            p_i = float(binom.pmf(i, n_goal_trials, p_goal_h))
+            for j in range(n_goal_trials + 1):
+                prob_ij = p_i * float(binom.pmf(j, n_goal_trials, p_goal_a))
                 if (i + j) > 2.5:
                     prob_over_2_5 += prob_ij
-                score_matrix.append({
-                    "score": f"{i} - {j}",
-                    "home_goals": i,
-                    "away_goals": j,
-                    "probability": round(prob_ij, 4),
-                    "pct": round(prob_ij * 100, 1)
-                })
+                if i < 5 and j < 5:
+                    score_matrix.append({
+                        "score": f"{i} - {j}",
+                        "home_goals": i,
+                        "away_goals": j,
+                        "probability": round(prob_ij, 4),
+                        "pct": round(prob_ij * 100, 1)
+                    })
 
         top_scores = sorted(score_matrix, key=lambda s: s["probability"], reverse=True)[:5]
         outcomes = [('H', p_h), ('D', p_d), ('A', p_a)]
         best_outcome = max(outcomes, key=lambda x: x[1])[0]
 
-        # Muestreo estocástico Monte Carlo basado en la distribución conjunta bivariada de Poisson.
+        # Muestreo estocástico Monte Carlo basado en la distribución conjunta binomial independiente.
         # En enfrentamientos reñidos (ej. Real Madrid vs Barcelona), el marcador modal único suele ser 1-1.
-        # Con muestreo estocástico ponderado por las probabilidades reales de la matriz Poisson,
+        # Con muestreo estocástico ponderado por las probabilidades reales de la matriz Binomial,
         # cada simulación en vivo es única y reproduce fielmente la distribución (victorias locales,
         # empates y victorias visitantes según las cuotas y esperanzas matemáticas calculadas).
         import random
@@ -293,9 +299,12 @@ class MatchPredictor:
             "sampled_score": sampled_score,
             "analyzed_variables": {
                 "match_metrics": ["FTHG", "FTAG", "HTHG", "HTAG", "HTR", "HS", "AS", "HST", "AST", "HC", "AC", "HY", "AY", "HR", "AR"],
-                "poisson_parameters": {
-                    "lambda_home": round(lambda_h, 3),
-                    "lambda_away": round(lambda_a, 3),
+                "binomial_parameters": {
+                    "n_trials": n_goal_trials,
+                    "p_home": round(p_goal_h, 4),
+                    "p_away": round(p_goal_a, 4),
+                    "expected_home_goals": round(lambda_h, 3),
+                    "expected_away_goals": round(lambda_a, 3),
                     "expected_total_goals": round(lambda_h + lambda_a, 2),
                     "prob_over_2_5": round(prob_over_2_5, 3)
                 },
@@ -327,7 +336,7 @@ class MatchPredictor:
         """
         Genera una secuencia cronológica coherente y verosímil de eventos para la simulación
         en vivo de 30 segundos (equivalente a 90 minutos de juego).
-        Utiliza el marcador objetivo muestreado estocásticamente de la distribución de Poisson.
+        Utiliza el marcador objetivo muestreado estocásticamente de la distribución Binomial.
         """
         import random
 

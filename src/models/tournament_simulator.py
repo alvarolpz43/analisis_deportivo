@@ -2,12 +2,11 @@
 Simulador de Temporada y Proyección de Campeón para LaLiga Primera División
 Formato oficial: 20 equipos, todos contra todos a doble vuelta (38 jornadas, 380 partidos).
 Puntos oficiales: 3 por Victoria, 1 por Empate, 0 por Derrota.
-Realiza simulación probabilística analítica y Monte Carlo basada en modelos de Poisson (xG) y Bayes.
+Realiza simulación probabilística analítica y Monte Carlo basada en modelos Binomiales (xG) y Bayes.
 """
 import pandas as pd
 import numpy as np
 from typing import Dict, Any, List, Optional
-from scipy.stats import poisson
 
 class TournamentSimulator:
     def __init__(self, predictor):
@@ -95,9 +94,11 @@ class TournamentSimulator:
                 u = rng.random()
                 p_h, p_d = fix['p_h'], fix['p_d']
                 
-                # Muestreo Poisson de goles para calcular GD
-                gh = int(rng.poisson(max(0.2, fix['xg_home'])))
-                ga = int(rng.poisson(max(0.2, fix['xg_away'])))
+                # Muestreo Binomial independiente de goles (n=6 intervalos, p = xG/6) para calcular GD
+                p_gh = min(0.95, max(0.03, fix['xg_home'] / 6.0))
+                p_ga = min(0.95, max(0.03, fix['xg_away'] / 6.0))
+                gh = int(rng.binomial(6, p_gh))
+                ga = int(rng.binomial(6, p_ga))
 
                 h = fix['home']
                 a = fix['away']
@@ -197,7 +198,7 @@ class TournamentSimulator:
             "methodology_description": (
                 "La proyección del torneo ejecuta una simulación Monte Carlo sobre los 380 partidos que componen "
                 "el calendario oficial a doble vuelta de los 20 clubes. En cada partido individual, el resultado "
-                "y los goles se muestrean estocásticamente a partir de las distribuciones bivariadas de Poisson (xG), "
+                "y los goles se muestrean estocásticamente a partir de distribuciones binomiales independientes (xG), "
                 "ponderadas por el modo seleccionado (" + mode_title + "). Tras iterar cientos de campeonatos completos, "
                 "se calcula el promedio esperado de puntos, victorias y la probabilidad empírica de campeonato, "
                 "clasificación a Champions League (Top 4) y descenso (puestos 18-20)."

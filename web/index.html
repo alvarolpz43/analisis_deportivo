@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=20261125c">
 </head>
 <body>
 
@@ -133,6 +133,10 @@
         <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
         <span>Visión General</span>
       </button>
+      <button class="tab-btn" data-target="tab-notebook">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>Cuaderno Colab</span>
+      </button>
       <button class="tab-btn" data-target="tab-inferential">
         <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/></svg>
         <span>Estadística Inferencial & Bayes (6 Roles)</span>
@@ -148,10 +152,6 @@
       <button class="tab-btn" data-target="tab-equations">
         <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v3h-12l7 5-7 5h12v3h-16z"/></svg>
         <span>Ecuaciones & Código</span>
-      </button>
-      <button class="tab-btn" data-target="tab-assistant">
-        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/></svg>
-        <span>Asistente Analítico NLQ</span>
       </button>
     </div>
   </nav>
@@ -244,6 +244,177 @@
         <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
           El proyecto opera sobre el consolidado oficial de <strong>3.800 partidos de liga española</strong> extraídos de Football-Data.co.uk tras verificar la política de acceso de <code style="color: var(--accent-green-light);">robots.txt</code>. Se seleccionaron 21 variables limpias que capturan volumen ofensivo (<code style="color: var(--accent-blue);">HS, HST, HC</code>), comportamiento defensivo (<code style="color: var(--accent-amber);">HF, HY, HR</code>) y evolución temporal del marcador (<code style="color: var(--accent-green);">HTR, HTHG, HTAG, FTR, FTHG, FTAG</code>).
         </p>
+      </div>
+
+      <!-- Marco Teórico Resumido y Glosario Interactivo de Variables y Términos Técnicos -->
+      <div class="card theory-framework-card" id="card-theoretical-framework">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.45rem;">
+          <h2 class="card-title" style="margin: 0;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>
+            Marco Teórico, Variables y Glosario de Términos Técnicos
+          </h2>
+          <span class="brand-badge" style="background: rgba(56, 189, 248, 0.14); color: #38bdf8; border-color: rgba(56, 189, 248, 0.35);">
+            Guía Conceptual de Lectura
+          </span>
+        </div>
+        <p class="card-subtitle" style="margin-bottom: 1rem;">
+          Síntesis teórica de los modelos aplicados y diccionario explicado de las variables del dataset (<code>SP1.csv</code>) y vocabulario estadístico / de Ciencia de Datos.
+        </p>
+
+        <!-- 4 Pilares del Marco Teórico -->
+        <div class="theory-pillars-grid">
+          <div class="theory-pillar-box pillar-blue">
+            <div class="pillar-title">1. Espacio Muestral y Axiomas</div>
+            <p>Cada encuentro tiene tres resultados mutuamente excluyentes: <strong>&Omega; = {V<sub>A</sub>, E, V<sub>B</sub>}</strong> (Local, Empate, Visitante), cuya suma es <strong>1 (100%)</strong>. Permite calcular probabilidades compuestas por regla de adición y complemento.</p>
+          </div>
+          <div class="theory-pillar-box pillar-green">
+            <div class="pillar-title">2. Inferencia Bayesiana y Dependencia</div>
+            <p>El <strong>Teorema de Bayes</strong> actualiza una probabilidad previa <code>P(A)</code> al observar evidencia táctica <code>B</code> (ej. tiros al arco o ventaja al descanso), validando significancia mediante tablas <code>2&times;2</code>, prueba <strong>&chi;&sup2;</strong> y <strong>Odds Ratio</strong>.</p>
+          </div>
+          <div class="theory-pillar-box pillar-amber">
+            <div class="pillar-title">3. Hipergeométrica vs. Binomial</div>
+            <p>Usamos <strong>Hipergeométrica</strong> para <em>variables dependientes</em> extraídas sin reemplazo de una población finita (<code>n &lt; 0.05N</code> aproxima a Binomial), y <strong>Binomial</strong> para <em>variables independientes</em> con probabilidad constante <code>p</code>.</p>
+          </div>
+          <div class="theory-pillar-box pillar-purple">
+            <div class="pillar-title">4. Ciencia de Datos &amp; ML Causal</div>
+            <p>Captura ética (<code>robots.txt</code>), preservación de <em>outliers</em> reales, partición temporal <strong>80/20 sin fuga de datos</strong>, ventanas rodantes de 5 partidos, cuotas justas (<code>1/P</code>) y simulación Monte Carlo.</p>
+          </div>
+        </div>
+
+        <!-- Controles de Filtro y Búsqueda del Glosario -->
+        <div class="glossary-controls">
+          <div class="glossary-filter-pills" role="group" aria-label="Filtrar términos técnicos">
+            <button type="button" class="glossary-pill active" data-category="all">Todos</button>
+            <button type="button" class="glossary-pill" data-category="dataset">Variables del Dataset (SP1)</button>
+            <button type="button" class="glossary-pill" data-category="stats">Estadística Inferencial</button>
+            <button type="button" class="glossary-pill" data-category="ml">Ciencia de Datos &amp; ML</button>
+          </div>
+          <div class="glossary-search-wrap">
+            <input type="text" id="glossary-search-input" class="glossary-search-input" placeholder="Buscar variable o término (ej. HST, Bayes, data leakage)..." />
+          </div>
+        </div>
+        <div class="glossary-count-meta" id="glossary-count-meta">Mostrando 28 términos técnicos explicados</div>
+
+        <!-- Rejilla de Variables y Palabras Técnicas -->
+        <div class="glossary-grid" id="glossary-grid">
+          <!-- Variables del Dataset SP1 -->
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">FTR</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Full Time Result:</strong> Resultado reglamentario final del partido: <code>H</code> (Victoria Local), <code>D</code> (Empate) o <code>A</code> (Victoria Visitante).</p>
+          </div>
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">FTHG / FTAG</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Goles Finales:</strong> Goles anotados al minuto 90 por el equipo local (<em>Home</em>) y por el visitante (<em>Away</em>).</p>
+          </div>
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">HTR / HTHG / HTAG</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Marcador al Descanso:</strong> Resultado parcial (<code>HTR</code>) y goles al término del primer tiempo (minuto 45), clave para el Rol 3 de Bayes.</p>
+          </div>
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">HS / AS</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Tiros Totales (Shots):</strong> Total de remates intentados durante el partido (incluye tiros desviados, bloqueados y al arco).</p>
+          </div>
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">HST / AST</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Tiros a Puerta (Shots on Target):</strong> Remates dirigidos entre los tres palos que terminan en gol o atajada del arquero.</p>
+          </div>
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">HC / AC</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Tiros de Esquina (Corners):</strong> Saques de esquina forzados por el equipo local (<code>HC</code>) o visitante (<code>AC</code>).</p>
+          </div>
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">HF / AF</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Faltas Cometidas (Fouls):</strong> Infracciones sancionadas por el árbitro a cada equipo; población base para el análisis disciplinario.</p>
+          </div>
+          <div class="glossary-item" data-category="dataset">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ds">HY / AY / HR / AR</span><span class="glossary-cat-label">Dataset SP1</span></div>
+            <p><strong>Tarjetas Disciplinarias:</strong> Tarjetas amarillas (<code>HY</code>, <code>AY</code>) y rojas (<code>HR</code>, <code>AR</code>) acumuladas por local y visitante.</p>
+          </div>
+
+          <!-- Estadística Inferencial -->
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">P(A) — Previa</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Probabilidad a Priori:</strong> Frecuencia histórica inicial de un evento antes de conocer condiciones del partido (ej. victoria local = 45.5%).</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">P(A | B) — Posteriori</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Probabilidad a Posteriori (Bayes):</strong> Probabilidad actualizada del evento <code>A</code> una vez ocurre la evidencia <code>B</code> (ej. <code>P(H | HST &gt; 5) = 65.2%</code>).</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">P(B | A) — Likelihood</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Verosimilitud:</strong> Qué tan frecuente aparece la evidencia <code>B</code> dentro de los partidos donde sí ocurrió el resultado <code>A</code>.</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">Odds Ratio (OR)</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Razón de Momios:</strong> Mide cuántas veces se multiplican las posibilidades de ganar si se cumple la condición frente a cuando no se cumple.</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">Chi-Cuadrado (&chi;&sup2;) &amp; p-valor</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Prueba de Independencia:</strong> Evalúa en una tabla 2&times;2 si la relación entre dos variables es real (<code>p &lt; 0.05</code>) o simple azar.</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">Hipergeométrica</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Variables Dependientes (sin reemplazo):</strong> Calcula éxitos <code>x</code> al extraer muestra <code>n</code> sin reposición de población finita <code>N</code> con <code>r</code> éxitos.</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">Regla n &lt; 0.05N</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Aproximación Binomial:</strong> Si la muestra <code>n</code> es menor al 5% de <code>N</code>, la dependencia es mínima y la Hipergeométrica converge a la Binomial.</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">Binomial</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Variables Independientes:</strong> Modela <code>k</code> éxitos en <code>n</code> ensayos independientes con probabilidad constante <code>p</code> (y goles esperados <code>xG</code>).</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">Desv. Estándar (s)</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Dispersión Muestral:</strong> Mide cuánto varían los datos respecto al promedio. Valores bajos (<code>s &asymp; 1.2</code> goles) confirman estabilidad muestral.</p>
+          </div>
+          <div class="glossary-item" data-category="stats">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-st">Prueba Bilateral (Z)</span><span class="glossary-cat-label">Estadística</span></div>
+            <p><strong>Contraste de Localía:</strong> Prueba <code>H<sub>0</sub>: p = 0.5</code> vs <code>H<sub>1</sub>: p &ne; 0.5</code>. Nuestro <code>Z = -5.55</code> (<code>p &lt; 0.0001</code>) confirma ventaja local real.</p>
+          </div>
+
+          <!-- Ciencia de Datos & ML -->
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">robots.txt</span><span class="glossary-cat-label">Ciencia de Datos</span></div>
+            <p><strong>Web Scraping Ético:</strong> Archivo del servidor que autoriza qué rutas pueden rastrearse automáticamente antes de descargar los CSV.</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Outliers</span><span class="glossary-cat-label">Ciencia de Datos</span></div>
+            <p><strong>Valores Atípicos:</strong> Goleadas extremas (&ge;7 goles como 6-2 u 8-2). Se conservan porque son hechos reales que explican la asimetría derecha.</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Media vs. Mediana</span><span class="glossary-cat-label">Ciencia de Datos</span></div>
+            <p><strong>Diagnóstico de Asimetría:</strong> Cuando Media &gt; Mediana (goles: 2.34 vs 2.0) hay cola derecha; cuando coinciden (HST: 5.62 vs 5.0) hay simetría.</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Data Leakage</span><span class="glossary-cat-label">Ciencia de Datos</span></div>
+            <p><strong>Fuga de Datos:</strong> Error de usar información futura o del propio partido para predecirlo. Se evita ordenando fechas y excluyendo cuotas.</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Split Out-of-Time</span><span class="glossary-cat-label">Machine Learning</span></div>
+            <p><strong>Partición Temporal 80/20:</strong> Entrenar con 3.040 partidos pasados (2016–2024) y evaluar sobre 760 partidos futuros (2024–2026).</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Rolling 5 (Ventana Móvil)</span><span class="glossary-cat-label">Machine Learning</span></div>
+            <p><strong>Forma Reciente:</strong> Promedio causal de los últimos 5 encuentros jugados por cada club (<code>gf_5</code>, <code>ga_5</code>, <code>hst_5</code>, <code>pts_5</code>).</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">StandardScaler</span><span class="glossary-cat-label">Machine Learning</span></div>
+            <p><strong>Estandarización de Features:</strong> Centra y escala las 16 variables predictoras para que la Regresión Logística compare magnitudes justamente.</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Fair Odds (1 / P)</span><span class="glossary-cat-label">Ciencia de Datos</span></div>
+            <p><strong>Cuotas Justas Implícitas:</strong> Inversa matemática de la probabilidad estimada, sin margen comercial ni comisión de casas de apuestas.</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Monte Carlo</span><span class="glossary-cat-label">Simulación</span></div>
+            <p><strong>Simulación Estocástica:</strong> Repetir cientos de veces los 380 partidos de la liga muestreando resultados para estimar campeones y descenso.</p>
+          </div>
+          <div class="glossary-item" data-category="ml">
+            <div class="glossary-item-head"><span class="glossary-term-badge badge-ml">Asociación vs. Causalidad</span><span class="glossary-cat-label">Metodología</span></div>
+            <p><strong>Rigor Epistemológico:</strong> Que dos variables ocurran juntas (ej. tirar al arco y ganar) no prueba causa directa única; la pandemia aisló el efecto público.</p>
+          </div>
+        </div>
       </div>
 
       <!-- Validación de Confiabilidad y Prueba de Hipótesis Bilateral -->
@@ -589,7 +760,7 @@
           </span>
         </div>
         <p class="card-subtitle" id="hyper-scenario-desc">
-          Simulación interactiva de muestreo finito sin reposición adaptada al escenario del integrante:
+          Simulación interactiva para variables dependientes (muestreo finito sin reposición) adaptada al escenario del integrante:
         </p>
 
         <!-- Sliders interactivos -->
@@ -732,174 +903,6 @@
           <canvas id="chart-binom-pmf"></canvas>
         </div>
       </div>
-
-      <!-- Módulo de Distribución de Poisson (Larson & Farber Cap. 4: Variables en Intervalos Continuos) -->
-      <div class="card" style="margin-top: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
-          <h2 class="card-title">
-            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-            Intervalos Continuos: Distribución de Poisson Interactiva (Larson & Farber Cap. 4)
-          </h2>
-          <span class="brand-badge" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8; border-color: rgba(14, 165, 233, 0.35);">
-            P(x) = (μ^x · e^-μ) / x! | σ² = μ | σ = √μ
-          </span>
-        </div>
-        <p class="card-subtitle">
-          Modela la probabilidad de que ocurra un número discreto de eventos ($x$) en un intervalo continuo fijo (ej. 90 minutos de juego). Se audita si el conteo cae en el <strong>rango usual [μ - 2σ, μ + 2σ]</strong> según el criterio de Larson & Farber:
-        </p>
-
-        <!-- Sliders interactivos Poisson -->
-        <div class="hyper-controls" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-          <div class="control-group">
-            <div class="control-header">
-              <label>Media de Eventos en 90 min (μ)</label>
-              <span class="val-badge" id="val-slider-poisson-mu">1.45</span>
-            </div>
-            <input type="range" id="slider-poisson-mu" min="10" max="600" value="145">
-          </div>
-
-          <div class="control-group">
-            <div class="control-header">
-              <label>Eventos Observados (x)</label>
-              <span class="val-badge" id="val-slider-poisson-x">2</span>
-            </div>
-            <input type="range" id="slider-poisson-x" min="0" max="10" value="2">
-          </div>
-        </div>
-
-        <!-- Métricas Poisson en vivo -->
-        <div class="hyper-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
-          <div class="hyper-stat-box">
-            <span class="h-label">P(X = x) Exacta</span>
-            <div class="h-value" style="color: #38bdf8;" id="poisson-exact">0.0%</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">P(X ≤ x) Acumulada</span>
-            <div class="h-value" id="poisson-cdf">0.0%</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">P(X ≥ x) Supervivencia</span>
-            <div class="h-value" id="poisson-sf">0.0%</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">Varianza (σ² = μ)</span>
-            <div class="h-value" style="color: #34d399;" id="poisson-var">1.45</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">Desv. Estándar (σ = √μ)</span>
-            <div class="h-value" style="color: #60a5fa;" id="poisson-std">1.20</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">Rango Usual [μ ± 2σ]</span>
-            <div class="h-value" style="font-size: 0.95rem; color: #f59e0b;" id="poisson-usual-bounds">[0.0, 3.8]</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-          <div id="poisson-usual-badge" class="badge-usual">
-            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Evento Estadísticamente Usual (Dentro de μ ± 2σ)</span>
-          </div>
-          <span style="font-size: 0.75rem; color: var(--text-muted);">Criterio Larson & Farber: Los valores fuera de μ ± 2σ se consideran poco comunes (P &lt; 0.05).</span>
-        </div>
-
-        <!-- Gráfico PMF Poisson -->
-        <div style="height: 260px; position: relative; margin-top: 1rem;">
-          <canvas id="chart-poisson-pmf"></canvas>
-        </div>
-      </div>
-
-      <!-- Módulo de Distribución Normal Estándar y Valor Z (Larson & Farber Cap. 7) -->
-      <div class="card" style="margin-top: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
-          <h2 class="card-title">
-            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            Distribución Normal Estándar & Puntuación z (Larson & Farber Cap. 7)
-          </h2>
-          <span class="brand-badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.35);">
-            z = (X - μ) / σ | Regla Empírica 68-95-99.7
-          </span>
-        </div>
-        <p class="card-subtitle">
-          Tipificación de variables deportivas continuas (ej. rendimiento goleador de un club en una temporada) y cálculo de áreas bajo la curva según los <strong>4 Casos de Larson & Farber</strong>:
-        </p>
-
-        <!-- Sliders interactivos Normal -->
-        <div class="hyper-controls" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-          <div class="control-group">
-            <div class="control-header">
-              <label>Valor Observado (X)</label>
-              <span class="val-badge" id="val-slider-normal-x">75</span>
-            </div>
-            <input type="range" id="slider-normal-x" min="10" max="110" value="75">
-          </div>
-
-          <div class="control-group">
-            <div class="control-header">
-              <label>Media Poblacional (μ)</label>
-              <span class="val-badge" id="val-slider-normal-mu">52.8</span>
-            </div>
-            <input type="range" id="slider-normal-mu" min="20" max="90" value="53">
-          </div>
-
-          <div class="control-group">
-            <div class="control-header">
-              <label>Desv. Estándar (σ)</label>
-              <span class="val-badge" id="val-slider-normal-std">16.5</span>
-            </div>
-            <input type="range" id="slider-normal-std" min="5" max="30" value="17">
-          </div>
-        </div>
-
-        <!-- Estadísticos Z y Regla Empírica -->
-        <div class="hyper-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
-          <div class="hyper-stat-box">
-            <span class="h-label">Puntuación z</span>
-            <div class="h-value" style="color: #c084fc;" id="normal-z-val">+1.35</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">Interpretación z</span>
-            <div class="h-value" style="font-size: 0.95rem; color: #34d399;" id="normal-z-interp">Normal (Superior)</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">Regla 68% (μ ± 1σ)</span>
-            <div class="h-value" style="font-size: 0.9rem;" id="normal-emp-68">[36.3, 69.3]</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">Regla 95% (μ ± 2σ)</span>
-            <div class="h-value" style="font-size: 0.9rem;" id="normal-emp-95">[19.8, 85.8]</div>
-          </div>
-          <div class="hyper-stat-box">
-            <span class="h-label">Regla 99.7% (μ ± 3σ)</span>
-            <div class="h-value" style="font-size: 0.9rem;" id="normal-emp-99">[3.3, 102.3]</div>
-          </div>
-        </div>
-
-        <!-- 4 Casos de Larson & Farber -->
-        <div class="normal-cases-grid">
-          <div class="normal-case-box">
-            <span class="normal-case-title">Caso 1: Área Izquierda P(Z &lt; z)</span>
-            <div class="normal-case-val" id="normal-case-1">91.1%</div>
-          </div>
-          <div class="normal-case-box">
-            <span class="normal-case-title">Caso 2: Área Derecha P(Z &gt; z)</span>
-            <div class="normal-case-val" id="normal-case-2">8.9%</div>
-          </div>
-          <div class="normal-case-box">
-            <span class="normal-case-title">Caso 3: Entre [-|z|, |z|]</span>
-            <div class="normal-case-val" id="normal-case-3">82.3%</div>
-          </div>
-          <div class="normal-case-box">
-            <span class="normal-case-title">Caso 4: Colas Exteriores</span>
-            <div class="normal-case-val" id="normal-case-4">17.7%</div>
-          </div>
-        </div>
-
-        <!-- Gráfico Campana de Gauss Normal -->
-        <div style="height: 260px; position: relative; margin-top: 1rem;">
-          <canvas id="chart-normal-pdf"></canvas>
-        </div>
-      </div>
     </section>
 
     <!-- ==================== TAB 3: MACHINE LEARNING & PREDICTOR ==================== -->
@@ -969,12 +972,14 @@
           </div>
         </div>
 
-        <button id="btn-run-predict" class="btn-predict">
-          <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="6 3 20 12 6 21 6 3"/>
-          </svg>
-          Simular Partido
-        </button>
+        <div style="display: flex; justify-content: center;">
+          <button id="btn-run-predict" class="btn-predict" type="button">
+            <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="6 3 20 12 6 21 6 3"/>
+            </svg>
+            Simular Partido
+          </button>
+        </div>
       </div>
 
       <!-- ==================== ARENA DE SIMULACIÓN EN VIVO (30 SEGUNDOS) ==================== -->
@@ -1102,9 +1107,25 @@
                     <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
                     <span>Aérea</span>
                   </button>
-                  <button id="btn-toggle-heatmap" class="btn-cam-switch" type="button" title="Activar/Desactivar Mapa de Calor Táctico 3D">
+                  <button id="cam-btn-follow" class="btn-cam-switch" type="button" title="Seguir dinámicamente el balón en la jugada">
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span>Seguir Balón</span>
+                  </button>
+                  <button id="cam-btn-reset" class="btn-cam-switch" type="button" title="Recentrar vista de la cámara activa">
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>Centrar</span>
+                  </button>
+                  <button id="btn-toggle-heatmap" class="btn-cam-switch" type="button" title="Activar/Desactivar Mapa de Calor Táctico 3D Dinámico">
                     <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     <span>Heatmap</span>
+                  </button>
+                  <button id="btn-toggle-shotmap" class="btn-cam-switch" type="button" title="Mostrar/Ocultar Pines 3D de Tiros y Goles">
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/></svg>
+                    <span>Tiros 3D</span>
+                  </button>
+                  <button id="btn-cycle-lighting" class="btn-cam-switch" type="button" title="Cambiar Iluminación del Estadio: Noche / Atardecer / Día">
+                    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+                    <span id="lighting-mode-label">Noche</span>
                   </button>
                 </div>
 
@@ -1223,7 +1244,7 @@
                     <!-- Valla LED Publicitaria Inferior -->
                     <div class="stadium-led-board led-bottom">
                       <div class="led-ticker-inner reverse">
-                        <span>• 3.800 PARTIDOS HISTÓRICOS AUDITADOS • PREDICCIÓN POISSON xG • MODELOS ML REGRESIÓN LOGÍSTICA & RANDOM FOREST •</span>
+                        <span>• 3.800 PARTIDOS HISTÓRICOS AUDITADOS • PREDICCIÓN BINOMIAL xG • MODELOS ML REGRESIÓN LOGÍSTICA & RANDOM FOREST •</span>
                       </div>
                     </div>
                   </div>
@@ -1362,7 +1383,7 @@
                 <strong id="label-sampled-score" style="font-size: 1.05rem; color: #ffffff; background: rgba(0,0,0,0.4); padding: 0.2rem 0.6rem; border-radius: 4px; margin-left: 0.4rem;">1 - 0</strong>
               </div>
             </div>
-            <span id="label-sampled-prob" style="font-size: 0.82rem; color: var(--text-secondary);">Probabilidad Poisson Bivariada: 8.6%</span>
+            <span id="label-sampled-prob" style="font-size: 0.82rem; color: var(--text-secondary);">Probabilidad Binomial Bivariada: 8.6%</span>
           </div>
 
           <!-- Barra animada de probabilidades -->
@@ -1396,7 +1417,7 @@
             <div class="card" style="background-color: var(--bg-secondary);">
               <h3 style="font-size: 1rem; color: var(--accent-green-light); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
                 <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-                Goles Esperados (Poisson xG)
+                Goles Esperados (Binomial xG)
               </h3>
               <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
                 <div class="hyper-stat-box">
@@ -1424,7 +1445,7 @@
                 Marcadores Más Probables (Matriz Bivariada)
               </h3>
               <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-                Probabilidad exacta de marcadores finales calculada por convolución de Poisson:
+                Probabilidad exacta de marcadores finales calculada por convolución Binomial independiente:
               </p>
               <div id="top-scores-list" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
             </div>
@@ -1572,21 +1593,21 @@
             </div>
           </div>
 
-          <!-- Columna 2: Parámetros Inferenciales & Poisson -->
+          <!-- Columna 2: Parámetros Inferenciales & Binomial -->
           <div class="var-category-card">
             <div class="var-category-header">
               <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M4 4h16v3h-12l7 5-7 5h12v3h-16z"/></svg>
-              <h3 class="var-category-title">2. Inferencia Estadística & Poisson</h3>
+              <h3 class="var-category-title">2. Inferencia Estadística & Binomial</h3>
             </div>
             <div class="var-tags-list">
-              <div class="var-tag-row"><span class="var-badge badge-poisson">&lambda;<sub>H</sub> (xG Local)</span><span class="var-desc">Tasa esperada Poisson del local calculada por fuerza de ataque y defensa rival.</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-poisson">&lambda;<sub>A</sub> (xG Visitante)</span><span class="var-desc">Tasa esperada Poisson del visitante.</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-poisson">P(1), P(X), P(2)</span><span class="var-desc">Probabilidades analíticas acumuladas de Victoria Local, Empate y Visitante.</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-poisson">P(x, y)</span><span class="var-desc">Matriz de distribución bivariada conjunta para marcadores exactos (0-0 a 4-4).</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-poisson">Cuotas Justas</span><span class="var-desc">Inversa de probabilidad O = 1/P para arbitraje probabilístico de mercado.</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-poisson">P(A | B) Bayes</span><span class="var-desc">Probabilidad condicionada ante eventos observados (HTR = H o HST > 5).</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-poisson">Desv. Estándar (s)</span><span class="var-desc">Dispersión de goles en 3.800 partidos (s<sub>H</sub> = 1.30, s<sub>A</sub> = 1.15).</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-poisson">Z-Score Localía</span><span class="var-desc">Prueba de hipótesis bilateral (Z = -5.59, p &lt; 0.0001) que confirma la ventaja de jugar en casa.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">&lambda;<sub>H</sub> (xG Local)</span><span class="var-desc">Goles esperados del local (Binomial n=6, p<sub>H</sub> = &lambda;<sub>H</sub>/6) por fuerza de ataque y defensa rival.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">&lambda;<sub>A</sub> (xG Visitante)</span><span class="var-desc">Goles esperados del visitante (Binomial n=6, p<sub>A</sub> = &lambda;<sub>A</sub>/6).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">P(1), P(X), P(2)</span><span class="var-desc">Probabilidades analíticas acumuladas de Victoria Local, Empate y Visitante.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">P(x, y)</span><span class="var-desc">Matriz de distribución binomial conjunta para marcadores exactos (0-0 a 4-4).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">Cuotas Justas</span><span class="var-desc">Inversa de probabilidad O = 1/P para arbitraje probabilístico de mercado.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">P(A | B) Bayes</span><span class="var-desc">Probabilidad condicionada ante eventos observados (HTR = H o HST > 5).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">Desv. Estándar (s)</span><span class="var-desc">Dispersión de goles en 3.800 partidos (s<sub>H</sub> = 1.30, s<sub>A</sub> = 1.15).</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-binomial">Z-Score Localía</span><span class="var-desc">Prueba de hipótesis bilateral (Z = -5.59, p &lt; 0.0001) que confirma la ventaja de jugar en casa.</span></div>
             </div>
           </div>
 
@@ -1616,7 +1637,7 @@
             <div class="var-tags-list">
               <div class="var-tag-row"><span class="var-badge badge-tourn">PJ (Partidos)</span><span class="var-desc">38 jornadas oficiales por club (380 partidos totales por simulación).</span></div>
               <div class="var-tag-row"><span class="var-badge badge-tourn">Pts Esperados</span><span class="var-desc">Puntos promedio proyectados (Victoria = 3 pts, Empate = 1 pt, Derrota = 0 pts).</span></div>
-              <div class="var-tag-row"><span class="var-badge badge-tourn">GF / GC</span><span class="var-desc">Goles a favor y en contra acumulados mediante muestreo Poisson por fixture.</span></div>
+              <div class="var-tag-row"><span class="var-badge badge-tourn">GF / GC</span><span class="var-desc">Goles a favor y en contra acumulados mediante muestreo Binomial por fixture.</span></div>
               <div class="var-tag-row"><span class="var-badge badge-tourn">DG (Dif. Goles)</span><span class="var-desc">Diferencia de Goles (DG = GF - GC), primer criterio de desempate clasificatorio.</span></div>
               <div class="var-tag-row"><span class="var-badge badge-tourn">% Campeón</span><span class="var-desc">Frecuencia empírica en que el club terminó 1º tras las N temporadas Monte Carlo.</span></div>
               <div class="var-tag-row"><span class="var-badge badge-tourn">% Champions</span><span class="var-desc">Probabilidad empírica de ubicarse en el Top 4 de la clasificación.</span></div>
@@ -1659,7 +1680,7 @@
             ¿En qué se basa la simulación del ganador de temporada? (Metodología Monte Carlo)
           </h3>
           <p id="tournament-methodology-text">
-            La simulación proyecta la liga completa ejecutando un <strong>algoritmo Monte Carlo sobre los 380 partidos oficiales</strong> (los 20 clubes se enfrentan todos contra todos a doble vuelta: local y visitante). En cada partido individual, el resultado y los goles se muestrean estocásticamente a partir de las distribuciones bivariadas de Poisson (&lambda;<sub>H</sub>, &lambda;<sub>A</sub>), calibradas según el modo seleccionado (<em>Forma Reciente ML</em> basada en ventanas móviles de 5 partidos o <em>Registro Histórico</em> de 10 temporadas / 3.800 partidos). Cada partido otorga <strong>3 puntos por victoria, 1 por empate y 0 por derrota</strong>. Al iterar cientos de campeonatos completos, el sistema calcula la tabla proyectada, los puntos esperados y la <strong>probabilidad empírica de salir campeón</strong>, clasificar a Champions League (Top 4) o descender (Puestos 18 a 20).
+            La simulación proyecta la liga completa ejecutando un <strong>algoritmo Monte Carlo sobre los 380 partidos oficiales</strong> (los 20 clubes se enfrentan todos contra todos a doble vuelta: local y visitante). En cada partido individual, el resultado y los goles se muestrean estocásticamente a partir de distribuciones binomiales independientes (&lambda;<sub>H</sub>, &lambda;<sub>A</sub>), calibradas según el modo seleccionado (<em>Forma Reciente ML</em> basada en ventanas móviles de 5 partidos o <em>Registro Histórico</em> de 10 temporadas / 3.800 partidos). Cada partido otorga <strong>3 puntos por victoria, 1 por empate y 0 por derrota</strong>. Al iterar cientos de campeonatos completos, el sistema calcula la tabla proyectada, los puntos esperados y la <strong>probabilidad empírica de salir campeón</strong>, clasificar a Champions League (Top 4) o descender (Puestos 18 a 20).
           </p>
         </div>
 
@@ -1917,7 +1938,7 @@
           <span class="brand-badge">Traducción Matemática ⇄ Python</span>
         </div>
         <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
-          Este apartado expone con rigor formal las <strong>ecuaciones estadísticas y probabilísticas</strong> empleadas en la plataforma, confrontadas directamente con su <strong>implementación real en código Python</strong>. Cada módulo ilustra cómo los modelos teóricos de inferencia bayesiana, combinatoria hipergeométrica, procesos de Poisson y algoritmos de Machine Learning son computados sobre los 3.800 partidos históricos de La Liga.
+          Este apartado expone con rigor formal las <strong>ecuaciones estadísticas y probabilísticas</strong> empleadas en la plataforma, confrontadas directamente con su <strong>implementación real en código Python</strong>. Cada módulo ilustra cómo los modelos teóricos de inferencia bayesiana, combinatoria hipergeométrica (variables dependientes), distribución binomial (variables independientes) y algoritmos de Machine Learning son computados sobre los 3.800 partidos históricos de La Liga.
         </p>
       </div>
 
@@ -2132,33 +2153,33 @@
           </div>
         </div>
 
-        <!-- 4. Modelo Bivariado Poisson -->
+        <!-- 4. Modelo Bivariado Binomial -->
         <div class="equation-card amber">
           <div class="equation-header">
             <div>
               <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
                 <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-                4. Modelo Poisson Bivariado: Goles Esperados (xG) y Marcadores Exactos
+                4. Modelo Binomial Bivariado: Goles Esperados (xG) y Marcadores Exactos
               </h3>
               <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
-                Computa la intensidad ofensiva/defensiva de cada club para predecir la matriz de marcadores y Más/Menos 2.5 goles.
+                Computa la intensidad ofensiva/defensiva de cada club bajo ensayos binomiales independientes ($n = 6$) para predecir marcadores y Más/Menos 2.5 goles.
               </p>
             </div>
-            <span class="math-tag amber">Procesos Estocásticos</span>
+            <span class="math-tag amber">Modelado Binomial xG</span>
           </div>
 
           <div class="equation-split">
             <div class="formula-panel">
               <div class="formula-box">
-                <span class="katex-render">$$P(G_H = i, G_A = j) = \frac{\lambda_H^i e^{-\lambda_H}}{i!} \times \frac{\lambda_A^j e^{-\lambda_A}}{j!}$$</span>
+                <span class="katex-render">$$P(G_H = i, G_A = j) = \binom{n}{i} p_H^i (1 - p_H)^{n - i} \times \binom{n}{j} p_A^j (1 - p_A)^{n - j}$$</span>
               </div>
               <div class="formula-box" style="min-height: 60px;">
-                <span class="katex-render">$$\lambda_H = \frac{\text{GF}_H}{\overline{\text{GF}}_L} \cdot \frac{\text{GA}_A}{\overline{\text{GA}}_L} \cdot \mu_H, \quad P(\text{Más de 2.5}) = 1 - \sum_{i+j \le 2} P(G_H = i, G_A = j)$$</span>
+                <span class="katex-render">$$p_H = \frac{\lambda_H}{n}, \quad p_A = \frac{\lambda_A}{n}, \quad P(\text{Más de 2.5}) = 1 - \sum_{i+j \le 2} P(G_H = i, G_A = j)$$</span>
               </div>
               <ul class="var-definition-list">
-                <li><code>\lambda_H, \lambda_A</code> Tasa media de goles esperados (xG) de local y visitante.</li>
-                <li><code>\mu_H = 1.45</code> Promedio histórico de goles marcados por clubes locales en La Liga.</li>
-                <li><code>\text{GF}_H, \text{GA}_A</code> Capacidad goleadora del local frente a la vulnerabilidad defensiva del visitante.</li>
+                <li><code>\lambda_H, \lambda_A</code> Goles esperados (xG) de local y visitante en el encuentro.</li>
+                <li><code>n = 6</code> Ventanas independientes de ocasión de gol por equipo ($E[G] = n \cdot p = \lambda$).</li>
+                <li><code>p_H, p_A</code> Probabilidad de conversión por ventana ofensiva independiente.</li>
               </ul>
             </div>
 
@@ -2169,26 +2190,26 @@
                   <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                   src/models/predictor.py
                 </span>
-                <button class="btn-copy-code" data-code-id="code-poisson">
+                <button class="btn-copy-code" data-code-id="code-binom-xg">
                   <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                   Copiar
                 </button>
               </div>
-              <pre class="code-pre" id="code-poisson"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">poisson</span>
+              <pre class="code-pre" id="code-binom-xg"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">binom</span>
 
-<span class="comment"># 1. Parámetros Poisson de intensidad (xG)</span>
-<span class="var">lambda_h</span> = <span class="func">max</span>(<span class="number">0.4</span>, (<span class="var">h_stat</span>[<span class="string">'gf'</span>] / <span class="number">1.3</span>) * (<span class="var">a_stat</span>[<span class="string">'ga'</span>] / <span class="number">1.3</span>) * <span class="number">1.45</span>)
-<span class="var">lambda_a</span> = <span class="func">max</span>(<span class="number">0.3</span>, (<span class="var">a_stat</span>[<span class="string">'gf'</span>] / <span class="number">1.1</span>) * (<span class="var">h_stat</span>[<span class="string">'ga'</span>] / <span class="number">1.3</span>) * <span class="number">1.10</span>)
+<span class="comment"># 1. Parámetros Binomiales de intensidad (n = 6, E[G] = lambda)</span>
+<span class="var">n_trials</span> = <span class="number">6</span>
+<span class="var">p_goal_h</span> = <span class="func">min</span>(<span class="number">0.95</span>, <span class="func">max</span>(<span class="number">0.01</span>, <span class="var">lambda_h</span> / <span class="var">n_trials</span>))
+<span class="var">p_goal_a</span> = <span class="func">min</span>(<span class="number">0.95</span>, <span class="func">max</span>(<span class="number">0.01</span>, <span class="var">lambda_a</span> / <span class="var">n_trials</span>))
 
-<span class="comment"># 2. Convolución bivariada para marcadores i vs j</span>
+<span class="comment"># 2. Convolución binomial independiente para marcadores i vs j</span>
 <span class="var">score_matrix</span> = []
 <span class="var">prob_over_2_5</span> = <span class="number">0.0</span>
-<span class="keyword">for</span> <span class="var">i</span> <span class="keyword">in</span> <span class="func">range</span>(<span class="number">5</span>):
-    <span class="keyword">for</span> <span class="var">j</span> <span class="keyword">in</span> <span class="func">range</span>(<span class="number">5</span>):
-        <span class="var">p_ij</span> = <span class="func">float</span>(<span class="var">poisson</span>.<span class="func">pmf</span>(<span class="var">i</span>, <span class="var">lambda_h</span>) * <span class="var">poisson</span>.<span class="func">pmf</span>(<span class="var">j</span>, <span class="var">lambda_a</span>))
-        <span class="keyword">if</span> (<span class="var">i</span> + <span class="var">j</span>) > <span class="number">2.5</span>:
-            <span class="var">prob_over_2_5</span> += <span class="var">p_ij</span>
-        <span class="var">score_matrix</span>.<span class="func">append</span>({<span class="string">"score"</span>: <span class="string">f"{i} - {j}"</span>, <span class="string">"probability"</span>: <span class="var">p_ij</span>})</pre>
+<span class="keyword">for</span> <span class="var">i</span> <span class="keyword">in</span> <span class="func">range</span>(<span class="var">n_trials</span> + <span class="number">1</span>):
+    <span class="keyword">for</span> <span class="var">j</span> <span class="keyword">in</span> <span class="func">range</span>(<span class="var">n_trials</span> + <span class="number">1</span>):
+        <span class="var">p_ij</span> = <span class="func">float</span>(<span class="var">binom</span>.<span class="func">pmf</span>(<span class="var">i</span>, <span class="var">n_trials</span>, <span class="var">p_goal_h</span>) * <span class="var">binom</span>.<span class="func">pmf</span>(<span class="var">j</span>, <span class="var">n_trials</span>, <span class="var">p_goal_a</span>))
+        <span class="keyword">if</span> (<span class="var">i</span> + <span class="var">j</span>) > <span class="number">2.5</span>: <span class="var">prob_over_2_5</span> += <span class="var">p_ij</span>
+        <span class="keyword">if</span> <span class="var">i</span> < <span class="number">5</span> <span class="keyword">and</span> <span class="var">j</span> < <span class="number">5</span>: <span class="var">score_matrix</span>.<span class="func">append</span>({<span class="string">"score"</span>: <span class="string">f"{i} - {j}"</span>, <span class="string">"probability"</span>: <span class="var">p_ij</span>})</pre>
             </div>
           </div>
         </div>
@@ -2403,8 +2424,7 @@
                   Copiar
                 </button>
               </div>
-              <pre class="code-pre" id="code-reliability"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">norm</span>
-<span class="keyword">import</span> <span class="var">math</span>
+              <pre class="code-pre" id="code-reliability"><span class="keyword">import</span> <span class="var">math</span>
 
 <span class="comment"># 1. Desviación estándar muestral</span>
 <span class="var">s_goles_local</span> = <span class="func">float</span>(<span class="var">df</span>[<span class="string">'FTHG'</span>].<span class="func">std</span>())
@@ -2413,123 +2433,7 @@
 <span class="var">p_hat</span> = (<span class="var">df</span>[<span class="string">'FTR'</span>] == <span class="string">'H'</span>).<span class="func">mean</span>()
 <span class="var">se_0</span>  = <span class="var">math</span>.<span class="func">sqrt</span>((<span class="number">0.5</span> * <span class="number">0.5</span>) / <span class="var">N</span>)
 <span class="var">z_stat</span> = (<span class="var">p_hat</span> - <span class="number">0.5</span>) / <span class="var">se_0</span>
-<span class="var">p_value</span> = <span class="number">2.0</span> * (<span class="number">1.0</span> - <span class="var">norm</span>.<span class="func">cdf</span>(<span class="func">abs</span>(<span class="var">z_stat</span>)))</pre>
-            </div>
-          </div>
-        </div>
-
-        <!-- 9. Distribución de Poisson (Larson & Farber Cap. 4) -->
-        <div class="equation-card cyan">
-          <div class="equation-header">
-            <div>
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
-                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-                9. Distribución de Poisson: Conteo en Intervalos Continuos (Larson & Farber Cap. 4)
-              </h3>
-              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
-                Modela eventos raros en intervalos de tiempo continuo (90 minutos) y define el rango usual $[\mu - 2\sigma, \mu + 2\sigma]$.
-              </p>
-            </div>
-            <span class="math-tag blue">Larson & Farber Cap. 4</span>
-          </div>
-
-          <div class="equation-split">
-            <div class="formula-panel">
-              <div class="formula-box">
-                <span class="katex-render">$$P(x) = \frac{\mu^x e^{-\mu}}{x!}, \quad \operatorname{Var}(x) = \sigma^2 = \mu, \quad \sigma = \sqrt{\mu}$$</span>
-              </div>
-              <div class="formula-box" style="min-height: 60px;">
-                <span class="katex-render">$$\text{Rango Usual} = [\mu - 2\sigma, \; \mu + 2\sigma], \quad x \notin [\mu \pm 2\sigma] \iff \text{Inusual } (P < 0.05)$$</span>
-              </div>
-              <ul class="var-definition-list">
-                <li><code>\mu</code> Media de ocurrencias en el intervalo continuo (ej. $\mu = 1.45$ goles locales por partido).</li>
-                <li><code>x</code> Conteo discreto de eventos observados ($x = 0, 1, 2, \dots$).</li>
-                <li><code>\sigma = \sqrt{\mu}</code> Desviación estándar exacta según la identidad de Poisson.</li>
-                <li><code>\text{Rango Usual}</code> Criterio de Larson & Farber: valores a más de 2 desv. estándar son inusuales.</li>
-              </ul>
-            </div>
-
-            <div class="code-panel">
-              <div class="code-header">
-                <span class="code-file-badge">
-                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  src/analytics/inferential_engine.py
-                </span>
-                <button class="btn-copy-code" data-code-id="code-poisson-larson">
-                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                  Copiar
-                </button>
-              </div>
-              <pre class="code-pre" id="code-poisson-larson"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">poisson</span>
-<span class="keyword">import</span> <span class="var">math</span>
-
-<span class="keyword">def</span> <span class="func">calculate_poisson</span>(<span class="var">mu</span>: <span class="func">float</span>, <span class="var">x</span>: <span class="func">int</span>):
-    <span class="var">dist</span> = <span class="func">poisson</span>(<span class="var">mu</span>)
-    <span class="var">variance</span> = <span class="var">mu</span>
-    <span class="var">std_dev</span>  = <span class="var">math</span>.<span class="func">sqrt</span>(<span class="var">mu</span>)
-    
-    <span class="comment"># Rango usual Larson & Farber [mu - 2*sigma, mu + 2*sigma]</span>
-    <span class="var">usual_min</span> = <span class="func">max</span>(<span class="number">0.0</span>, <span class="var">mu</span> - <span class="number">2.0</span> * <span class="var">std_dev</span>)
-    <span class="var">usual_max</span> = <span class="var">mu</span> + <span class="number">2.0</span> * <span class="var">std_dev</span>
-    <span class="var">is_usual</span>  = <span class="func">bool</span>(<span class="var">usual_min</span> <= <span class="var">x</span> <= <span class="var">usual_max</span>)
-    
-    <span class="keyword">return</span> {<span class="string">"pmf"</span>: <span class="var">dist</span>.<span class="func">pmf</span>(<span class="var">x</span>), <span class="string">"std_dev"</span>: <span class="var">std_dev</span>, <span class="string">"is_usual"</span>: <span class="var">is_usual</span>}</pre>
-            </div>
-          </div>
-        </div>
-
-        <!-- 10. Distribución Normal Estándar y Valor Z (Larson & Farber Cap. 7) -->
-        <div class="equation-card purple">
-          <div class="equation-header">
-            <div>
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
-                <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                10. Distribución Normal Estándar, Valor z y 4 Casos de Área (Larson & Farber Cap. 7)
-              </h3>
-              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
-                Tipificación z y cálculo de áreas bajo la curva estándar para evaluación de rendimiento deportivo.
-              </p>
-            </div>
-            <span class="math-tag purple">Larson & Farber Cap. 7</span>
-          </div>
-
-          <div class="equation-split">
-            <div class="formula-panel">
-              <div class="formula-box">
-                <span class="katex-render">$$z = \frac{X - \mu}{\sigma}, \quad f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x - \mu}{\sigma}\right)^2}$$</span>
-              </div>
-              <div class="formula-box" style="min-height: 60px;">
-                <span class="katex-render">$$\text{Caso 1: } P(Z < z) = \Phi(z), \quad \text{Caso 2: } P(Z > z) = 1 - \Phi(z)$$</span>
-                <span class="katex-render">$$\text{Caso 3: } P(-|z| < Z < |z|) = 2\Phi(|z|) - 1, \quad \text{Caso 4: } 2(1 - \Phi(|z|))$$</span>
-              </div>
-              <ul class="var-definition-list">
-                <li><code>z</code> Número de desviaciones estándar que separan a $X$ de la media $\mu$.</li>
-                <li><code>\text{Regla Empírica}</code> 68.26% en $\mu \pm 1\sigma$, 95.44% en $\mu \pm 2\sigma$, 99.73% en $\mu \pm 3\sigma$.</li>
-                <li><code>\Phi(z)</code> Función de distribución acumulada (CDF) de la normal estándar $N(0, 1)$.</li>
-              </ul>
-            </div>
-
-            <div class="code-panel">
-              <div class="code-header">
-                <span class="code-file-badge">
-                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  src/analytics/inferential_engine.py
-                </span>
-                <button class="btn-copy-code" data-code-id="code-normal-larson">
-                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                  Copiar
-                </button>
-              </div>
-              <pre class="code-pre" id="code-normal-larson"><span class="keyword">from</span> <span class="var">scipy.stats</span> <span class="keyword">import</span> <span class="func">norm</span>
-
-<span class="keyword">def</span> <span class="func">calculate_normal</span>(<span class="var">value</span>: <span class="func">float</span>, <span class="var">mean</span>: <span class="func">float</span>, <span class="var">std_dev</span>: <span class="func">float</span>):
-    <span class="var">z</span> = (<span class="var">value</span> - <span class="var">mean</span>) / <span class="var">std_dev</span>
-    <span class="comment"># 4 Casos de Larson & Farber</span>
-    <span class="var">area_left</span>  = <span class="func">float</span>(<span class="var">norm</span>.<span class="func">cdf</span>(<span class="var">z</span>))            <span class="comment"># Caso 1: P(Z < z)</span>
-    <span class="var">area_right</span> = <span class="func">float</span>(<span class="number">1.0</span> - <span class="var">area_left</span>)       <span class="comment"># Caso 2: P(Z > z)</span>
-    <span class="var">area_between</span> = <span class="func">float</span>(<span class="number">2.0</span> * <span class="var">norm</span>.<span class="func">cdf</span>(<span class="func">abs</span>(<span class="var">z</span>)) - <span class="number">1.0</span>) <span class="comment"># Caso 3</span>
-    <span class="var">area_tails</span>   = <span class="func">float</span>(<span class="number">1.0</span> - <span class="var">area_between</span>)   <span class="comment"># Caso 4</span>
-    <span class="keyword">return</span> {<span class="string">"z_score"</span>: <span class="var">z</span>, <span class="string">"case_1"</span>: <span class="var">area_left</span>, <span class="string">"case_2"</span>: <span class="var">area_right</span>}</pre>
+<span class="var">p_value</span> = <span class="var">math</span>.<span class="func">erfc</span>(<span class="func">abs</span>(<span class="var">z_stat</span>) / <span class="var">math</span>.<span class="func">sqrt</span>(<span class="number">2.0</span>))</pre>
             </div>
           </div>
         </div>
@@ -2537,73 +2441,56 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 6: ASISTENTE ANALÍTICO NLQ ==================== -->
-    <section id="tab-assistant" class="tab-panel">
-      <div class="card" style="margin-bottom: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-          <h2 class="card-title">
-            <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/></svg>
-            Asistente Analítico en Lenguaje Natural (NLQ)
-          </h2>
-          <span class="brand-badge">Motor Semántico Local • 3.800 Partidos</span>
-        </div>
-        <p class="card-subtitle">
-          Escribe cualquier consulta sobre probabilidades, teoremas de Bayes, pandemia, tiros a puerta, clubes o modelos.
-        </p>
+    <!-- ==================== TAB 6: CUADERNO COLAB INTERACTIVO ==================== -->
+    <section id="tab-notebook" class="tab-panel">
+      <div class="card colab-header-card">
+        <div class="colab-toolbar">
+          <div class="colab-title-group">
+            <div class="colab-logo-pill">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 8a4 4 0 1 0 0 8h2"/>
+                <path d="M17 8a4 4 0 1 1 0 8h-2"/>
+                <line x1="9" y1="12" x2="15" y2="12"/>
+              </svg>
+              <span>COLAB</span>
+            </div>
+            <div>
+              <h2 class="card-title" style="margin: 0;" id="colab-filename">LaLigaScrap.ipynb</h2>
+              <p class="card-subtitle" style="margin: 0.15rem 0 0 0;">
+                Cuaderno interactivo de extracción ética, limpieza, auditoría de outliers y análisis exploratorio (EDA). Puedes editar y ejecutar cada celda en vivo (<code>Shift + Enter</code>).
+              </p>
+            </div>
+          </div>
 
-        <!-- Barra de Búsqueda -->
-        <div class="assistant-input-row">
-          <input type="text" id="assistant-input" class="assistant-text-field" placeholder="Ej: ¿Cuál es la probabilidad de ganar si se tienen más de 5 tiros a puerta?" />
-          <button type="button" id="btn-assistant-ask" class="btn-assistant-submit">
-            <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <span>Consultar</span>
-          </button>
-        </div>
-
-        <!-- Chips de Sugerencias Rápidas -->
-        <div class="assistant-chips-row">
-          <span class="chips-label">Consultas frecuentes:</span>
-          <button class="assistant-chip" type="button" data-query="¿Cuál es la probabilidad de victoria si hay más de 5 tiros a puerta?">
-            Eficacia remate local (HST > 5)
-          </button>
-          <button class="assistant-chip" type="button" data-query="¿Cómo influye ir ganando al descanso en el resultado final?">
-            Ventaja al descanso (HTR = H)
-          </button>
-          <button class="assistant-chip" type="button" data-query="¿Cuál fue el impacto de jugar sin público en la temporada pandemia 2020/21?">
-            Pandemia 2020/21 (Efecto público)
-          </button>
-          <button class="assistant-chip" type="button" data-query="Compara el rendimiento histórico de Real Madrid vs Barcelona">
-            Comparar Real Madrid vs Barcelona
-          </button>
-          <button class="assistant-chip" type="button" data-query="¿Cuál es el Brier Score y la calibración del modelo?">
-            Calibración y Brier Score
-          </button>
-          <button class="assistant-chip" type="button" data-query="¿Cómo afecta la acumulación de tarjetas amarillas?">
-            Tarjetas y Faltas (Chi-cuadrado)
-          </button>
+          <div class="colab-actions">
+            <span class="colab-kernel-badge" id="colab-kernel-status">
+              <span class="kernel-dot"></span>
+              Python 3 • Kernel Listo
+            </span>
+            <button type="button" id="btn-notebook-run-all" class="btn-colab-primary">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="4 3 13 12 4 21 4 3"/><polygon points="13 3 22 12 13 21 13 3"/></svg>
+              <span>Ejecutar Todo</span>
+            </button>
+            <button type="button" id="btn-notebook-reset" class="btn-colab-secondary">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              <span>Reiniciar Entorno</span>
+            </button>
+            <a href="/api/notebook/download" class="btn-colab-secondary" download="LaLigaScrap.ipynb">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Descargar .ipynb</span>
+            </a>
+            <a id="link-open-google-colab" href="https://colab.research.google.com/github/alvarolpz43/analisis_deportivo/blob/main/LaLigaScrap.ipynb" target="_blank" rel="noopener noreferrer" class="btn-colab-external">
+              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              <span>Abrir en Google Colab</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Tarjeta de Respuesta del Asistente -->
-      <div id="assistant-response-container" style="display: none;">
-        <div class="card assistant-response-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-            <span class="brand-badge" id="ast-category-badge">Inferencia Estadística</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted);" id="ast-query-echo"></span>
-          </div>
-
-          <h3 id="ast-headline" style="font-size: 1.35rem; font-weight: 800; color: #34d399; margin-bottom: 0.5rem;"></h3>
-          <p id="ast-explanation" style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;"></p>
-
-          <div class="grid-3" id="ast-metrics-grid" style="margin-bottom: 1rem;"></div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-            <div id="ast-formula-box" style="font-size: 0.85rem; color: var(--accent-cyan);"></div>
-            <button id="btn-ast-jump" class="btn-primary" type="button" style="padding: 0.45rem 1rem; font-size: 0.8rem;">
-              <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-              <span id="ast-jump-label">Ver Análisis en Detalle</span>
-            </button>
-          </div>
+      <!-- Lista dinámica de celdas del cuaderno -->
+      <div id="notebook-cells-container" class="colab-cells-container">
+        <div class="card" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+          Cargando celdas de <code>LaLigaScrap.ipynb</code>...
         </div>
       </div>
     </section>
@@ -2641,7 +2528,7 @@
         </header>
 
         <div class="paper-abstract">
-          <strong>Resumen Ejecutivo:</strong> El presente dictamen consolida la auditoría estadística y predictiva de 10 temporadas oficiales de LaLiga Santander (3.800 partidos). A través de distribuciones bivariadas de Poisson, teoremas de probabilidad condicional bayesiana y modelos de Machine Learning (Regresión Logística y Random Forest con partición temporal 80/20), se analiza la ventaja del factor campo, la dependencia del estado intermedio al descanso, la eficacia de remate a puerta y el aislamiento causal del público en la temporada de pandemia 2020/21.
+          <strong>Resumen Ejecutivo:</strong> El presente dictamen consolida la auditoría estadística y predictiva de 10 temporadas oficiales de LaLiga Santander (3.800 partidos). A través de distribuciones hipergeométricas (variables dependientes), binomiales (eventos independientes), teoremas de probabilidad condicional bayesiana y modelos de Machine Learning (Regresión Logística y Random Forest con partición temporal 80/20), se analiza la ventaja del factor campo, la dependencia del estado intermedio al descanso, la eficacia de remate a puerta y el aislamiento causal del público en la temporada de pandemia 2020/21.
         </div>
 
         <div class="paper-grid-columns">
@@ -2653,8 +2540,8 @@
             </div>
 
             <div class="paper-section-block">
-              <h3>Integrante 2: Distribución de Goles y Poisson Bivariado</h3>
-              <p>El promedio de goles por partido es &mu; = 2.68. La distribución Poisson bivariada modela la independencia condicional de goles esperados (&lambda;<sub>H</sub> = 1.51, &lambda;<sub>A</sub> = 1.17).</p>
+              <h3>Integrante 2: Distribución de Goles y Modelo Binomial</h3>
+              <p>El promedio de goles por partido es &mu; = 2.68. La distribución Binomial bivariada modela la independencia de goles esperados (&lambda;<sub>H</sub> = 1.51, &lambda;<sub>A</sub> = 1.17) sobre ocasiones ofensivas independientes.</p>
             </div>
 
             <div class="paper-section-block">
@@ -2688,7 +2575,7 @@
                 <tbody>
                   <tr><td>Regresión Logística</td><td>53.2%</td><td>52.8%</td><td>0.184</td></tr>
                   <tr><td>Random Forest (150 Árboles)</td><td>52.8%</td><td>52.4%</td><td>0.189</td></tr>
-                  <tr><td>Poisson xG Bivariado</td><td>50.4%</td><td>49.8%</td><td>0.198</td></tr>
+                  <tr><td>Binomial xG Bivariado</td><td>50.4%</td><td>49.8%</td><td>0.198</td></tr>
                 </tbody>
               </table>
             </div>
@@ -2720,15 +2607,15 @@
   </footer>
 
   <!-- Scripts 3D WebGL (Three.js & OrbitControls) y Motor de Audio -->
-  <script src="js/three.min.js"></script>
-  <script src="js/OrbitControls.js"></script>
-  <script src="js/stadium_audio.js"></script>
-  <script src="js/stadium_3d.js"></script>
+  <script src="js/three.min.js?v=20261125c"></script>
+  <script src="js/OrbitControls.js?v=20261125c"></script>
+  <script src="js/stadium_audio.js?v=20261125c"></script>
+  <script src="js/stadium_3d.js?v=20261125c"></script>
 
   <!-- Scripts de la Aplicación -->
-  <script src="js/api.js"></script>
-  <script src="js/charts.js"></script>
-  <script src="js/match_simulator.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/api.js?v=20261125c"></script>
+  <script src="js/charts.js?v=20261125c"></script>
+  <script src="js/match_simulator.js?v=20261125c"></script>
+  <script src="js/app.js?v=20261125c"></script>
 </body>
 </html>

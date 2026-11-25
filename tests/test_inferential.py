@@ -76,24 +76,6 @@ class TestInferentialEngine(unittest.TestCase):
         self.assertLess(test['p_value'], 0.001)
         self.assertIn('Rechazar H0', test['decision'])
 
-    def test_poisson_calculation(self):
-        res = self.engine.calculate_poisson(mu=1.45, x=2)
-        self.assertEqual(res['mu'], 1.45)
-        self.assertEqual(res['x'], 2)
-        self.assertAlmostEqual(res['variance'], 1.45, places=2)
-        self.assertAlmostEqual(res['std_dev'], 1.45 ** 0.5, places=2)
-        self.assertTrue(res['is_usual'])
-        self.assertTrue(0.0 <= res['pmf_exact'] <= 1.0)
-        self.assertTrue(0.0 <= res['cdf_leq'] <= 1.0)
-
-    def test_normal_calculation(self):
-        res = self.engine.calculate_normal(value=75.0, mean=52.8, std_dev=16.5)
-        self.assertAlmostEqual(res['z_score'], (75.0 - 52.8) / 16.5, places=2)
-        self.assertIn('case_1_left', res['areas'])
-        self.assertIn('case_2_right', res['areas'])
-        self.assertIn('68_percent', res['empirical_rule'])
-        self.assertIn('95_percent', res['empirical_rule'])
-
     def test_descriptive_analysis(self):
         desc = self.engine.get_descriptive_analysis()
         self.assertIn('pregunta_1_localia', desc)

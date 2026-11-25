@@ -178,18 +178,18 @@
       La competición opera bajo el formato regular de <strong>todos contra todos por puntos a doble vuelta</strong> (38 jornadas de 10 partidos, 380 encuentros anuales; 3 puntos por victoria, 1 por empate). La recopilación ética de los datos se validó mediante el archivo <code>robots.txt</code> de <em>Football-Data.co.uk</em>. Los valores atípicos (outliers) correspondientes a goleadas extremas (6-1, 6-2, 6-4, 8-2) se conservaron deliberadamente por constituir hechos deportivos verídicos que definen la cola derecha de la varianza natural del fútbol.
     </p>
 
-    <h2>2. Marco Teórico y Distribuciones de Probabilidad (Larson & Farber Cap. 4 & 7)</h2>
+    <h2>2. Marco Teórico y Distribuciones de Probabilidad</h2>
     <p>
       El espacio muestral del desenlace de un partido se define como $\Omega = \{V_A, E, V_B\}$, con $P(\Omega) = 1$.
     </p>
 
-    <h3>A. Distribución Binomial (Eventos Independientes)</h3>
+    <h3>A. Distribución Binomial (Variables e Instancias Independientes)</h3>
     <div class="formula-box">
       $$P(X = k) = \binom{n}{k} p^k q^{n - k}, \quad q = 1 - p, \quad \mu = n \cdot p, \quad \sigma^2 = n \cdot p \cdot q, \quad \sigma = \sqrt{n \cdot p \cdot q}$$
       $$\text{Rango Usual: } [\mu - 2\sigma, \; \mu + 2\sigma]$$
     </div>
 
-    <h3>B. Distribución Hipergeométrica y Criterio de Aproximación Binomial</h3>
+    <h3>B. Distribución Hipergeométrica (Variables Dependientes sin Reemplazo) y Criterio de Aproximación</h3>
     <p>
       Muestreo finito sin reposición de tamaño $n$ sobre población $N$ con $r$ éxitos:
     </p>
@@ -197,26 +197,8 @@
       $$P(X = x \mid N, r, n) = \frac{\binom{r}{x} \binom{N - r}{n - x}}{\binom{N}{n}}, \quad \operatorname{Var}(X) = n \frac{r}{N} \left(1 - \frac{r}{N}\right) \left(\frac{N - n}{N - 1}\right)$$
     </div>
     <p style="font-size: 0.9rem; color: #475569;">
-      <strong>Regla de Aproximación (Larson & Farber):</strong> Si $n < 0.05N$ (la muestra es inferior al 5% de la población finita), los ensayos se consideran prácticamente independientes y la distribución converge fielmente a la Binomial con $p = r/N$.
+      <strong>Regla de Aproximación:</strong> Si $n < 0.05N$ (la muestra es inferior al 5% de la población finita), los ensayos se consideran prácticamente independientes y la distribución converge fielmente a la Binomial con $p = r/N$.
     </p>
-
-    <h3>C. Distribución de Poisson (Larson & Farber Cap. 4: Variables en Intervalos Continuos)</h3>
-    <p>
-      Modelado de eventos discretos que ocurren a lo largo del intervalo continuo de 90 minutos de juego:
-    </p>
-    <div class="formula-box">
-      $$P(x) = \frac{\mu^x e^{-\mu}}{x!}, \quad \sigma^2 = \mu, \quad \sigma = \sqrt{\mu}$$
-      $$\text{Rango Usual: } [\mu - 2\sigma, \; \mu + 2\sigma]$$
-    </div>
-
-    <h3>D. Distribución Normal Estándar y Valor Z (Larson & Farber Cap. 7)</h3>
-    <p>
-      Tipificación de rendimiento de los clubes y cálculo de los 4 Casos estándar de área bajo la curva:
-    </p>
-    <div class="formula-box">
-      $$z = \frac{X - \mu}{\sigma}, \quad \text{Regla Empírica: } 68.27\% \; (\mu \pm 1\sigma), \; 95.45\% \; (\mu \pm 2\sigma), \; 99.73\% \; (\mu \pm 3\sigma)$$
-      $$\text{Caso 1: } P(Z < z) = \Phi(z), \quad \text{Caso 2: } P(Z > z) = 1 - \Phi(z)$$
-    </div>
 
     <h2>3. Ciencia de Datos: Respuestas a las 3 Preguntas de la Cátedra (Electiva III 25%)</h2>
     
@@ -332,7 +314,7 @@
     <h2>7. Conclusiones</h2>
     <ol>
       <li><strong>Baja Dispersión Muestral:</strong> Las desviaciones estándar en goles ($s \approx 1.25$) ratifican la alta estabilidad y representatividad de la muestra de 10 temporadas.</li>
-      <li><strong>Rigor Metodológico:</strong> La distinción entre Binomial, Hipergeométrica (con la regla $n < 0.05N$), Poisson ($\sigma^2 = \mu$) y Normal ($Z$ y los 4 Casos) unifica los Capítulos 4 y 7 de Larson & Farber.</li>
+      <li><strong>Rigor Metodológico:</strong> La distinción entre Distribución Hipergeométrica (variables dependientes con la regla $n < 0.05N$) y Distribución Binomial (eventos independientes), junto al contraste bilateral $Z$ de localía, sustenta matemáticamente la investigación.</li>
       <li><strong>Ética y Reproducibilidad:</strong> La arquitectura garantiza cero filtración temporal (<em>no data leakage</em>) y estricto respeto a la política de <code>robots.txt</code>.</li>
     </ol>
   </article>

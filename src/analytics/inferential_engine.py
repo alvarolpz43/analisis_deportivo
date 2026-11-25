@@ -2,12 +2,13 @@
 Motor de Estadística Inferencial y Probabilidad Condicional
 Implementación rigurosa de los 6 roles/integrantes según el documento de arquitectura:
 - Teorema de Bayes: P(Evento | Evidencia)
-- Muestreo sin reemplazo / Distribución Hipergeométrica: P(X=x | N, r, n)
+- Muestreo sin reemplazo / Distribución Hipergeométrica (variables dependientes): P(X=x | N, r, n)
+- Distribución Binomial (variables e instancias independientes): P(X=k | n, p)
 - Pruebas de hipótesis Chi-cuadrado e Intervalos de Confianza al 95%.
 """
 import numpy as np
 import pandas as pd
-from scipy.stats import hypergeom, chi2_contingency, binom, norm, poisson
+from scipy.stats import hypergeom, chi2_contingency, binom
 from typing import Dict, Any, List
 import math
 
@@ -129,130 +130,6 @@ class InferentialEngine:
             "k_values": k_values,
             "pmf_values": pmf_values,
             "cdf_values": cdf_values
-        }
-
-    def calculate_poisson(self, mu: float, x: int) -> Dict[str, Any]:
-        """
-        Calcula probabilidades de la Distribución de Poisson (Larson & Farber Cap. 4):
-        P(x) = (mu^x * e^-mu) / x!
-        Aplicada a conteo de goles por partido (intervalo continuo de 90 min).
-        mu: Tasa media de ocurrencia (media histórica de goles)
-        x: Conteo de eventos observados
-        """
-        mu = max(0.05, min(15.0, float(mu)))
-        x = max(0, min(25, int(x)))
-
-        dist = poisson(mu)
-
-        pmf_exact = float(dist.pmf(x))
-        cdf_leq = float(dist.cdf(x))
-        sf_geq = float(dist.sf(x - 1)) if x > 0 else 1.0
-
-        sigma_sq = mu
-        sigma = math.sqrt(mu)
-
-        # Criterio de valores inusuales [mu - 2*sigma, mu + 2*sigma]
-        usual_min = max(0.0, mu - 2.0 * sigma)
-        usual_max = mu + 2.0 * sigma
-        is_usual = bool(usual_min <= x <= usual_max)
-
-        max_curve_x = max(10, int(math.ceil(mu + 3.5 * sigma)))
-        k_values = list(range(0, max_curve_x + 1))
-        pmf_values = [round(float(dist.pmf(k)), 4) for k in k_values]
-        cdf_values = [round(float(dist.cdf(k)), 4) for k in k_values]
-
-        return {
-            "mu": round(mu, 3),
-            "x": x,
-            "pmf_exact": round(pmf_exact, 4),
-            "cdf_leq": round(cdf_leq, 4),
-            "sf_geq": round(sf_geq, 4),
-            "variance": round(sigma_sq, 3),
-            "sigma_sq": round(sigma_sq, 3),
-            "std_dev": round(sigma, 3),
-            "sigma": round(sigma, 3),
-            "usual_range": [round(usual_min, 2), round(usual_max, 2)],
-            "is_usual": is_usual,
-            "k_values": k_values,
-            "pmf_values": pmf_values,
-            "cdf_values": cdf_values
-        }
-
-    def calculate_normal(self, value: float, mean: float = None, std_dev: float = None) -> Dict[str, Any]:
-        """
-        Distribución Normal, Estandarización Valor z y Regla Empírica (Larson & Farber Cap. 7):
-        z = (X - mu) / sigma
-        Casos 1 al 4 de áreas bajo la curva normal estándar.
-        """
-        if mean is None:
-            mean = float((self.df['FTHG'] + self.df['FTAG']).mean()) # Promedio de goles total
-        if std_dev is None or std_dev <= 0:
-            std_dev = float((self.df['FTHG'] + self.df['FTAG']).std()) # Desviación goles total
-
-        x_val = float(value)
-        z = (x_val - mean) / std_dev
-
-        # Casos 1 al 4 de Larson & Farber:
-        # Caso 1: Área a la izquierda P(Z <= z)
-        area_left = float(norm.cdf(z))
-        # Caso 2: Área a la derecha P(Z >= z)
-        area_right = float(norm.sf(z))
-        # Caso 3: Área central simétrica P(-|z| <= Z <= |z|)
-        area_central = float(norm.cdf(abs(z)) - norm.cdf(-abs(z)))
-        # Caso 4: Área en las dos colas P(|Z| >= |z|)
-        area_two_tails = float(2.0 * norm.sf(abs(z)))
-
-        # Regla empírica (68% - 95% - 99.7%)
-        empirical_rule = {
-            "sigma_1_range": [round(mean - std_dev, 2), round(mean + std_dev, 2)],
-            "sigma_1_pct": 68.27,
-            "sigma_2_range": [round(mean - 2 * std_dev, 2), round(mean + 2 * std_dev, 2)],
-            "sigma_2_pct": 95.45,
-            "sigma_3_range": [round(mean - 3 * std_dev, 2), round(mean + 3 * std_dev, 2)],
-            "sigma_3_pct": 99.73,
-            "68_percent": {"min": round(mean - std_dev, 2), "max": round(mean + std_dev, 2)},
-            "95_percent": {"min": round(mean - 2 * std_dev, 2), "max": round(mean + 2 * std_dev, 2)},
-            "99_7_percent": {"min": round(mean - 3 * std_dev, 2), "max": round(mean + 3 * std_dev, 2)}
-        }
-
-        # Curva de densidad f(x) para visualización
-        x_min = mean - 3.5 * std_dev
-        x_max = mean + 3.5 * std_dev
-        step = (x_max - x_min) / 49.0 if std_dev > 0 else 1.0
-        x_values = [round(x_min + i * step, 2) for i in range(50)]
-        pdf_values = [round(float(norm.pdf(xv, mean, std_dev)), 5) for xv in x_values]
-
-        areas = {
-            "case_1_left": round(area_left, 4),
-            "case_2_right": round(area_right, 4),
-            "case_3_between": round(area_central, 4),
-            "case_4_tails": round(area_two_tails, 4)
-        }
-
-        classification = (
-            "Dentro del 68% central (habitual)" if abs(z) <= 1.0 else
-            "Entre 1 y 2 desviaciones estándar (moderado)" if abs(z) <= 2.0 else
-            "Estadísticamente inusual (> 2 sigma)"
-        )
-
-        return {
-            "value": round(x_val, 2),
-            "x": round(x_val, 2),
-            "mean": round(mean, 2),
-            "mu": round(mean, 2),
-            "std_dev": round(std_dev, 3),
-            "sigma": round(std_dev, 3),
-            "z_score": round(z, 3),
-            "case_1_area_left": round(area_left, 4),
-            "case_2_area_right": round(area_right, 4),
-            "case_3_area_central": round(area_central, 4),
-            "case_4_area_two_tails": round(area_two_tails, 4),
-            "areas": areas,
-            "empirical_rule": empirical_rule,
-            "classification": classification,
-            "interpretation": classification,
-            "x_values": x_values,
-            "pdf_values": pdf_values
         }
 
     def get_descriptive_analysis(self) -> Dict[str, Any]:
@@ -402,8 +279,8 @@ class InferentialEngine:
         # Error estándar bajo H0
         se_0 = math.sqrt((p_0 * (1 - p_0)) / N)
         z_stat = (p_hat - p_0) / se_0
-        # p-valor bilateral
-        p_value = 2.0 * (1.0 - norm.cdf(abs(z_stat)))
+        # p-valor bilateral usando función de error complementaria (erfc)
+        p_value = math.erfc(abs(z_stat) / math.sqrt(2.0))
 
         # Intervalo de confianza al 95% para la proporción de victorias locales
         se_hat = math.sqrt((p_hat * (1 - p_hat)) / N)

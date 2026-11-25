@@ -34,11 +34,12 @@ class TestMLAndPredictor(unittest.TestCase):
         self.assertGreater(odds['draw'], 1.0)
         self.assertGreater(odds['away_win'], 1.0)
 
-        # Poisson xG
+        # Binomial xG
         xG = pred['expected_goals']
         self.assertGreater(xG['home_xG'], 0.0)
         self.assertGreater(xG['away_xG'], 0.0)
         self.assertTrue(0.0 <= xG['prob_over_2_5'] <= 1.0)
+        self.assertIn('binomial_parameters', pred['analyzed_variables'])
 
     def test_bayesian_adjustment_effect(self):
         pred_base = self.predictor.predict_match('Real Madrid', 'Barcelona')

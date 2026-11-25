@@ -1,0 +1,488 @@
+{
+  "datos.py": {
+    "mtime": 1795394403.5804381,
+    "seen": 1795584313.432257,
+    "ast_hash": "896bd81bcb15be4a9dec6a98f122b068",
+    "semantic_hash": "896bd81bcb15be4a9dec6a98f122b068"
+  },
+  "generar_informe_pdf.py": {
+    "mtime": 1795487990.119316,
+    "seen": 1795584313.432257,
+    "ast_hash": "43d186bf5e0e38a119996615a0a5cf81",
+    "semantic_hash": "43d186bf5e0e38a119996615a0a5cf81"
+  },
+  "main.py": {
+    "mtime": 1795584089.8895533,
+    "seen": 1795584313.432257,
+    "ast_hash": "d381c3a7b3c4e1328e0e9f965a896815",
+    "semantic_hash": "d381c3a7b3c4e1328e0e9f965a896815"
+  },
+  "modelo.py": {
+    "mtime": 1795584048.5916286,
+    "seen": 1795584313.432257,
+    "ast_hash": "07850e021ed246bbde3ff1021b57bb32",
+    "semantic_hash": "07850e021ed246bbde3ff1021b57bb32"
+  },
+  "run.py": {
+    "mtime": 1795325700.3053088,
+    "seen": 1795584313.432257,
+    "ast_hash": "306e6d7599665ec32052b6568a720880",
+    "semantic_hash": "306e6d7599665ec32052b6568a720880"
+  },
+  "src/analytics/data_processor.py": {
+    "mtime": 1795410478.6425872,
+    "seen": 1795584313.432257,
+    "ast_hash": "720a0226875bd2fc4cc9643e0733c9d7",
+    "semantic_hash": "720a0226875bd2fc4cc9643e0733c9d7"
+  },
+  "src/analytics/inferential_engine.py": {
+    "mtime": 1795584043.5163512,
+    "seen": 1795584313.432257,
+    "ast_hash": "4f20f743715ea576f1536670880d9c91",
+    "semantic_hash": "4f20f743715ea576f1536670880d9c91"
+  },
+  "src/api/app.py": {
+    "mtime": 1795584078.42284,
+    "seen": 1795584313.432257,
+    "ast_hash": "2a50f1087c30724323b97f0a76efb22a",
+    "semantic_hash": "2a50f1087c30724323b97f0a76efb22a"
+  },
+  "src/models/predictor.py": {
+    "mtime": 1795584084.9980645,
+    "seen": 1795584313.432257,
+    "ast_hash": "690b8138d2f9bab7d5fbcd117f1b6fdc",
+    "semantic_hash": "690b8138d2f9bab7d5fbcd117f1b6fdc"
+  },
+  "src/models/tournament_simulator.py": {
+    "mtime": 1795584088.8258748,
+    "seen": 1795584313.432257,
+    "ast_hash": "5d863f46cea3edd4031272dd6de295cb",
+    "semantic_hash": "5d863f46cea3edd4031272dd6de295cb"
+  },
+  "src/models/train.py": {
+    "mtime": 1795400612.7305892,
+    "seen": 1795584313.432257,
+    "ast_hash": "5ba0a539b23a95bd842648e3b6f56a3a",
+    "semantic_hash": "5ba0a539b23a95bd842648e3b6f56a3a"
+  },
+  "src/scraper/football_scraper.py": {
+    "mtime": 1795325403.7486558,
+    "seen": 1795584313.432257,
+    "ast_hash": "603b56e3927fb4328e84033bafbaf152",
+    "semantic_hash": "603b56e3927fb4328e84033bafbaf152"
+  },
+  "tests/test_academic_modules.py": {
+    "mtime": 1795394513.2570148,
+    "seen": 1795584313.432257,
+    "ast_hash": "6ba01c26121811796fb897ae46b1aa7f",
+    "semantic_hash": "6ba01c26121811796fb897ae46b1aa7f"
+  },
+  "tests/test_api.py": {
+    "mtime": 1795584245.8287592,
+    "seen": 1795584313.432257,
+    "ast_hash": "89c80a2191f31d86fa53ef18925ccaec",
+    "semantic_hash": "89c80a2191f31d86fa53ef18925ccaec"
+  },
+  "tests/test_inferential.py": {
+    "mtime": 1795584247.5615294,
+    "seen": 1795584313.432257,
+    "ast_hash": "6e2bd5735ee76aa83c101eeb22188b9b",
+    "semantic_hash": "6e2bd5735ee76aa83c101eeb22188b9b"
+  },
+  "tests/test_models.py": {
+    "mtime": 1795584249.1860178,
+    "seen": 1795584313.432257,
+    "ast_hash": "34c95946af857dd3c984f4cdc921e279",
+    "semantic_hash": "34c95946af857dd3c984f4cdc921e279"
+  },
+  "web/js/OrbitControls.js": {
+    "mtime": 1795407498.9558473,
+    "seen": 1795584313.432257,
+    "ast_hash": "d1067100355bd2b9c3017f9261a0416a",
+    "semantic_hash": "d1067100355bd2b9c3017f9261a0416a"
+  },
+  "web/js/api.js": {
+    "mtime": 1795584133.7393985,
+    "seen": 1795584313.432257,
+    "ast_hash": "d6e5d13c47eb77a3ddba8bfb133f1fcc",
+    "semantic_hash": "d6e5d13c47eb77a3ddba8bfb133f1fcc"
+  },
+  "web/js/app.js": {
+    "mtime": 1795584146.1190412,
+    "seen": 1795584313.432257,
+    "ast_hash": "2011587fabbd96818d2071632e706b2d",
+    "semantic_hash": "2011587fabbd96818d2071632e706b2d"
+  },
+  "web/js/charts.js": {
+    "mtime": 1795584135.696038,
+    "seen": 1795584313.432257,
+    "ast_hash": "20e0cdff23e94dd1912cdd54bc41773c",
+    "semantic_hash": "20e0cdff23e94dd1912cdd54bc41773c"
+  },
+  "web/js/match_simulator.js": {
+    "mtime": 1795583205.141495,
+    "seen": 1795584313.432257,
+    "ast_hash": "7a4c251446d9748dee056b7abcb609d9",
+    "semantic_hash": "7a4c251446d9748dee056b7abcb609d9"
+  },
+  "web/js/stadium_3d.js": {
+    "mtime": 1795583740.9325633,
+    "seen": 1795584313.432257,
+    "ast_hash": "8dfbcdf2d5414264263dbbf1b8d7d8d3",
+    "semantic_hash": "8dfbcdf2d5414264263dbbf1b8d7d8d3"
+  },
+  "web/js/stadium_audio.js": {
+    "mtime": 1795409682.1933517,
+    "seen": 1795584313.432257,
+    "ast_hash": "902230d6472c5b572d25e55a446afd3c",
+    "semantic_hash": "902230d6472c5b572d25e55a446afd3c"
+  },
+  "web/js/three.min.js": {
+    "mtime": 1795407498.7752647,
+    "seen": 1795584313.432257,
+    "ast_hash": "eb8549863a97355411c3259a3f93b8e1",
+    "semantic_hash": "eb8549863a97355411c3259a3f93b8e1"
+  },
+  "GUION_SUSTENTACION_15_MINUTOS.md": {
+    "mtime": 1795584304.83373,
+    "seen": 1795584313.432257,
+    "ast_hash": "0a7cb08ae049f9762036a1b2c2b4a645",
+    "semantic_hash": "0a7cb08ae049f9762036a1b2c2b4a645"
+  },
+  "INFORME_BREVE_ACADEMICO.md": {
+    "mtime": 1795584293.3744948,
+    "seen": 1795584313.432257,
+    "ast_hash": "3723cb7bc8a15aa1b2bef884db46efc8",
+    "semantic_hash": "3723cb7bc8a15aa1b2bef884db46efc8"
+  },
+  "INFORME_EJECUTIVO_CIENCIA_DE_DATOS.md": {
+    "mtime": 1795584301.185371,
+    "seen": 1795584313.432257,
+    "ast_hash": "b07c5c7f3948c6bad0862718c1c13c17",
+    "semantic_hash": "b07c5c7f3948c6bad0862718c1c13c17"
+  },
+  "INFORME_TECNICO_FINAL_LALIGA.md": {
+    "mtime": 1795584258.5961516,
+    "seen": 1795584313.432257,
+    "ast_hash": "c3a58113b417ad883c5bc8a35890f334",
+    "semantic_hash": "c3a58113b417ad883c5bc8a35890f334"
+  },
+  "README.md": {
+    "mtime": 1795584251.7973063,
+    "seen": 1795584313.432257,
+    "ast_hash": "05154543ac308d636389250f111baa37",
+    "semantic_hash": "05154543ac308d636389250f111baa37"
+  },
+  "data/variablesPorCasaIntegranteEstadistica.md": {
+    "mtime": 1795324089.3980505,
+    "seen": 1795584313.432257,
+    "ast_hash": "15ba405ee52f6d143da56d18c9cac95a",
+    "semantic_hash": "15ba405ee52f6d143da56d18c9cac95a"
+  },
+  "informe_academico_laliga.html": {
+    "mtime": 1795584298.5227382,
+    "seen": 1795584313.432257,
+    "ast_hash": "6876293715667cff1b82fc767272e59f",
+    "semantic_hash": "6876293715667cff1b82fc767272e59f"
+  },
+  "requirements.txt": {
+    "mtime": 1795325369.8689559,
+    "seen": 1795584313.432257,
+    "ast_hash": "f7b2ce6a43bfdb0956b5b6a113da0e4b",
+    "semantic_hash": "f7b2ce6a43bfdb0956b5b6a113da0e4b"
+  },
+  "web/index.html": {
+    "mtime": 1795584222.6738222,
+    "seen": 1795584313.432257,
+    "ast_hash": "c059aae7cf583736dd959fa51849374c",
+    "semantic_hash": "c059aae7cf583736dd959fa51849374c"
+  },
+  "web/informe_tecnico.html": {
+    "mtime": 1795584289.9352636,
+    "seen": 1795584313.432257,
+    "ast_hash": "5984493a12e203f6d687e4c51d41480f",
+    "semantic_hash": "5984493a12e203f6d687e4c51d41480f"
+  },
+  "informe_academico_laliga.pdf": {
+    "mtime": 1795487995.4604087,
+    "seen": 1795584313.432257,
+    "ast_hash": "8f6458262a83583e305dedb87b56aad5",
+    "semantic_hash": "8f6458262a83583e305dedb87b56aad5"
+  },
+  "web/assets/logos/alaves.png": {
+    "mtime": 1795403666.9387438,
+    "seen": 1795584313.432257,
+    "ast_hash": "f8689e226f8341558454a78f41cfac83",
+    "semantic_hash": "f8689e226f8341558454a78f41cfac83"
+  },
+  "web/assets/logos/almeria.png": {
+    "mtime": 1795403667.2013288,
+    "seen": 1795584313.432257,
+    "ast_hash": "d99da1ec8f4dde981aa6795f2f7fda53",
+    "semantic_hash": "d99da1ec8f4dde981aa6795f2f7fda53"
+  },
+  "web/assets/logos/ath_bilbao.png": {
+    "mtime": 1795403667.3880777,
+    "seen": 1795584313.432257,
+    "ast_hash": "435241bc0812c58f9104a8eb37aaf2b2",
+    "semantic_hash": "435241bc0812c58f9104a8eb37aaf2b2"
+  },
+  "web/assets/logos/ath_madrid.png": {
+    "mtime": 1795403667.5765195,
+    "seen": 1795584313.432257,
+    "ast_hash": "b9bbfff5d10045c66f66c93cbda1f8d8",
+    "semantic_hash": "b9bbfff5d10045c66f66c93cbda1f8d8"
+  },
+  "web/assets/logos/barcelona.png": {
+    "mtime": 1795403667.7685835,
+    "seen": 1795584313.432257,
+    "ast_hash": "f50132ccce979366daa97ec7f2450bfe",
+    "semantic_hash": "f50132ccce979366daa97ec7f2450bfe"
+  },
+  "web/assets/logos/betis.png": {
+    "mtime": 1795403667.945773,
+    "seen": 1795584313.432257,
+    "ast_hash": "3c113ad8e00c28eeddf6ce73d2722943",
+    "semantic_hash": "3c113ad8e00c28eeddf6ce73d2722943"
+  },
+  "web/assets/logos/cadiz.png": {
+    "mtime": 1795403668.129804,
+    "seen": 1795584313.432257,
+    "ast_hash": "3cacb00dad8d44d6f21c6b1d72a82a4a",
+    "semantic_hash": "3cacb00dad8d44d6f21c6b1d72a82a4a"
+  },
+  "web/assets/logos/celta.png": {
+    "mtime": 1795403668.3133237,
+    "seen": 1795584313.432257,
+    "ast_hash": "f7c32e9418c0905d7683fb15208621aa",
+    "semantic_hash": "f7c32e9418c0905d7683fb15208621aa"
+  },
+  "web/assets/logos/eibar.svg": {
+    "mtime": 1795403669.0079756,
+    "seen": 1795584313.432257,
+    "ast_hash": "d8b6d076c1c11bbc86a8154c05d92c26",
+    "semantic_hash": "d8b6d076c1c11bbc86a8154c05d92c26"
+  },
+  "web/assets/logos/elche.png": {
+    "mtime": 1795403669.2001421,
+    "seen": 1795584313.432257,
+    "ast_hash": "fa26d0074946d8d6214d4c1bfdeed80f",
+    "semantic_hash": "fa26d0074946d8d6214d4c1bfdeed80f"
+  },
+  "web/assets/logos/espanol.png": {
+    "mtime": 1795403669.4737084,
+    "seen": 1795584313.432257,
+    "ast_hash": "297cb1b4e28586a84b1858ac8b0c27ed",
+    "semantic_hash": "297cb1b4e28586a84b1858ac8b0c27ed"
+  },
+  "web/assets/logos/getafe.png": {
+    "mtime": 1795403669.7486448,
+    "seen": 1795584313.432257,
+    "ast_hash": "19e82f5a1f266b0bf306a274fe90debf",
+    "semantic_hash": "19e82f5a1f266b0bf306a274fe90debf"
+  },
+  "web/assets/logos/girona.png": {
+    "mtime": 1795403669.9462614,
+    "seen": 1795584313.432257,
+    "ast_hash": "1efcc69b231f5ca29304eb36872ef684",
+    "semantic_hash": "1efcc69b231f5ca29304eb36872ef684"
+  },
+  "web/assets/logos/granada.png": {
+    "mtime": 1795403670.130215,
+    "seen": 1795584313.432257,
+    "ast_hash": "98e4d08ac3236866ee26ad88e57f32b1",
+    "semantic_hash": "98e4d08ac3236866ee26ad88e57f32b1"
+  },
+  "web/assets/logos/huesca.svg": {
+    "mtime": 1795403671.0018005,
+    "seen": 1795584313.432257,
+    "ast_hash": "5334879245c5ceadad0e22569719f783",
+    "semantic_hash": "5334879245c5ceadad0e22569719f783"
+  },
+  "web/assets/logos/la_coruna.png": {
+    "mtime": 1795403671.7005234,
+    "seen": 1795584313.432257,
+    "ast_hash": "870d99aeb577694cdcae776d1835c642",
+    "semantic_hash": "870d99aeb577694cdcae776d1835c642"
+  },
+  "web/assets/logos/las_palmas.png": {
+    "mtime": 1795403671.9022956,
+    "seen": 1795584313.432257,
+    "ast_hash": "b8416bf557d5cedca8cfe67f3b49fee8",
+    "semantic_hash": "b8416bf557d5cedca8cfe67f3b49fee8"
+  },
+  "web/assets/logos/leganes.png": {
+    "mtime": 1795403672.4205897,
+    "seen": 1795584313.432257,
+    "ast_hash": "a82e737d5c79f2ec197e69f9b9b2d496",
+    "semantic_hash": "a82e737d5c79f2ec197e69f9b9b2d496"
+  },
+  "web/assets/logos/levante.png": {
+    "mtime": 1795403672.9266696,
+    "seen": 1795584313.432257,
+    "ast_hash": "10d390779d1d329db2905ad9aa4c2ce8",
+    "semantic_hash": "10d390779d1d329db2905ad9aa4c2ce8"
+  },
+  "web/assets/logos/malaga.svg": {
+    "mtime": 1795403673.7886403,
+    "seen": 1795584313.432257,
+    "ast_hash": "3eee3933df2e90a265266111eef06bb7",
+    "semantic_hash": "3eee3933df2e90a265266111eef06bb7"
+  },
+  "web/assets/logos/mallorca.png": {
+    "mtime": 1795403674.2948837,
+    "seen": 1795584313.432257,
+    "ast_hash": "c7a550f173c811e72f5ca18f9540686b",
+    "semantic_hash": "c7a550f173c811e72f5ca18f9540686b"
+  },
+  "web/assets/logos/osasuna.png": {
+    "mtime": 1795403674.4767406,
+    "seen": 1795584313.432257,
+    "ast_hash": "bf7bc21f5b65ad44687d6fc2c5ec3501",
+    "semantic_hash": "bf7bc21f5b65ad44687d6fc2c5ec3501"
+  },
+  "web/assets/logos/oviedo.png": {
+    "mtime": 1795403674.7318947,
+    "seen": 1795584313.432257,
+    "ast_hash": "941ae3e91c22d6266cca8ea131cb74af",
+    "semantic_hash": "941ae3e91c22d6266cca8ea131cb74af"
+  },
+  "web/assets/logos/real_madrid.png": {
+    "mtime": 1795403674.9894261,
+    "seen": 1795584313.432257,
+    "ast_hash": "80e1d27f760443eeef67fcfe1e7292f8",
+    "semantic_hash": "80e1d27f760443eeef67fcfe1e7292f8"
+  },
+  "web/assets/logos/sevilla.png": {
+    "mtime": 1795403675.240973,
+    "seen": 1795584313.432257,
+    "ast_hash": "5270611cc9a4a8d399d627153376951f",
+    "semantic_hash": "5270611cc9a4a8d399d627153376951f"
+  },
+  "web/assets/logos/sociedad.png": {
+    "mtime": 1795403675.496821,
+    "seen": 1795584313.432257,
+    "ast_hash": "cc43194a3ea09f7580dc3e5fcbc8a25e",
+    "semantic_hash": "cc43194a3ea09f7580dc3e5fcbc8a25e"
+  },
+  "web/assets/logos/sp_gijon.svg": {
+    "mtime": 1795403676.190143,
+    "seen": 1795584313.432257,
+    "ast_hash": "be8fda8df51858b60550f43c7a380690",
+    "semantic_hash": "be8fda8df51858b60550f43c7a380690"
+  },
+  "web/assets/logos/valencia.png": {
+    "mtime": 1795403676.3622122,
+    "seen": 1795584313.432257,
+    "ast_hash": "e72743e56fa94a736ca5addeb061cdd8",
+    "semantic_hash": "e72743e56fa94a736ca5addeb061cdd8"
+  },
+  "web/assets/logos/valladolid.png": {
+    "mtime": 1795403676.6174989,
+    "seen": 1795584313.432257,
+    "ast_hash": "b4d94450223289dedd2c5810cb8841de",
+    "semantic_hash": "b4d94450223289dedd2c5810cb8841de"
+  },
+  "web/assets/logos/vallecano.png": {
+    "mtime": 1795403676.8696039,
+    "seen": 1795584313.432257,
+    "ast_hash": "16d5006cbd9bcfd1312a8e72c4065b72",
+    "semantic_hash": "16d5006cbd9bcfd1312a8e72c4065b72"
+  },
+  "web/assets/logos/villarreal.png": {
+    "mtime": 1795403677.1184,
+    "seen": 1795584313.432257,
+    "ast_hash": "0aef5f34a4de62872d404f4581701eb0",
+    "semantic_hash": "0aef5f34a4de62872d404f4581701eb0"
+  },
+  "web/cancha_proporcionada.png": {
+    "mtime": 1795405363.3253033,
+    "seen": 1795584313.432257,
+    "ast_hash": "06772164302276fa897d5923c4ed31ec",
+    "semantic_hash": "06772164302276fa897d5923c4ed31ec"
+  },
+  "web/copa_campeon_animacion.png": {
+    "mtime": 1795409993.9681902,
+    "seen": 1795584313.432257,
+    "ast_hash": "13a3ac34bfe3be8eda597afd960e41b8",
+    "semantic_hash": "13a3ac34bfe3be8eda597afd960e41b8"
+  },
+  "web/dictamen_academico_modal.png": {
+    "mtime": 1795411214.941758,
+    "seen": 1795584313.432257,
+    "ast_hash": "f10ea60f898a509ee38cbfe23459a6ad",
+    "semantic_hash": "f10ea60f898a509ee38cbfe23459a6ad"
+  },
+  "web/estadio_3d_a_pie_de_campo.png": {
+    "mtime": 1795408893.0506673,
+    "seen": 1795584313.432257,
+    "ast_hash": "f5645152f232af202d3b0ec41cf72479",
+    "semantic_hash": "f5645152f232af202d3b0ec41cf72479"
+  },
+  "web/estadio_3d_broadcast.png": {
+    "mtime": 1795408893.0553637,
+    "seen": 1795584313.432257,
+    "ast_hash": "35b9363f03e4601902055bb818e7a74c",
+    "semantic_hash": "35b9363f03e4601902055bb818e7a74c"
+  },
+  "web/estadio_3d_final.png": {
+    "mtime": 1795407962.6500401,
+    "seen": 1795584313.432257,
+    "ast_hash": "978c9744af405120e535bee0b0bcf7ff",
+    "semantic_hash": "978c9744af405120e535bee0b0bcf7ff"
+  },
+  "web/estadio_3d_iconos_heatmap.png": {
+    "mtime": 1795410029.1972258,
+    "seen": 1795584313.432257,
+    "ast_hash": "7d1318baf7d72b0a71cc30eae645b7a4",
+    "semantic_hash": "7d1318baf7d72b0a71cc30eae645b7a4"
+  },
+  "web/estadio_3d_render.png": {
+    "mtime": 1795407893.533617,
+    "seen": 1795584313.432257,
+    "ast_hash": "a1b887c4f7de5bf41cda504f53013eef",
+    "semantic_hash": "a1b887c4f7de5bf41cda504f53013eef"
+  },
+  "web/estadio_toggle_2d.png": {
+    "mtime": 1795407928.0256658,
+    "seen": 1795584313.432257,
+    "ast_hash": "1339bc1094cb7f57c0500418e15f1052",
+    "semantic_hash": "1339bc1094cb7f57c0500418e15f1052"
+  },
+  "web/podio_y_tabla.png": {
+    "mtime": 1795405495.5196044,
+    "seen": 1795584313.432257,
+    "ast_hash": "fc0ecf8cbf78926b1d65438eaa7ae108",
+    "semantic_hash": "fc0ecf8cbf78926b1d65438eaa7ae108"
+  },
+  "web/radar_tactico_h2h.png": {
+    "mtime": 1795411425.041457,
+    "seen": 1795584313.432257,
+    "ast_hash": "ea86b0d9ca75733cfb28617dde41809e",
+    "semantic_hash": "ea86b0d9ca75733cfb28617dde41809e"
+  },
+  "web/simulacion_torneo_completa.png": {
+    "mtime": 1795405441.110782,
+    "seen": 1795584313.432257,
+    "ast_hash": "62fd72c31df79c884f345cd3222cde68",
+    "semantic_hash": "62fd72c31df79c884f345cd3222cde68"
+  },
+  "web/tabla_torneo.png": {
+    "mtime": 1795405467.2947285,
+    "seen": 1795584313.432257,
+    "ast_hash": "e249130bd7a964c709f551eac789b0df",
+    "semantic_hash": "e249130bd7a964c709f551eac789b0df"
+  },
+  "web/variables_analizadas.png": {
+    "mtime": 1795405382.8135996,
+    "seen": 1795584313.432257,
+    "ast_hash": "eb2e9254a5294cc006d9ca363a332e1c",
+    "semantic_hash": "eb2e9254a5294cc006d9ca363a332e1c"
+  },
+  "web/variables_analizadas_full.png": {
+    "mtime": 1795405402.3136697,
+    "seen": 1795584313.432257,
+    "ast_hash": "da796122c5f0da28dd658438aa4b7b2e",
+    "semantic_hash": "da796122c5f0da28dd658438aa4b7b2e"
+  }
+}

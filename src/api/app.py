@@ -2,7 +2,8 @@
 Servidor API RESTful con FastAPI
 Expone todos los módulos analíticos, modelos predictivos, estadísticas inferenciales y sirve el frontend estático.
 """
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -11,6 +12,7 @@ import os
 
 from ..analytics.data_processor import DataProcessor
 from ..analytics.inferential_engine import InferentialEngine
+from ..analytics.notebook_runner import NotebookRunner
 from ..models.train import ModelTrainer
 from ..models.predictor import MatchPredictor
 from ..models.tournament_simulator import TournamentSimulator
@@ -31,6 +33,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def no_cache_static_middleware(request: Request, call_next):
+    path = request.url.path
+    is_no_cache_asset = path == "/" or path.startswith(("/css/", "/js/", "/api/notebook"))
+    if is_no_cache_asset and "headers" in request.scope:
+        # Evita respuestas 304 Not Modified cuando se actualizan archivos locales
+        request.scope["headers"] = [
+            (k, v) for (k, v) in request.scope["headers"]
+            if k.lower() not in (b"if-none-match", b"if-modified-since")
+        ]
+    response = await call_next(request)
+    if is_no_cache_asset:
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    return response
+
 # Inicializar componentes
 print("[INIT] Inicializando procesador de datos...")
 processor = DataProcessor()
@@ -42,6 +61,7 @@ trainer.train_and_evaluate()
 predictor = MatchPredictor(trainer)
 tournament_simulator = TournamentSimulator(predictor)
 scraper = FootballDataScraper()
+notebook_runner = NotebookRunner()
 print("[INIT] Sistema listo.")
 
 # Schemas
@@ -50,6 +70,10 @@ class PredictionRequest(BaseModel):
     away_team: str
     bayesian_condition: Optional[str] = None
     simulation_mode: Optional[str] = "recent"
+
+class NotebookExecuteRequest(BaseModel):
+    cell_index: int
+    code: Optional[str] = None
 
 # Rutas API
 @app.get("/api/summary")
@@ -97,29 +121,6 @@ def calculate_binomial(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/api/poisson/calculate")
-def calculate_poisson(
-    mu: float = Query(..., description="Tasa media histórica de ocurrencia (goles/partido)"),
-    x: int = Query(..., description="Conteo de goles observado")
-):
-    """Calcula probabilidades de la Distribución de Poisson (Larson & Farber Cap. 4)."""
-    try:
-        return engine.calculate_poisson(mu=mu, x=x)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.get("/api/normal/calculate")
-def calculate_normal(
-    value: float = Query(..., description="Valor de la variable continua a evaluar"),
-    mean: Optional[float] = Query(None, description="Media de la distribución (opcional)"),
-    std: Optional[float] = Query(None, description="Desviación estándar (opcional)")
-):
-    """Calcula estandarización valor z, áreas y regla empírica (Larson & Farber Cap. 7)."""
-    try:
-        return engine.calculate_normal(value=value, mean=mean, std_dev=std)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
 @app.get("/api/descriptive/questions")
 def get_descriptive_questions():
     """Devuelve las respuestas estadísticas formales a las 3 preguntas descriptivas de Electiva III."""
@@ -146,7 +147,7 @@ def simulate_tournament(
 
 @app.post("/api/predict")
 def predict_match(req: PredictionRequest):
-    """Predice un enfrentamiento entre dos clubes con ML, Poisson xG y actualización bayesiana opcional."""
+    """Predice un enfrentamiento entre dos clubes con ML, Binomial xG y actualización bayesiana opcional."""
     try:
         return predictor.predict_match(
             home_team=req.home_team,
@@ -205,189 +206,54 @@ def get_teams_radar(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/assistant/ask")
-def query_assistant(q: str = Query(..., description="Pregunta en lenguaje natural sobre los datos de LaLiga")):
-    """
-    Asistente analítico que procesa consultas en lenguaje natural, identifica la intención estadística
-    y responde con métricas numéricas formales, valores de significancia y enlaces al módulo correspondiente.
-    """
-    import unicodedata
-    norm_q = unicodedata.normalize('NFKD', q).encode('ASCII', 'ignore').decode('utf-8').lower()
+@app.get("/api/notebook")
+def get_notebook():
+    """Devuelve la estructura completa de LaLigaScrap.ipynb y su estado actual de ejecución."""
+    try:
+        return notebook_runner.get_notebook()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    # Intención 1: Bayes / Tiros a puerta / Eficacia de remate (Integrante 1)
-    if any(k in norm_q for k in ["tiro", "puerta", "hst", "remate", "bayes", "disparo"]):
-        m1 = engine.get_member_analysis(1)
+@app.post("/api/notebook/execute")
+def execute_notebook_cell(req: NotebookExecuteRequest):
+    """Ejecuta una celda de código específica del cuaderno Colab en el kernel Python persistente."""
+    try:
+        return notebook_runner.execute_cell(cell_index=req.cell_index, code=req.code)
+    except (IndexError, ValueError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/notebook/execute-all")
+def execute_all_notebook_cells():
+    """Reinicia el kernel y ejecuta secuencialmente todas las celdas de código del cuaderno."""
+    try:
+        results = notebook_runner.execute_all()
         return {
-            "query": q,
-            "category": "inferential_bayes",
-            "title": "Eficacia de Remate y Actualización Bayesiana (Integrante 1)",
-            "headline": "P(Victoria | HST > 5) = 65.2% (Odds Ratio = 3.86, r = 0.58)",
-            "explanation": "Al registrar más de 5 tiros a puerta (HST > 5), la probabilidad de victoria local aumenta de una previa de 45.5% a una posteriori del 65.2%. El Likelihood ratio es de 1.43, lo que demuestra una fuerte asociación estadística.",
-            "metrics": {
-                "P_A_previa": "45.5%",
-                "P_A_dado_B_posteriori": "65.2%",
-                "odds_ratio": 3.86,
-                "correlation_r": 0.58
-            },
-            "target_tab": "tab-inferential",
-            "member_id": 1,
-            "formula": "P(A|B) = \\frac{P(B|A) \\cdot P(A)}{P(B)}"
+            "status": "completed",
+            "executed_cells": len(results),
+            "results": results
         }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    # Intención 2: Ventaja al descanso / HTR / Primer tiempo (Integrante 3)
-    if any(k in norm_q for k in ["descanso", "medio tiempo", "htr", "primer tiempo", "ir ganando"]):
-        m3 = engine.get_member_analysis(3)
-        return {
-            "query": q,
-            "category": "inferential_halftime",
-            "title": "Ventaja Parcial al Descanso (Integrante 3)",
-            "headline": "P(Victoria Final | HTR = H) = 78.5% (Z = 18.4, p < 0.0001)",
-            "explanation": "Ir ganando al término de los primeros 45 minutos predice el 78.5% de los triunfos finales del equipo local en 3.800 partidos. Refleja un estado acumulado de dominio táctico y psicológico previo.",
-            "metrics": {
-                "P_H_dado_HTR_H": "78.5%",
-                "partidos_con_ventaja_1t": 1104,
-                "victorias_concretadas": 867
-            },
-            "target_tab": "tab-inferential",
-            "member_id": 3,
-            "formula": "P(FTR=H \\mid HTR=H) = 0.785"
-        }
+@app.post("/api/notebook/reset")
+def reset_notebook_kernel():
+    """Reinicia el entorno de ejecución en memoria del cuaderno Colab."""
+    return notebook_runner.reset_kernel()
 
-    # Intención 3: Pandemia / COVID-19 / Factor campo / Experimento natural
-    if any(k in norm_q for k in ["pandemia", "covid", "sin publico", "puertas cerradas", "2020", "2021"]):
-        return {
-            "query": q,
-            "category": "natural_experiment",
-            "title": "Experimento Cuasi-Natural: Temporada Pandemia (2020/21)",
-            "headline": "Victoria Local: 41.6% (Pandemia) vs 47.9% (Público Pleno)",
-            "explanation": "La ausencia de público en las gradas durante la temporada 2020/21 redujo la victoria local en 6.3 puntos porcentuales. Esto aísla el componente ambiental y la presión sobre árbitro y rival del conocimiento puramente geográfico del campo.",
-            "metrics": {
-                "tasa_local_pandemia": "41.6%",
-                "tasa_local_historica": "45.5%",
-                "tasa_local_publico_pleno": "47.9%",
-                "diferencial_impacto": "-6.3%"
-            },
-            "target_tab": "tab-overview",
-            "formula": "\\Delta P = P_{publico} - P_{vacio} = +0.063"
-        }
-
-    # Intención 4: Disciplina / Tarjetas / Faltas / Árbitros (Integrante 5)
-    if any(k in norm_q for k in ["tarjeta", "amarilla", "roja", "falta", "expulsion", "disciplina"]):
-        m5 = engine.get_member_analysis(5)
-        return {
-            "query": q,
-            "category": "inferential_discipline",
-            "title": "Impacto Disciplinario y Tarjetas (Integrante 5)",
-            "headline": "Prueba Chi-Cuadrado: p = 0.012 (Rechazo de H0 de Independencia)",
-            "explanation": "La acumulación de tarjetas amarillas (HY >= 3) se asocia con una disminución en la efectividad defensiva y probabilidad de victoria, demostrando dependencia estadística entre la disciplina arbitral y el resultado final.",
-            "metrics": {
-                "chi2_p_value": 0.012,
-                "resultado": "Asociación estadísticamente significativa"
-            },
-            "target_tab": "tab-inferential",
-            "member_id": 5,
-            "formula": "\\chi^2 = \\sum \\frac{(O - E)^2}{E}, \\quad p = 0.012"
-        }
-
-    # Intención 5: Desempeño Visitante / AST (Integrante 6)
-    if any(k in norm_q for k in ["visitante", "fuera de casa", "ast", "resiliencia visitante"]):
-        m6 = engine.get_member_analysis(6)
-        return {
-            "query": q,
-            "category": "inferential_away",
-            "title": "Rendimiento y Resiliencia Visitante (Integrante 6)",
-            "headline": "P(Victoria Visitante | AST > 4) = 54.1% (Frente a 27.5% basal)",
-            "explanation": "El equipo visitante prácticamente duplica su probabilidad de triunfo (de 27.5% a 54.1%) cuando logra conectar más de 4 tiros entre los tres palos rivales.",
-            "metrics": {
-                "tasa_basal_visitante": "27.5%",
-                "tasa_con_ast_mayor_4": "54.1%"
-            },
-            "target_tab": "tab-inferential",
-            "member_id": 6,
-            "formula": "P(FTR=A \\mid AST > 4) = 0.541"
-        }
-
-    # Intención 6: Modelos Machine Learning / Brier Score / Calibración
-    if any(k in norm_q for k in ["brier", "calibracion", "machine learning", "accuracy", "modelo", "random forest", "regresion"]):
-        return {
-            "query": q,
-            "category": "ml_calibration",
-            "title": "Calibración Probabilística y Métricas de Machine Learning",
-            "headline": "Brier Score = 0.184 (Excelente Calibración Probabilística)",
-            "explanation": "La evaluación sobre el conjunto de test cronológico (760 partidos) confirma que los modelos de Regresión Logística y Random Forest alcanzan un Brier Score de 0.184 y un Log Loss de 0.88, demostrando que las probabilidades predichas corresponden fielmente a las frecuencias observadas en la realidad.",
-            "metrics": {
-                "brier_score": 0.184,
-                "accuracy_lr": "53.2%",
-                "accuracy_rf": "52.8%",
-                "roc_auc_multiclase": 0.69
-            },
-            "target_tab": "tab-ml",
-            "formula": "BS = \\frac{1}{N} \\sum_{i=1}^N (f_i - o_i)^2 = 0.184"
-        }
-
-    # Intención 7: Campeón / Temporada / Monte Carlo
-    if any(k in norm_q for k in ["campeon", "temporada", "monte carlo", "tabla", "torneo"]):
-        return {
-            "query": q,
-            "category": "tournament_simulation",
-            "title": "Metodología de Simulación de Temporada Completa",
-            "headline": "Simulación Monte Carlo de 380 Partidos Oficiales (250 Iteraciones)",
-            "explanation": "El algoritmo simula los 380 emparejamientos del calendario a doble vuelta muestreando goles a partir de Poisson bivariado y ventanas móviles recientes de 5 partidos. Determina puntos esperados, puestos de Champions y descenso.",
-            "metrics": {
-                "partidos_por_temporada": 380,
-                "partidos_totales_simulados": 95000,
-                "criterio_desempate": "Puntos -> DG -> GF"
-            },
-            "target_tab": "tab-ml"
-        }
-
-    # Intención 8: Detección de dos equipos para comparación directa
-    all_teams = processor.df['HomeTeam'].unique().tolist()
-    detected_teams = [t for t in all_teams if t.lower() in norm_q]
-    if len(detected_teams) >= 2:
-        t1, t2 = detected_teams[0], detected_teams[1]
-        radar_data = processor.get_team_radar_comparison(t1, t2)
-        return {
-            "query": q,
-            "category": "team_comparison",
-            "title": f"Comparativa Táctica Directa: {t1} vs {t2}",
-            "headline": "Comparación Multidimensional de 8 Ejes Históricos",
-            "explanation": f"Se comparan las 8 dimensiones tácticas entre {t1} y {t2} sobre las 10 temporadas auditadas.",
-            "metrics": {
-                "equipo_1": t1,
-                "equipo_2": t2,
-                "pts_promedio_t1": radar_data['team1']['raw']['pts_per_match'],
-                "pts_promedio_t2": radar_data['team2']['raw']['pts_per_match']
-            },
-            "target_tab": "tab-ml",
-            "radar_data": radar_data
-        }
-
-    # Intención por Defecto: Resumen General de la Base de Datos
-    stats = processor.get_summary_stats()
-    return {
-        "query": q,
-        "category": "general_overview",
-        "title": "Base de Datos Consolidada de LaLiga (2016-2026)",
-        "headline": f"3.800 Partidos Auditados • 10 Temporadas • {stats['total_goals']} Goles",
-        "explanation": "La plataforma integra 3.800 partidos oficiales de la Primera División española. El 45.5% de los encuentros culminaron en victoria local, 26.9% en empate y 27.5% en victoria visitante.",
-        "metrics": {
-            "total_partidos": 3800,
-            "goles_totales": stats['total_goals'],
-            "promedio_goles_partido": stats['avg_goals_per_match'],
-            "tasa_local": "45.5%",
-            "tasa_empate": "26.9%",
-            "tasa_visitante": "27.5%"
-        },
-        "target_tab": "tab-overview",
-        "suggestions": [
-            "¿Cuál es la probabilidad de victoria local con más de 5 tiros a puerta?",
-            "¿Cómo influye ir ganando al descanso en el resultado final?",
-            "¿Cuál fue el impacto de jugar sin público en la temporada pandemia?",
-            "¿Cómo se calculan el Brier Score y la calibración probabilística?",
-            "Compara el rendimiento de Real Madrid vs Barcelona"
-        ]
-    }
+@app.get("/api/notebook/download")
+def download_notebook():
+    """Permite descargar el archivo original LaLigaScrap.ipynb."""
+    if not os.path.exists(notebook_runner.notebook_path):
+        raise HTTPException(status_code=404, detail="Archivo LaLigaScrap.ipynb no encontrado.")
+    return FileResponse(
+        path=notebook_runner.notebook_path,
+        filename="LaLigaScrap.ipynb",
+        media_type="application/x-ipynb+json"
+    )
 
 # Montar frontend web estático
 WEB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "web")

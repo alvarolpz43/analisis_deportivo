@@ -43,7 +43,7 @@ La recolección se efectuó mediante inspección previa automatizada del archivo
 
 ### 2.3 Tratamiento y Justificación Metodológica de Valores Atípicos (*Outliers*)
 Se identificaron 43 partidos con marcadores atípicos de 7 o más goles (ej. victorias 6-1, 6-2, 6-4, 8-2). En ciencia de datos aplicada a sistemas físicos o sociológicos, un valor extremo suele indicar fallo del sensor o ruido espurio. Sin embargo, en el fútbol:
-> **Justificación:** Las goleadas extremas son **eventos atléticos auténticos y legalmente registrados**, derivados de circunstancias reales de juego (superioridad táctica masiva, expulsiones tempranas o desorganización defensiva). Truncar o eliminar estas observaciones distorsionaría la varianza real del fenómeno, sesgaría a la baja la tasa de intensidad de Poisson ($\lambda$) y falsearía las probabilidades de mercados de goles (*Over 2.5*). Por tanto, se preservan íntegramente.
+> **Justificación:** Las goleadas extremas son **eventos atléticos auténticos y legalmente registrados**, derivados de circunstancias reales de juego (superioridad táctica masiva, expulsiones tempranas o desorganización defensiva). Truncar o eliminar estas observaciones distorsionaría la varianza real del fenómeno, sesgaría a la baja el promedio esperado de goles ($\lambda$) y falsearía las probabilidades binomiales de mercados de goles (*Over 2.5*). Por tanto, se preservan íntegramente.
 
 ---
 
@@ -129,5 +129,5 @@ Se identificaron 43 partidos con marcadores atípicos de 7 o más goles (ej. vic
 ## 6. CONCLUSIONES GENERALES
 
 1. **Rigor en la Ingeniería de Datos:** El proceso de captura respetó la política de `robots.txt`, construyendo un dataset estructurado de 3.800 partidos sin nulos ni data leakage.
-2. **Consistencia Inferencial y Descriptiva:** La convergencia entre los modelos de Larson & Farber (Poisson con varianza $\sigma^2 = \mu$, Normal tipificada con $Z = -5.59$) y los algoritmos de Machine Learning proporciona un marco analítico sólido y coherente.
+2. **Consistencia Inferencial y Descriptiva:** La convergencia entre los modelos probabilísticos discretos (Distribución Hipergeométrica para variables dependientes sin reemplazo, Distribución Binomial para eventos independientes y contraste de hipótesis $Z = -5.59$) y los algoritmos de Machine Learning proporciona un marco analítico sólido y coherente.
 3. **Aporte Disciplinar:** Se superó la barrera del análisis superficial demostrando que los tiros a puerta se distribuyen simétricamente y actúan como palanca decisiva de victoria, al tiempo que se aisló empíricamente la influencia de la hinchada durante el cierre de estadios de 2020/21.

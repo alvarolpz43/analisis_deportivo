@@ -29,7 +29,7 @@ El software combina de forma rigurosa:
    - **Distribución Hipergeométrica:** Muestreo finito dependiente sin reemplazo (tiros a puerta, córners y tarjetas).
    - **Teorema de Bayes:** Actualización empírica para las 6 hipótesis de investigación de los autores.
    - **Validación de Confiabilidad:** Cálculo de la **desviación estándar muestral** ($s$) y **Prueba de Hipótesis Bilateral de Localía** ($H_0: p = 0.5$ vs $H_1: p \ne 0.5$).
-3. **Machine Learning & Poisson Bivariado:**
+3. **Machine Learning & Binomial Bivariado:**
    - Ensamble cronológico (80% Train, 20% Test) de Regresión Logística y Random Forest con ventana rodante de 5 partidos.
    - Cálculo de goles esperados ($xG$), matrices de marcadores probables y cuotas justas implícitas ($1 / P$).
 4. **Simulador de Temporada y Proyección de Campeón:** Simulación Monte Carlo de las 38 jornadas (380 partidos) bajo el formato de *todos contra todos por puntos*, proyectando la tabla de posiciones, puntos esperados y probabilidades de título y clasificación europea.
@@ -91,15 +91,16 @@ analisis_deportivo/
 │   │   └── football_scraper.py                   # Scraper ético para Football-Data.co.uk
 │   ├── analytics/
 │   │   ├── data_processor.py                     # Motor de procesamiento y cálculo de medias móviles (rolling 5)
-│   │   └── inferential_engine.py                 # Motor de Bayes, Binomial, Hipergeométrica y Confiabilidad
+│   │   ├── inferential_engine.py                 # Motor de Bayes, Binomial, Hipergeométrica y Confiabilidad
+│   │   └── notebook_runner.py                    # Ejecutor interactivo stateful para LaLigaScrap.ipynb (Colab)
 │   ├── models/
 │   │   ├── train.py                              # Entrenamiento de modelos ML (Logistic Regression, Random Forest)
-│   │   ├── predictor.py                          # Predictor de partidos, cuotas justas y Poisson xG
+│   │   ├── predictor.py                          # Predictor de partidos, cuotas justas y Binomial xG
 │   │   └── tournament_simulator.py               # Simulador Monte Carlo de temporada completa (380 partidos)
 │   └── api/
 │       └── app.py                                # Servidor RESTful FastAPI con todos los endpoints expuestos
 ├── web/
-│   ├── index.html                                # Dashboard SPA con 5 pestañas temáticas
+│   ├── index.html                                # Dashboard SPA con 6 pestañas temáticas (incluyendo Cuaderno Colab)
 │   ├── informe_tecnico.html                      # Versión web imprimible del informe técnico con KaTeX
 │   ├── css/
 │   │   └── styles.css                            # Sistema de diseño dark mode con variables CSS y selectores
@@ -110,7 +111,8 @@ analisis_deportivo/
 └── tests/
     ├── test_academic_modules.py                  # Pruebas unitarias de datos.py y modelo.py
     ├── test_inferential.py                       # Pruebas de Bayes, Hipergeométrica, Binomial y Confiabilidad
-    ├── test_models.py                            # Pruebas de ML, Poisson y simulación histórica H2H
+    ├── test_models.py                            # Pruebas de ML, Binomial y simulación histórica H2H
+    ├── test_notebook.py                          # Pruebas de ejecución del cuaderno Colab (LaLigaScrap.ipynb)
     └── test_api.py                               # Pruebas de rutas y endpoints de la API RESTful
 ```
 

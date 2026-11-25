@@ -26,7 +26,7 @@
 ### 1.1 Contexto y Justificación
 En el análisis deportivo moderno, la intuición cualitativa y el seguimiento empírico informal resultan insuficientes para comprender la compleja dinámica de los resultados en competiciones de alto rendimiento. El presente proyecto desarrolla una herramienta integral de software que articula metodológicamente dos pilares de la formación en ingeniería:
 1. **La Ciencia de Datos (Electiva III):** Web scraping ético respetando `robots.txt`, depuración sin fuga temporal (*data leakage*), análisis exploratorio de datos (EDA), respuesta fundamentada a preguntas estructurales y modelos predictivos multiclase de Machine Learning.
-2. **La Estadística Inferencial Formal (Cátedra Troncal):** Estimación puntual y por intervalos, Teorema de Bayes aplicado a 6 roles tácticos, distribuciones de probabilidad teóricas discretas y continuas (Binomial, Hipergeométrica, Poisson y Normal según el texto guía de Larson & Farber, Capítulos 4 y 7) y contraste formal de hipótesis.
+2. **La Estadística Inferencial Formal (Cátedra Troncal):** Estimación puntual y por intervalos, Teorema de Bayes aplicado a 6 roles tácticos, distribuciones de probabilidad teóricas discretas (**Distribución Hipergeométrica** para variables dependientes sin reemplazo y **Distribución Binomial** para eventos independientes) y contraste formal de hipótesis.
 
 ### 1.2 Formato de la Competición y Delimitación Temporal
 * **Sistema de Competición:** LaLiga regular opera bajo el formato de **todos contra todos a doble vuelta por puntos**. Cada club disputa 38 jornadas (19 en condición de local y 19 de visitante), otorgando 3 puntos por victoria, 1 por empate y 0 por derrota. Se corona campeón el equipo con mayor puntuación acumulada.
@@ -35,7 +35,7 @@ En el análisis deportivo moderno, la intuición cualitativa y el seguimiento em
 
 ---
 
-## 2. Marco Teórico y Distribuciones Probabilísticas (Larson & Farber Cap. 4 & 7)
+## 2. Marco Teórico y Distribuciones Probabilísticas
 
 ### 2.1 Espacio Muestral y Reglas Fundamentales de Probabilidad
 Para cualquier encuentro oficial disputado entre un equipo anfitrión $A$ (local) y un adversario $B$ (visitante), el espacio muestral $\Omega$ de los resultados finales posibles es discreto y finito:
@@ -60,35 +60,12 @@ $$P(X = k) = \binom{n}{k} p^k (1 - p)^{n - k} = \frac{n!}{k!(n - k)!} p^k q^{n -
 * **Desviación Estándar:** $\sigma = \sqrt{n \cdot p \cdot q}$
 * **Rango Usual (Larson & Farber):** $[\mu - 2\sigma, \; \mu + 2\sigma]$. Valores fuera de este intervalo son estadísticamente inusuales ($P < 0.05$).
 
-#### B. Distribución Hipergeométrica (Muestreo Finito sin Reemplazo)
-Se aplica cuando se extrae una muestra de tamaño $n$ sin reposición a partir de una población finita $N$ que contiene $r$ éxitos:
+#### B. Distribución Hipergeométrica (Variables Dependientes: Muestreo Finito sin Reemplazo)
+Se aplica cuando se extrae una muestra de tamaño $n$ sin reposición a partir de una población finita $N$ que contiene $r$ éxitos (variables con relación de dependencia entre sí):
 $$P(X = x \mid N, r, n) = \frac{\binom{r}{x} \binom{N - r}{n - x}}{\binom{N}{n}}$$
 * **Esperanza:** $E[X] = n \frac{r}{N}$
 * **Varianza con Factor de Corrección Finita:** $\operatorname{Var}(X) = n \frac{r}{N} \left(1 - \frac{r}{N}\right) \left(\frac{N - n}{N - 1}\right)$
 * **Criterio de Aproximación Binomial (Larson & Farber):** Si la fracción de muestreo cumple $n < 0.05N$ (la muestra es inferior al 5% de la población finita), los ensayos pueden considerarse prácticamente independientes y la hipergeométrica se aproxima con alta fidelidad mediante la distribución binomial con $p = r/N$.
-
-#### C. Distribución de Poisson (Larson & Farber Cap. 4: Variables en Intervalos Continuos)
-Modela el conteo de eventos discretos independientes que ocurren en un intervalo continuo fijo (los 90 minutos reglamentarios de un partido de fútbol), tales como goles anotados o tarjetas sancionadas:
-$$P(x) = \frac{\mu^x e^{-\mu}}{x!}$$
-* **Parámetro $\mu$:** Tasa media de eventos en los 90 minutos (ej. $\mu = 1.45$ goles locales por encuentro).
-* **Propiedad Fundamental:** En Poisson, la varianza es idéntica a la media:
-  $$\sigma^2 = \mu, \quad \sigma = \sqrt{\mu}$$
-* **Criterio de Rango Usual (Larson & Farber Cap. 4):**
-  $$\text{Intervalo Usual} = [\mu - 2\sigma, \; \mu + 2\sigma]$$
-  Un partido donde un equipo anota 5 goles con $\mu = 1.45$ tiene un límite superior $\mu + 2\sqrt{1.45} = 1.45 + 2(1.204) = 3.86$, clasificando de inmediato como un resultado **estadísticamente inusual** ($P(X \ge 5) < 0.02$).
-
-#### D. Distribución Normal Estándar y Valor Z (Larson & Farber Cap. 7)
-Para tipificar variables continuas de rendimiento de un club frente a la liga:
-$$z = \frac{X - \mu}{\sigma}$$
-* **Regla Empírica (68% – 95% – 99.7%):**
-  * $68.27\%$ de las observaciones caen en el intervalo $[\mu - \sigma, \; \mu + \sigma]$.
-  * $95.45\%$ de las observaciones caen en el intervalo $[\mu - 2\sigma, \; \mu + 2\sigma]$.
-  * $99.73\%$ de las observaciones caen en el intervalo $[\mu - 3\sigma, \; \mu + 3\sigma]$.
-* **Los 4 Casos de Áreas bajo la Curva Normal Estándar (Larson & Farber):**
-  1. *Caso 1 (Área a la izquierda):* $P(Z < z) = \Phi(z)$
-  2. *Caso 2 (Área a la derecha):* $P(Z > z) = 1 - \Phi(z)$
-  3. *Caso 3 (Área entre dos valores simétricos):* $P(-|z| < Z < |z|) = 2\Phi(|z|) - 1$
-  4. *Caso 4 (Área en las colas exteriores):* $P(Z < -|z| \text{ o } Z > |z|) = 2(1 - \Phi(|z|))$
 
 ---
 
@@ -96,7 +73,7 @@ $$z = \frac{X - \mu}{\sigma}$$
 
 ### 3.1 Tratamiento de Outliers (Valores Atípicos Extremos)
 En el consolidado de 3.800 partidos se identificaron 43 encuentros con tanteadores abultados de 7 o más goles (ej. victorias 6-1, 6-2, 6-4, 8-2). En ciencia de datos tradicional, los outliers pueden eliminarse si corresponden a errores instrumentales. En analítica deportiva:
-> **Justificación:** Las goleadas son **eventos físicos auténticos** derivados de factores tácticos legítimos (expulsiones, juego ultraofensivo o colapso defensivo). Eliminarlas mutilaría la varianza natural del fútbol y sesgaría gravemente la tasa de intensidad de Poisson ($\lambda$), alterando las cuotas justas de goles.
+> **Justificación:** Las goleadas son **eventos físicos auténticos** derivados de factores tácticos legítimos (expulsiones, juego ultraofensivo o colapso defensivo). Eliminarlas mutilaría la varianza natural del fútbol y sesgaría gravemente la estimación de goles esperados ($xG$) y las probabilidades binomiales de marcadores, alterando las cuotas justas de goles.
 
 ### 3.2 Respuestas a las Tres Preguntas de la Cátedra de Ciencia de Datos
 
@@ -183,6 +160,6 @@ El software computa directamente sobre los 3.800 encuentros:
 ## 7. Conclusiones
 
 1. **Articulación Académica Interdisciplinar Plena:** La integración entre la Ciencia de Datos y la Estadística Inferencial permitió abordar el ciclo completo de vida de los datos, desde el scraping legal en `robots.txt` hasta la inferencia bayesiana y el aprendizaje automático.
-2. **Convergencia Teórica (Larson & Farber):** El rigor en la aplicación de las distribuciones Binomial, Hipergeométrica (con la regla $n < 0.05N$), Poisson ($\sigma^2 = \mu$) y Normal ($Z$ tipificado con los 4 casos) demuestra dominio de los fundamentos de probabilidad.
+2. **Convergencia Teórica:** El rigor en la aplicación de la **Distribución Hipergeométrica** (variables dependientes sin reemplazo y regla $n < 0.05N$), la **Distribución Binomial** (variables independientes) y el contraste bilateral de localía ($Z = -5.59$, $p < 0.0001$) demuestra dominio de los fundamentos de probabilidad e inferencia estadística.
 3. **Diferenciación Causal Crítica:** Se demostró que la ventaja al descanso y los tiros a puerta son predictores de alta correlación pero no causas mecánicas simples, mientras que la pandemia de 2020/21 ofreció evidencia cuasi-experimental del peso de la hinchada.
 4. **Plataforma Web Funcional:** El desarrollo de la SPA en JavaScript Vanilla con KaTeX y Chart.js entrega una herramienta interactiva, visualmente impecable y de código abierto al servicio de la comunidad académica.

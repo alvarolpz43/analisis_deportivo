@@ -6,20 +6,18 @@ Articulación Interdisciplinaria (Ciclo 2026) - Institución Universitaria Coleg
 Autores: José Luis Martínez, Álvaro José López Quira, Jose Aldair Torres,
          Cristian Samir Narváez, Joan Sebastian Mosquera y Rubén Darío Velasco.
 
-Contenido Matemático (Referencia: Larson & Farber, Cap. 4 y Cap. 7):
+Contenido Matemático:
 1. Espacio Muestral y Reglas de Probabilidad (Axiomas, Unión, Intersección, Complemento).
-2. Distribución Binomial (Eventos Independientes, q = 1 - p, Rango Habitual [mu - 2*sigma, mu + 2*sigma]).
-3. Distribución Hipergeométrica (Muestreo Finito sin Reemplazo, Factor de Corrección, Condición n < 0.05*N).
-4. Distribución de Poisson (Eventos en Intervalo Continuo de 90 min, mu = sigma^2).
-5. Distribución Normal, Estandarización Valor z y Regla Empírica (68% - 95% - 99.7%, Casos 1 al 4).
-6. Teorema de Bayes y Actualización de Probabilidades con Evidencia Táctica.
-7. Validación de Confiabilidad Estadística (Desviación Estándar s y Prueba de Hipótesis Bilateral de Localía).
-8. Análisis Descriptivo e Interpretación de las 3 Preguntas de Investigación (Electiva III).
+2. Distribución Binomial (Variables y Ensayos Independientes, q = 1 - p, Rango Habitual [mu - 2*sigma, mu + 2*sigma]).
+3. Distribución Hipergeométrica (Variables Dependientes, Muestreo Finito sin Reemplazo, Factor de Corrección, Condición n < 0.05*N).
+4. Teorema de Bayes y Actualización de Probabilidades con Evidencia Táctica.
+5. Validación de Confiabilidad Estadística (Desviación Estándar s y Prueba de Hipótesis Bilateral de Localía).
+6. Análisis Descriptivo e Interpretación de las 3 Preguntas de Investigación (Electiva III).
 """
 import math
 import numpy as np
 import pandas as pd
-from scipy.stats import binom, hypergeom, poisson, norm, chi2_contingency
+from scipy.stats import binom, hypergeom, chi2_contingency
 from typing import Dict, Any, List, Tuple
 
 from datos import load_consolidated_data
@@ -162,84 +160,7 @@ def distribucion_hipergeometrica(N: int, r: int, n: int, x: int) -> Dict[str, An
 
 
 # ==============================================================================
-# 4. DISTRIBUCIÓN DE POISSON (LARSON & FARBER CAP. 4)
-# ==============================================================================
-
-def distribucion_poisson(mu: float, x: int) -> Dict[str, Any]:
-    """
-    Distribución de Poisson:
-    P(x) = (mu^x * e^-mu) / x!
-    sigma^2 = mu,  sigma = sqrt(mu)
-    """
-    mu = max(0.05, min(15.0, float(mu)))
-    x = max(0, min(25, int(x)))
-
-    dist = poisson(mu)
-
-    pmf_exact = float(dist.pmf(x))
-    cdf_leq = float(dist.cdf(x))
-    sf_geq = float(dist.sf(x - 1)) if x > 0 else 1.0
-
-    sigma_sq = mu
-    sigma = math.sqrt(mu)
-
-    usual_min = max(0.0, mu - 2.0 * sigma)
-    usual_max = mu + 2.0 * sigma
-    is_usual = bool(usual_min <= x <= usual_max)
-
-    return {
-        "modelo": "Distribución de Poisson (Larson & Farber Cap. 4)",
-        "parametros": {"mu": round(mu, 3), "x": x},
-        "P(x)": round(pmf_exact, 4),
-        "P(X <= x)": round(cdf_leq, 4),
-        "P(X >= x)": round(sf_geq, 4),
-        "mu": round(mu, 3),
-        "varianza_sigma_sq": round(sigma_sq, 3),
-        "desviacion_estandar_sigma": round(sigma, 3),
-        "rango_habitual_2sigma": [round(usual_min, 2), round(usual_max, 2)],
-        "es_valor_habitual": is_usual
-    }
-
-
-# ==============================================================================
-# 5. DISTRIBUCIÓN NORMAL Y VALOR Z (LARSON & FARBER CAP. 7)
-# ==============================================================================
-
-def distribucion_normal_y_valor_z(x_val: float, mean: float, std_dev: float) -> Dict[str, Any]:
-    """
-    Distribución Normal, Estandarización Valor z y Regla Empírica:
-    z = (X - mu) / sigma
-    Casos 1 al 4 de áreas bajo la curva normal estándar.
-    """
-    mean = float(mean)
-    std_dev = max(0.001, float(std_dev))
-    x_val = float(x_val)
-
-    z = (x_val - mean) / std_dev
-
-    area_left = float(norm.cdf(z))
-    area_right = float(norm.sf(z))
-    area_central = float(norm.cdf(abs(z)) - norm.cdf(-abs(z)))
-    area_two_tails = float(2.0 * norm.sf(abs(z)))
-
-    return {
-        "modelo": "Distribución Normal Estándar y Regla Empírica (Larson & Farber Cap. 7)",
-        "parametros": {"x": round(x_val, 2), "mu": round(mean, 2), "sigma": round(std_dev, 3)},
-        "valor_z": round(z, 3),
-        "caso_1_area_izquierda": round(area_left, 4),
-        "caso_2_area_derecha": round(area_right, 4),
-        "caso_3_area_central": round(area_central, 4),
-        "caso_4_area_dos_colas": round(area_two_tails, 4),
-        "regla_empirica": {
-            "68_pct_intervalo": [round(mean - std_dev, 2), round(mean + std_dev, 2)],
-            "95_pct_intervalo": [round(mean - 2 * std_dev, 2), round(mean + 2 * std_dev, 2)],
-            "99_7_pct_intervalo": [round(mean - 3 * std_dev, 2), round(mean + 3 * std_dev, 2)]
-        }
-    }
-
-
-# ==============================================================================
-# 6. TEOREMA DE BAYES Y ACTUALIZACIÓN
+# 4. TEOREMA DE BAYES Y ACTUALIZACIÓN
 # ==============================================================================
 
 def actualizacion_bayesiana(prior_A: float, likelihood_B_given_A: float, prob_B: float) -> Dict[str, Any]:
@@ -285,7 +206,7 @@ def calcular_confiabilidad_y_desviacion_estandar(df: pd.DataFrame) -> Dict[str, 
 
     se_0 = math.sqrt((p_0 * (1.0 - p_0)) / N)
     z_stat = (p_hat - p_0) / se_0
-    p_value = 2.0 * (1.0 - norm.cdf(abs(z_stat)))
+    p_value = math.erfc(abs(z_stat) / math.sqrt(2.0))
 
     se_hat = math.sqrt((p_hat * (1.0 - p_hat)) / N)
     ci_lower = p_hat - 1.95996 * se_hat
@@ -372,31 +293,25 @@ if __name__ == "__main__":
     print(f"  - P(Empate): {reglas['probabilidades_simples']['P(E)'] * 100:.2f}%")
     print(f"  - P(Victoria Visitante): {reglas['probabilidades_simples']['P(V_B)'] * 100:.2f}%")
 
-    print("\n[2] Distribución Binomial (n=5 partidos, p=0.60):")
+    print("\n[2] Distribución Binomial (Variables Independientes: n=5 partidos, p=0.60):")
     b_res = distribucion_binomial(n=5, p=0.60, k=3)
     print(f"  - P(X = 3): {b_res['P(x)'] * 100:.2f}%")
     print(f"  - Esperanza mu: {b_res['mu']}, sigma: {b_res['sigma']}")
     print(f"  - Rango habitual [mu ± 2*sigma]: {b_res['rango_habitual_2sigma']} (Habitual: {b_res['es_valor_habitual']})")
 
-    print("\n[3] Distribución de Poisson (mu=2.62 goles/partido, x=3):")
-    p_res = distribucion_poisson(mu=2.62, x=3)
-    print(f"  - P(x=3 goles): {p_res['P(x)'] * 100:.2f}%")
-    print(f"  - Rango habitual [mu ± 2*sigma]: {p_res['rango_habitual_2sigma']}")
+    print("\n[3] Distribución Hipergeométrica (Variables Dependientes sin Reemplazo: N=15, r=7, n=5, x=3):")
+    h_res = distribucion_hipergeometrica(N=15, r=7, n=5, x=3)
+    print(f"  - P(X = 3): {h_res['P(x)'] * 100:.2f}%")
+    print(f"  - Esperanza mu: {h_res['mu']}, sigma: {h_res['sigma']}")
+    print(f"  - Factor de corrección finita: {h_res['factor_correccion_poblacion_finita']} (Aprox. Binomial: {h_res['aproximacion_binomial_valida']})")
 
-    print("\n[4] Distribución Normal y Valor z (x=4 goles, mu=2.62, sigma=1.68):")
-    n_res = distribucion_normal_y_valor_z(x_val=4.0, mean=2.62, std_dev=1.68)
-    print(f"  - Valor z: {n_res['valor_z']}")
-    print(f"  - Caso 1 P(Z <= z): {n_res['caso_1_area_izquierda'] * 100:.2f}%")
-    print(f"  - Caso 2 P(Z >= z): {n_res['caso_2_area_derecha'] * 100:.2f}%")
-    print(f"  - Regla empírica 95%: {n_res['regla_empirica']['95_pct_intervalo']}")
-
-    print("\n[5] Confiabilidad y Prueba de Hipótesis Bilateral:")
+    print("\n[4] Confiabilidad y Prueba de Hipótesis Bilateral:")
     conf = calcular_confiabilidad_y_desviacion_estandar(df)
     test = conf['prueba_hipotesis_bilateral']
     print(f"  - Estadístico Z de localía: {test['estadistico_Z']} (p-valor: {test['valor_p']})")
     print(f"  - Decisión: {test['decision']}")
 
-    print("\n[6] Análisis Descriptivo (Electiva III):")
+    print("\n[5] Análisis Descriptivo (Electiva III):")
     desc = analisis_descriptivo_3_preguntas(df)
     print(f"  - Victoria local Top 3: {desc['pregunta_1']['victoria_local_top3']}%")
     print(f"  - Tiros a puerta media en victorias: {desc['pregunta_2']['media_tiros_puerta_victoria']} (mediana: {desc['pregunta_2']['mediana_tiros_puerta_victoria']})")

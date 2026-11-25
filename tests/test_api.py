@@ -58,6 +58,8 @@ class TestAPIRoutes(unittest.TestCase):
         self.assertIn('expected_goals', data)
         self.assertIn('top_scores', data)
         self.assertIn('head_to_head', data)
+        self.assertIn('binomial_parameters', data['analyzed_variables'])
+        self.assertNotIn('poisson_parameters', data['analyzed_variables'])
         self.assertIn('match_simulation', data)
         self.assertEqual(data['match_simulation']['duration_seconds'], 30)
         self.assertGreaterEqual(len(data['match_simulation']['timeline']), 10)
@@ -101,22 +103,6 @@ class TestAPIRoutes(unittest.TestCase):
         self.assertIn('projected_champion', data)
         self.assertTrue(data['champion_probability'] > 0)
 
-    def test_poisson_endpoint(self):
-        r = self.client.get('/api/poisson/calculate?mu=1.45&x=2')
-        self.assertEqual(r.status_code, 200)
-        data = r.json()
-        self.assertIn('pmf_exact', data)
-        self.assertIn('std_dev', data)
-        self.assertIn('is_usual', data)
-
-    def test_normal_endpoint(self):
-        r = self.client.get('/api/normal/calculate?value=75&mean=52.8&std_dev=16.5')
-        self.assertEqual(r.status_code, 200)
-        data = r.json()
-        self.assertIn('z_score', data)
-        self.assertIn('areas', data)
-        self.assertIn('empirical_rule', data)
-
     def test_descriptive_questions_endpoint(self):
         r = self.client.get('/api/descriptive/questions')
         self.assertEqual(r.status_code, 200)
@@ -132,8 +118,51 @@ class TestAPIRoutes(unittest.TestCase):
         self.assertIn('La Liga Analytics', r.text)
         self.assertIn('tab-inferential', r.text)
         self.assertIn('tab-equations', r.text)
+        self.assertIn('tab-notebook', r.text)
+        self.assertLess(
+            r.text.index('data-target="tab-overview"'),
+            r.text.index('data-target="tab-notebook"'),
+        )
+        self.assertLess(
+            r.text.index('data-target="tab-notebook"'),
+            r.text.index('data-target="tab-inferential"'),
+        )
+        self.assertIn('no-store', r.headers.get('cache-control', ''))
         self.assertIn('Fundamentos Estadísticos y Mapeo al Código Fuente', r.text)
+        self.assertIn('card-theoretical-framework', r.text)
+        self.assertIn('theory-pillars-grid', r.text)
+        self.assertIn('glossary-grid', r.text)
         self.assertIn('katex', r.text.lower())
+        self.assertNotIn('tab-assistant', r.text)
+        self.assertNotIn('slider-poisson-mu', r.text)
+        self.assertNotIn('slider-normal-x', r.text)
+
+    def test_notebook_endpoints(self):
+        r = self.client.get('/api/notebook')
+        self.assertEqual(r.status_code, 200)
+        nb = r.json()
+        self.assertEqual(nb['filename'], 'LaLigaScrap.ipynb')
+        self.assertGreater(len(nb['cells']), 10)
+
+        first_code_idx = next(c['index'] for c in nb['cells'] if c['cell_type'] == 'code')
+        exec_r = self.client.post('/api/notebook/execute', json={'cell_index': first_code_idx})
+        self.assertEqual(exec_r.status_code, 200)
+        self.assertEqual(exec_r.json()['status'], 'ok')
+
+        all_r = self.client.post('/api/notebook/execute-all')
+        self.assertEqual(all_r.status_code, 200)
+        all_data = all_r.json()
+        self.assertEqual(all_data['status'], 'completed')
+        self.assertGreaterEqual(all_data['executed_cells'], 6)
+        self.assertTrue(all(item['status'] == 'ok' for item in all_data['results']))
+
+        dl_r = self.client.get('/api/notebook/download')
+        self.assertEqual(dl_r.status_code, 200)
+        self.assertIn('LaLigaScrap.ipynb', dl_r.headers.get('content-disposition', ''))
+
+        reset_r = self.client.post('/api/notebook/reset')
+        self.assertEqual(reset_r.status_code, 200)
+        self.assertEqual(reset_r.json()['status'], 'reset')
 
 if __name__ == '__main__':
     unittest.main()

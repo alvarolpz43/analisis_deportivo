@@ -195,13 +195,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupMemberTabs();
   setupHyperControls();
   setupBinomialControls();
-  setupPoissonControls();
-  setupNormalControls();
   setupPredictor();
   setupTournamentSimulator();
   setupAuditor();
   setupEquationsTab();
-  setupAssistantNLQ();
+  setupNotebookTab();
+  setupTheoreticalGlossary();
   await loadInitialData();
   updateRadarComparison();
 });
@@ -232,8 +231,6 @@ function setupNavigation() {
       if (targetId === 'tab-inferential') {
         loadMemberData(currentMemberId);
         calculateAndRenderBinomial();
-        calculateAndRenderPoisson();
-        calculateAndRenderNormal();
       }
       if (targetId === 'tab-ml') {
         loadMLMetrics();
@@ -241,6 +238,7 @@ function setupNavigation() {
       }
       if (targetId === 'tab-auditor') loadAuditorTable();
       if (targetId === 'tab-equations') renderEquationsMath();
+      if (targetId === 'tab-notebook') loadNotebookCells();
     });
   });
 }
@@ -281,10 +279,8 @@ async function loadInitialData() {
     // Cargar primer integrante
     await loadMemberData(1);
 
-    // Cargar simulación binomial, poisson y normal iniciales
+    // Cargar simulación binomial inicial
     await calculateAndRenderBinomial();
-    await calculateAndRenderPoisson();
-    await calculateAndRenderNormal();
 
     // Cargar selectores de equipos en el Predictor
     populateTeamSelectors();
@@ -419,111 +415,6 @@ async function calculateAndRenderBinomial() {
   }
 }
 
-// Controles y Cálculo Poisson Interactivo (Larson & Farber Cap. 4)
-function setupPoissonControls() {
-  const muSlider = document.getElementById('slider-poisson-mu');
-  const xSlider = document.getElementById('slider-poisson-x');
-
-  if (muSlider && xSlider) {
-    [muSlider, xSlider].forEach(slider => {
-      slider.addEventListener('input', () => {
-        const mu = (parseInt(muSlider.value) / 100).toFixed(2);
-        const x = xSlider.value;
-        document.getElementById('val-slider-poisson-mu').textContent = mu;
-        document.getElementById('val-slider-poisson-x').textContent = x;
-        calculateAndRenderPoisson();
-      });
-    });
-  }
-}
-
-async function calculateAndRenderPoisson() {
-  const muEl = document.getElementById('slider-poisson-mu');
-  const xEl = document.getElementById('slider-poisson-x');
-  if (!muEl || !xEl) return;
-
-  const mu = parseFloat(muEl.value) / 100.0;
-  const x = parseInt(xEl.value);
-
-  try {
-    const res = await SportsAPI.calculatePoisson(mu, x);
-    document.getElementById('poisson-exact').textContent = `${(res.pmf_exact * 100).toFixed(1)}%`;
-    document.getElementById('poisson-cdf').textContent = `${(res.cdf_leq * 100).toFixed(1)}%`;
-    document.getElementById('poisson-sf').textContent = `${(res.sf_geq * 100).toFixed(1)}%`;
-    document.getElementById('poisson-var').textContent = res.variance.toFixed(2);
-    document.getElementById('poisson-std').textContent = res.std_dev.toFixed(2);
-    document.getElementById('poisson-usual-bounds').textContent = `[${res.usual_range.min}, ${res.usual_range.max}]`;
-
-    const badge = document.getElementById('poisson-usual-badge');
-    if (badge) {
-      if (res.is_usual) {
-        badge.className = 'badge-usual';
-        badge.innerHTML = `
-          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Evento Estadísticamente Usual (Dentro de μ ± 2σ)</span>
-        `;
-      } else {
-        badge.className = 'badge-unusual';
-        badge.innerHTML = `
-          <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-          <span>Evento Poco Común / Inusual (P &lt; 0.05, fuera de μ ± 2σ)</span>
-        `;
-      }
-    }
-
-    ChartManager.renderPoissonChart('chart-poisson-pmf', res.k_values, res.pmf_values, res.x);
-  } catch (err) {
-    console.error('Error al calcular distribución de Poisson:', err);
-  }
-}
-
-// Controles y Cálculo Normal Interactivo (Larson & Farber Cap. 7)
-function setupNormalControls() {
-  const xSlider = document.getElementById('slider-normal-x');
-  const muSlider = document.getElementById('slider-normal-mu');
-  const stdSlider = document.getElementById('slider-normal-std');
-
-  if (xSlider && muSlider && stdSlider) {
-    [xSlider, muSlider, stdSlider].forEach(slider => {
-      slider.addEventListener('input', () => {
-        document.getElementById('val-slider-normal-x').textContent = xSlider.value;
-        document.getElementById('val-slider-normal-mu').textContent = muSlider.value;
-        document.getElementById('val-slider-normal-std').textContent = stdSlider.value;
-        calculateAndRenderNormal();
-      });
-    });
-  }
-}
-
-async function calculateAndRenderNormal() {
-  const xEl = document.getElementById('slider-normal-x');
-  const muEl = document.getElementById('slider-normal-mu');
-  const stdEl = document.getElementById('slider-normal-std');
-  if (!xEl || !muEl || !stdEl) return;
-
-  const x = parseFloat(xEl.value);
-  const mu = parseFloat(muEl.value);
-  const std = parseFloat(stdEl.value);
-
-  try {
-    const res = await SportsAPI.calculateNormal(x, mu, std);
-    document.getElementById('normal-z-val').textContent = res.z_score >= 0 ? `+${res.z_score}` : `${res.z_score}`;
-    document.getElementById('normal-z-interp').textContent = res.interpretation;
-    document.getElementById('normal-emp-68').textContent = `[${res.empirical_rule['68_percent'].min}, ${res.empirical_rule['68_percent'].max}]`;
-    document.getElementById('normal-emp-95').textContent = `[${res.empirical_rule['95_percent'].min}, ${res.empirical_rule['95_percent'].max}]`;
-    document.getElementById('normal-emp-99').textContent = `[${res.empirical_rule['99_7_percent'].min}, ${res.empirical_rule['99_7_percent'].max}]`;
-
-    document.getElementById('normal-case-1').textContent = `${(res.areas.case_1_left * 100).toFixed(1)}%`;
-    document.getElementById('normal-case-2').textContent = `${(res.areas.case_2_right * 100).toFixed(1)}%`;
-    document.getElementById('normal-case-3').textContent = `${(res.areas.case_3_between * 100).toFixed(1)}%`;
-    document.getElementById('normal-case-4').textContent = `${(res.areas.case_4_tails * 100).toFixed(1)}%`;
-
-    ChartManager.renderNormalChart('chart-normal-pdf', res.x_values, res.pdf_values, res.value, res.mean);
-  } catch (err) {
-    console.error('Error al calcular distribución normal:', err);
-  }
-}
-
 // Simulador de Torneo y Proyección de Campeón
 function setupTournamentSimulator() {
   const btn = document.getElementById('btn-run-tournament-sim');
@@ -537,11 +428,11 @@ function setupTournamentSimulator() {
       if (methText) {
         if (mode === 'historical') {
           methText.innerHTML = `
-            <strong>Modo Registro Histórico (10 Temporadas / 3.800 Partidos):</strong> Proyecta cada uno de los 380 partidos del calendario oficial utilizando las frecuencias absolutas y parámetros de Poisson derivados de la base de datos histórica consolidada (2016-2026), incluyendo el récord directo mutuo en cada feudo. Cada partido individual otorga <strong>3 puntos por victoria, 1 por empate y 0 por derrota</strong>.
+            <strong>Modo Registro Histórico (10 Temporadas / 3.800 Partidos):</strong> Proyecta cada uno de los 380 partidos del calendario oficial utilizando las frecuencias absolutas y parámetros Binomiales derivados de la base de datos histórica consolidada (2016-2026), incluyendo el récord directo mutuo en cada feudo. Cada partido individual otorga <strong>3 puntos por victoria, 1 por empate y 0 por derrota</strong>.
           `;
         } else {
           methText.innerHTML = `
-            <strong>Modo Forma Reciente (Modelos ML - 5 Partidos):</strong> Proyecta la temporada utilizando la ventana móvil reciente de 5 partidos para cada club (<code>gf_5, ga_5, hst_5, pts_5</code>), ponderada por los modelos de Regresión Logística y Random Forest combinados con la tasa Poisson. Refleja el momento competitivo contemporáneo de cada club en el campeonato.
+            <strong>Modo Forma Reciente (Modelos ML - 5 Partidos):</strong> Proyecta la temporada utilizando la ventana móvil reciente de 5 partidos para cada club (<code>gf_5, ga_5, hst_5, pts_5</code>), ponderada por los modelos de Regresión Logística y Random Forest combinados con el modelo Binomial de goles esperados. Refleja el momento competitivo contemporáneo de cada club en el campeonato.
           `;
         }
       }
@@ -984,7 +875,7 @@ function renderPredictionResults(pred) {
     const alertScore = document.getElementById('label-sampled-score');
     const alertProb = document.getElementById('label-sampled-prob');
     if (alertScore) alertScore.textContent = pred.sampled_score.score;
-    if (alertProb) alertProb.textContent = `Probabilidad Poisson Bivariada: ${pred.sampled_score.pct}% (Muestreo Estocástico)`;
+    if (alertProb) alertProb.textContent = `Probabilidad Binomial Bivariada: ${pred.sampled_score.pct}% (Muestreo Estocástico)`;
   }
 
   // Barra de probabilidades animada con escudos
@@ -1012,7 +903,7 @@ function renderPredictionResults(pred) {
   document.getElementById('fair-odd-draw').textContent = pred.fair_odds.draw;
   document.getElementById('fair-odd-away').textContent = pred.fair_odds.away_win;
 
-  // Goles Esperados (Poisson xG)
+  // Goles Esperados (Binomial xG)
   document.getElementById('xg-home').textContent = pred.expected_goals.home_xG;
   document.getElementById('xg-away').textContent = pred.expected_goals.away_xG;
   document.getElementById('xg-total').textContent = pred.expected_goals.total_xG;
@@ -1334,82 +1225,402 @@ function setupAcademicPDFModal() {
   }
 }
 
-// Asistente Analítico en Lenguaje Natural (NLQ)
-function setupAssistantNLQ() {
-  const input = document.getElementById('assistant-input');
-  const btnAsk = document.getElementById('btn-assistant-ask');
-  const container = document.getElementById('assistant-response-container');
-  const chips = document.querySelectorAll('.assistant-chip');
+// ==========================================================================
+// 8. Cuaderno Colab Interactivo (LaLigaScrap.ipynb)
+// ==========================================================================
+let notebookLoadedOnce = false;
 
-  async function handleQuery(query) {
-    if (!query || !query.trim()) return;
-    if (input) input.value = query;
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
-    try {
-      const data = await SportsAPI.askAssistant(query);
-      if (!container) return;
+function renderSimpleMarkdown(mdText) {
+  const lines = String(mdText || '').split(/\r?\n/);
+  const html = [];
+  let inList = false;
+  let listTag = 'ul';
 
-      container.style.display = 'block';
-      const catBadge = document.getElementById('ast-category-badge');
-      if (catBadge) catBadge.textContent = data.title || 'Inferencia Estadística';
+  const formatInline = (txt) => {
+    let s = escapeHtml(txt);
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    return s;
+  };
 
-      const echo = document.getElementById('ast-query-echo');
-      if (echo) echo.textContent = `Consulta: "${query}"`;
+  const closeList = () => {
+    if (inList) {
+      html.push(`</${listTag}>`);
+      inList = false;
+    }
+  };
 
-      const hl = document.getElementById('ast-headline');
-      if (hl) hl.textContent = data.headline || '';
-
-      const exp = document.getElementById('ast-explanation');
-      if (exp) exp.textContent = data.explanation || '';
-
-      const metricsGrid = document.getElementById('ast-metrics-grid');
-      if (metricsGrid) {
-        metricsGrid.innerHTML = '';
-        if (data.metrics) {
-          Object.entries(data.metrics).forEach(([k, v]) => {
-            const box = document.createElement('div');
-            box.className = 'hyper-stat-box';
-            const label = k.replace(/_/g, ' ').toUpperCase();
-            box.innerHTML = `<span class="h-label">${label}</span><div class="h-value" style="font-size: 1.1rem; color: #38bdf8;">${v}</div>`;
-            metricsGrid.appendChild(box);
-          });
-        }
+  lines.forEach(rawLine => {
+    const line = rawLine.trim();
+    if (!line) {
+      closeList();
+      return;
+    }
+    if (line === '---' || line === '***') {
+      closeList();
+      html.push('<hr class="colab-md-hr">');
+      return;
+    }
+    if (line.startsWith('### ')) {
+      closeList();
+      html.push(`<h3>${formatInline(line.slice(4))}</h3>`);
+      return;
+    }
+    if (line.startsWith('## ')) {
+      closeList();
+      html.push(`<h2>${formatInline(line.slice(3))}</h2>`);
+      return;
+    }
+    if (line.startsWith('# ')) {
+      closeList();
+      html.push(`<h1>${formatInline(line.slice(2))}</h1>`);
+      return;
+    }
+    if (line.startsWith('> ')) {
+      closeList();
+      html.push(`<blockquote>${formatInline(line.slice(2))}</blockquote>`);
+      return;
+    }
+    if (/^[-*]\s+/.test(line)) {
+      if (!inList || listTag !== 'ul') {
+        closeList();
+        listTag = 'ul';
+        inList = true;
+        html.push('<ul>');
       }
-
-      const formulaBox = document.getElementById('ast-formula-box');
-      if (formulaBox) {
-        formulaBox.innerHTML = data.formula ? `Fórmula formal: <code>${data.formula}</code>` : '';
+      html.push(`<li>${formatInline(line.replace(/^[-*]\s+/, ''))}</li>`);
+      return;
+    }
+    if (/^\d+\.\s+/.test(line)) {
+      if (!inList || listTag !== 'ol') {
+        closeList();
+        listTag = 'ol';
+        inList = true;
+        html.push('<ol>');
       }
+      html.push(`<li>${formatInline(line.replace(/^\d+\.\s+/, ''))}</li>`);
+      return;
+    }
+    closeList();
+    html.push(`<p>${formatInline(line)}</p>`);
+  });
 
-      const btnJump = document.getElementById('btn-ast-jump');
-      if (btnJump && data.target_tab) {
-        btnJump.onclick = () => {
-          const tabBtn = document.querySelector(`.tab-btn[data-target="${data.target_tab}"]`);
-          if (tabBtn) tabBtn.click();
-          if (data.member_id) {
-            const mBtn = document.querySelector(`.member-btn[data-member="${data.member_id}"]`);
-            if (mBtn) mBtn.click();
-          }
-        };
-      }
+  closeList();
+  return html.join('\n');
+}
 
-      container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } catch (err) {
-      console.error('Error al consultar asistente:', err);
+function autoResizeTextarea(el) {
+  if (!el) return;
+  el.style.height = 'auto';
+  el.style.height = `${Math.max(58, el.scrollHeight + 4)}px`;
+}
+
+function setKernelBadgeState(busy, text) {
+  const badge = document.getElementById('colab-kernel-status');
+  if (!badge) return;
+  badge.classList.toggle('busy', Boolean(busy));
+  badge.innerHTML = `<span class="kernel-dot"></span> ${text}`;
+}
+
+function renderCellOutput(cellIndex, res) {
+  const countEl = document.getElementById(`colab-exec-count-${cellIndex}`);
+  const metaEl = document.getElementById(`colab-meta-${cellIndex}`);
+  const outEl = document.getElementById(`colab-output-${cellIndex}`);
+  const runBtn = document.getElementById(`btn-run-cell-${cellIndex}`);
+
+  if (runBtn) {
+    runBtn.classList.toggle('executed-ok', res.status === 'ok');
+    runBtn.classList.toggle('executed-err', res.status === 'error');
+  }
+
+  if (countEl) {
+    countEl.textContent = res.execution_count ? `[${res.execution_count}]` : '[ ]';
+    countEl.classList.toggle('executed', Boolean(res.execution_count));
+    countEl.classList.toggle('error', res.status === 'error');
+  }
+
+  if (metaEl) {
+    if (res.duration_ms !== null && res.duration_ms !== undefined) {
+      metaEl.textContent = res.status === 'error'
+        ? `Error (${res.duration_ms} ms)`
+        : `Ejecutada en ${res.duration_ms} ms`;
+    } else {
+      metaEl.textContent = '';
     }
   }
 
-  if (btnAsk && input) {
-    btnAsk.addEventListener('click', () => handleQuery(input.value));
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') handleQuery(input.value);
+  if (!outEl) return;
+  const hasOutput = Boolean(
+    res.stdout ||
+    (res.html_outputs && res.html_outputs.length > 0) ||
+    (res.images && res.images.length > 0) ||
+    res.error
+  );
+
+  if (!hasOutput) {
+    outEl.style.display = 'none';
+    outEl.innerHTML = '';
+    return;
+  }
+
+  outEl.style.display = 'block';
+  const parts = [];
+
+  if (res.stdout) {
+    parts.push(`<pre class="colab-stdout">${escapeHtml(res.stdout)}</pre>`);
+  }
+  if (res.html_outputs && res.html_outputs.length > 0) {
+    res.html_outputs.forEach(tbl => {
+      parts.push(`<div class="colab-df-wrapper">${tbl}</div>`);
+    });
+  }
+  if (res.images && res.images.length > 0) {
+    res.images.forEach(src => {
+      parts.push(`<div class="colab-plot-wrap"><img class="colab-plot-img" src="${src}" alt="Gráfica generada por matplotlib"></div>`);
+    });
+  }
+  if (res.error) {
+    parts.push(`<pre class="colab-error">${escapeHtml(res.error)}</pre>`);
+  }
+
+  outEl.innerHTML = parts.join('');
+}
+
+async function runNotebookCell(cellIndex) {
+  const editor = document.getElementById(`colab-editor-${cellIndex}`);
+  const btn = document.getElementById(`btn-run-cell-${cellIndex}`);
+  const inlineBtn = document.getElementById(`btn-inline-run-${cellIndex}`);
+  const code = editor ? editor.value : null;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.add('running');
+  }
+  if (inlineBtn) {
+    inlineBtn.disabled = true;
+    inlineBtn.textContent = 'Ejecutando...';
+  }
+  setKernelBadgeState(true, 'Ejecutando celda...');
+
+  try {
+    const res = await SportsAPI.executeNotebookCell(cellIndex, code);
+    if (res.prerequisite_results && res.prerequisite_results.length > 0) {
+      res.prerequisite_results.forEach(preRes => renderCellOutput(preRes.cell_index, preRes));
+    }
+    renderCellOutput(cellIndex, res);
+    setKernelBadgeState(false, res.status === 'error' ? 'Python 3 • Error en celda' : 'Python 3 • Kernel Listo');
+  } catch (err) {
+    renderCellOutput(cellIndex, {
+      status: 'error',
+      execution_count: '!',
+      error: err.message
+    });
+    setKernelBadgeState(false, 'Python 3 • Error en celda');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.classList.remove('running');
+    }
+    if (inlineBtn) {
+      inlineBtn.disabled = false;
+      inlineBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg><span>Ejecutar</span>';
+    }
+  }
+}
+
+async function loadNotebookCells(forceReload = false) {
+  const container = document.getElementById('notebook-cells-container');
+  if (!container) return;
+  if (notebookLoadedOnce && !forceReload) return;
+
+  try {
+    const nb = await SportsAPI.getNotebook();
+    notebookLoadedOnce = true;
+
+    const fnEl = document.getElementById('colab-filename');
+    if (fnEl && nb.filename) fnEl.textContent = nb.filename;
+    const colabLink = document.getElementById('link-open-google-colab');
+    if (colabLink && nb.colab_url) colabLink.href = nb.colab_url;
+
+    container.innerHTML = '';
+    nb.cells.forEach(cell => {
+      const wrapper = document.createElement('div');
+      if (cell.cell_type === 'markdown') {
+        wrapper.className = 'colab-cell colab-cell-markdown';
+        wrapper.innerHTML = `<div class="colab-md-body">${renderSimpleMarkdown(cell.source)}</div>`;
+        container.appendChild(wrapper);
+      } else {
+        wrapper.className = 'colab-cell colab-cell-code';
+        wrapper.innerHTML = `
+          <div class="colab-code-row">
+            <div class="colab-gutter">
+              <button type="button" id="btn-run-cell-${cell.index}" class="colab-run-btn" title="Ejecutar celda (Shift + Enter)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+              </button>
+              <span class="colab-exec-count" id="colab-exec-count-${cell.index}">[ ]</span>
+            </div>
+            <div class="colab-code-main">
+              <textarea id="colab-editor-${cell.index}" class="colab-editor" spellcheck="false"></textarea>
+              <div class="colab-cell-footer">
+                <span class="colab-cell-meta" id="colab-meta-${cell.index}"></span>
+                <div class="colab-footer-right">
+                  <span class="colab-cell-hint">Shift + Enter</span>
+                  <button type="button" id="btn-inline-run-${cell.index}" class="colab-btn-inline-run" title="Ejecutar esta celda">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                    <span>Ejecutar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="colab-output-area" id="colab-output-${cell.index}" style="display: none;"></div>
+        `;
+        container.appendChild(wrapper);
+
+        const textarea = document.getElementById(`colab-editor-${cell.index}`);
+        if (textarea) {
+          textarea.value = cell.source;
+          autoResizeTextarea(textarea);
+          requestAnimationFrame(() => autoResizeTextarea(textarea));
+          textarea.addEventListener('input', () => autoResizeTextarea(textarea));
+          textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.shiftKey) {
+              e.preventDefault();
+              runNotebookCell(cell.index);
+            }
+          });
+        }
+
+        const runBtn = document.getElementById(`btn-run-cell-${cell.index}`);
+        if (runBtn) {
+          runBtn.addEventListener('click', () => runNotebookCell(cell.index));
+        }
+        const inlineRunBtn = document.getElementById(`btn-inline-run-${cell.index}`);
+        if (inlineRunBtn) {
+          inlineRunBtn.addEventListener('click', () => runNotebookCell(cell.index));
+        }
+
+        if (cell.status && cell.status !== 'idle') {
+          renderCellOutput(cell.index, cell);
+        }
+      }
+    });
+
+    if (typeof renderMathInElement === 'function') {
+      renderMathInElement(container, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false }
+        ],
+        throwOnError: false
+      });
+    }
+  } catch (err) {
+    container.innerHTML = `<div class="card colab-error">No se pudo cargar el cuaderno: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function setupNotebookTab() {
+  const btnRunAll = document.getElementById('btn-notebook-run-all');
+  const btnReset = document.getElementById('btn-notebook-reset');
+
+  if (btnRunAll) {
+    btnRunAll.addEventListener('click', async () => {
+      if (!notebookLoadedOnce) await loadNotebookCells();
+      btnRunAll.disabled = true;
+      setKernelBadgeState(true, 'Ejecutando todo el cuaderno...');
+      try {
+        const data = await SportsAPI.executeAllNotebook();
+        if (data.results) {
+          data.results.forEach(res => renderCellOutput(res.cell_index, res));
+        }
+        setKernelBadgeState(false, 'Python 3 • Cuaderno Ejecutado');
+      } catch (err) {
+        alert('Error al ejecutar el cuaderno: ' + err.message);
+        setKernelBadgeState(false, 'Python 3 • Error');
+      } finally {
+        btnRunAll.disabled = false;
+      }
     });
   }
 
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      const q = chip.dataset.query;
-      handleQuery(q);
+  if (btnReset) {
+    btnReset.addEventListener('click', async () => {
+      btnReset.disabled = true;
+      try {
+        await SportsAPI.resetNotebookKernel();
+        notebookLoadedOnce = false;
+        await loadNotebookCells(true);
+        setKernelBadgeState(false, 'Python 3 • Entorno Reiniciado');
+      } catch (err) {
+        alert('Error al reiniciar el entorno: ' + err.message);
+      } finally {
+        btnReset.disabled = false;
+      }
+    });
+  }
+}
+
+// ==========================================================================
+// 9. Marco Teórico y Glosario Interactivo en Visión General
+// ==========================================================================
+function setupTheoreticalGlossary() {
+  const pills = document.querySelectorAll('.glossary-pill');
+  const searchInput = document.getElementById('glossary-search-input');
+  const items = document.querySelectorAll('.glossary-item');
+  const countMeta = document.getElementById('glossary-count-meta');
+  if (!items.length) return;
+
+  let activeCat = 'all';
+
+  const normalizeText = (txt) =>
+    String(txt || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+
+  function applyFilter() {
+    const query = normalizeText(searchInput ? searchInput.value.trim() : '');
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      const cat = item.dataset.category || '';
+      const text = normalizeText(item.textContent);
+      const matchCat = activeCat === 'all' || cat === activeCat;
+      const matchSearch = !query || text.includes(query);
+      const show = matchCat && matchSearch;
+      item.style.display = show ? 'block' : 'none';
+      if (show) visibleCount++;
+    });
+
+    if (countMeta) {
+      countMeta.textContent = visibleCount > 0
+        ? `Mostrando ${visibleCount} de ${items.length} términos técnicos explicados`
+        : 'No se encontraron términos que coincidan con tu búsqueda.';
+    }
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeCat = pill.dataset.category || 'all';
+      applyFilter();
     });
   });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilter);
+  }
+
+  applyFilter();
 }

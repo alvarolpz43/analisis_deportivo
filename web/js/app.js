@@ -230,7 +230,9 @@ function setupNavigation() {
       }
       if (targetId === 'tab-inferential') {
         loadMemberData(currentMemberId);
-        calculateAndRenderBinomial();
+        if (![1, 2, 4].includes(currentMemberId)) {
+          calculateAndRenderBinomial();
+        }
       }
       if (targetId === 'tab-ml') {
         loadMLMetrics();
@@ -279,8 +281,10 @@ async function loadInitialData() {
     // Cargar primer integrante
     await loadMemberData(1);
 
-    // Cargar simulación binomial inicial
-    await calculateAndRenderBinomial();
+    // Cargar simulación binomial inicial solo si está visible para el integrante actual
+    if (![1, 2, 4].includes(currentMemberId)) {
+      await calculateAndRenderBinomial();
+    }
 
     // Cargar selectores de equipos en el Predictor
     populateTeamSelectors();
@@ -579,8 +583,9 @@ function applyMember4Customizations(memberId, data) {
   // Dar separación entre la Hipergeométrica y el bloque Bayes/tabla solo en el Integrante 4.
   if (hyper) hyper.style.marginBottom = isM4 ? '2rem' : '';
 
-  // Ocultar TODA la tarjeta Binomial solo en el Integrante 4.
-  if (binom) binom.style.display = isM4 ? 'none' : '';
+  // Ocultar la tarjeta Binomial (Eventos Independientes) en Integrante 1, Integrante 2 e Integrante 4.
+  const hideBinom = [1, 2, 4].includes(memberId);
+  if (binom) binom.style.display = hideBinom ? 'none' : 'block';
 
   // Ocultar Factor Bayes e IC 95% Posterior solo en el Integrante 4.
   const factorBox = document.getElementById('bayes-factor')?.closest('.hyper-stat-box');
@@ -750,7 +755,7 @@ async function loadMemberData(memberId) {
     const bayesSec = document.getElementById('bayes-secondary-metrics');
     const ctSec = document.getElementById('ct-secondary-metrics');
     if (bayesSec) bayesSec.style.display = isMember1 ? 'none' : 'grid';
-    if (ctSec) ctSec.style.display = isMember1 ? 'none' : 'grid';
+    if (ctSec) ctSec.style.display = (isMember1 || memberId === 2) ? 'none' : 'grid';
 
     // 3. Contenedor de Desarrollo Matemático Paso a Paso (Paso 2)
     const mathBlock = document.getElementById('member1-math-step-by-step');
@@ -765,6 +770,10 @@ async function loadMemberData(memberId) {
     }
 
     applyMember4Customizations(memberId, data);
+
+    if (![1, 2, 4].includes(memberId)) {
+      await calculateAndRenderBinomial();
+    }
 
   } catch (err) {
     console.error('Error al cargar datos del integrante:', err);

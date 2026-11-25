@@ -653,7 +653,7 @@
       </div>
 
       <!-- Análisis Bayesiano & Tabla de Contingencia -->
-      <div class="grid-2">
+      <div class="grid-2" id="block-inferential-grid">
         <div class="card">
           <h2 class="card-title">
             <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
@@ -667,20 +667,24 @@
             <div class="hyper-stat-box">
               <span class="h-label">P(A) Previa</span>
               <div class="h-value" id="bayes-prior">45.5%</div>
+              <div id="m4-bayes-prior-note" style="display: none; margin-top: 0.45rem; padding-top: 0.45rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.45; color: var(--text-secondary);"></div>
             </div>
             <div class="hyper-stat-box">
               <span class="h-label">P(B) Evidencia</span>
               <div class="h-value" id="bayes-evidence">32.0%</div>
+              <div id="m4-bayes-evidence-note" style="display: none; margin-top: 0.45rem; padding-top: 0.45rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.45; color: var(--text-secondary);"></div>
             </div>
             <div class="hyper-stat-box">
               <span class="h-label">P(A|B) Posteriori</span>
               <div class="h-value" style="color: var(--accent-green-light);" id="bayes-posterior">65.2%</div>
+              <div id="m4-bayes-posterior-note" style="display: none; margin-top: 0.45rem; padding-top: 0.45rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.45; color: var(--text-secondary);"></div>
             </div>
           </div>
           <div style="display: none; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem;" id="bayes-secondary-metrics">
             <div class="hyper-stat-box">
               <span class="h-label">P(B|A) Likelihood</span>
               <div class="h-value" id="bayes-likelihood">57.6%</div>
+              <div id="m4-bayes-likelihood-note" style="display: none; margin-top: 0.45rem; padding-top: 0.45rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.45; color: var(--text-secondary);"></div>
             </div>
             <div class="hyper-stat-box">
               <span class="h-label">Factor Bayes</span>
@@ -736,13 +740,19 @@
               <span class="h-label">Prueba Chi-Cuadrado (χ²)</span>
               <div class="h-value" id="stat-chi2">0.0</div>
               <span style="font-size: 0.7rem; color: var(--accent-green-light);">p-valor: <strong id="stat-pval">&lt; 0.0001</strong></span>
+              <div id="m4-chi2-def" style="display: none; margin-top: 0.45rem; font-size: 0.7rem; line-height: 1.45; color: var(--text-muted);"><strong>χ²:</strong> prueba de independencia que compara frecuencias observadas con las esperadas si córners y victoria fueran independientes; mide qué tan grande es la discrepancia.</div>
+              <div id="m4-pval-def" style="display: none; margin-top: 0.35rem; font-size: 0.7rem; line-height: 1.45; color: var(--text-muted);"><strong>p-valor:</strong> probabilidad de observar un χ² tan grande o mayor bajo independencia; si es menor a 0.05 se rechaza esa independencia.</div>
+              <div id="m4-chi2-explain" style="display: none; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color); font-size: 0.72rem; line-height: 1.5; color: var(--text-secondary);"></div>
             </div>
             <div class="hyper-stat-box">
               <span class="h-label">Odds Ratio (OR)</span>
               <div class="h-value" id="stat-or">0.0</div>
               <span style="font-size: 0.7rem; color: var(--text-muted);" id="stat-or-ci">IC 95%: [0 - 0]</span>
+              <div id="m4-or-def" style="display: none; margin-top: 0.45rem; font-size: 0.7rem; line-height: 1.45; color: var(--text-muted);"><strong>OR:</strong> razón de ventajas; compara la probabilidad del evento con la condición frente a sin ella. OR &gt; 1 favorece el evento, OR &lt; 1 lo desfavorece y OR = 1 indica independencia.</div>
+              <div id="m4-or-explain" style="display: none; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color); font-size: 0.72rem; line-height: 1.5; color: var(--text-secondary);"></div>
             </div>
           </div>
+          <div id="m4-joint-explain" style="display: none; margin-top: 0.75rem; padding: 0.7rem 0.85rem; border-radius: var(--radius-sm); background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--accent-green); font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary);"></div>
         </div>
       </div>
 
@@ -947,7 +957,7 @@
       </div>
 
       <!-- Módulo de Distribución Hipergeométrica Dinámica -->
-      <div class="card">
+      <div class="card" id="block-hyper">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
           <h2 class="card-title">
             <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
@@ -1001,26 +1011,32 @@
           <div class="hyper-stat-box">
             <span class="h-label">P(X = x) Exacta</span>
             <div class="h-value" style="color: var(--accent-green-light);" id="hyper-exact">0.0%</div>
+            <div id="m4-hyper-exact-note" style="display: none; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.4; color: var(--text-secondary);"></div>
           </div>
           <div class="hyper-stat-box">
             <span class="h-label">P(X ≤ x) Acumulada</span>
             <div class="h-value" id="hyper-cdf">0.0%</div>
+            <div id="m4-hyper-cdf-note" style="display: none; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.4; color: var(--text-secondary);"></div>
           </div>
           <div class="hyper-stat-box">
             <span class="h-label">P(X ≥ x) Supervivencia</span>
             <div class="h-value" id="hyper-sf">0.0%</div>
+            <div id="m4-hyper-sf-note" style="display: none; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.4; color: var(--text-secondary);"></div>
           </div>
           <div class="hyper-stat-box">
             <span class="h-label">Esperanza E[X]</span>
             <div class="h-value" id="hyper-mean">0.0</div>
+            <div id="m4-hyper-mean-note" style="display: none; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.4; color: var(--text-secondary);"></div>
           </div>
           <div class="hyper-stat-box">
             <span class="h-label">Varianza Var(X)</span>
             <div class="h-value" id="hyper-var">0.0</div>
+            <div id="m4-hyper-var-note" style="display: none; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.4; color: var(--text-secondary);"></div>
           </div>
           <div class="hyper-stat-box">
             <span class="h-label">Desv. Estándar σ</span>
             <div class="h-value" id="hyper-sd">0.0</div>
+            <div id="m4-hyper-sd-note" style="display: none; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border-color); font-size: 0.68rem; line-height: 1.4; color: var(--text-secondary);"></div>
           </div>
         </div>
 
@@ -1031,7 +1047,7 @@
       </div>
 
       <!-- Módulo de Distribución Binomial (Eventos Independientes y Goles) -->
-      <div class="card" style="margin-top: 2rem;">
+      <div class="card" id="block-binom" style="margin-top: 2rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
           <h2 class="card-title">
             <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>

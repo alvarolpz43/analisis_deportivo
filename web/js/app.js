@@ -540,6 +540,111 @@ function setupTournamentSimulator() {
 }
 
 // 3. Módulo de Estadística Inferencial (6 Integrantes)
+// --- Personalización exclusiva del Integrante 4 (no afecta a otros roles ni pestañas) ---
+let m4LayoutReady = false;
+let m4OriginalSiblings = {};
+
+function initMember4Layout() {
+  if (m4LayoutReady) return;
+  ['block-inferential-grid', 'card-interpretation', 'block-hyper', 'block-binom'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) m4OriginalSiblings[id] = el.nextSibling;
+  });
+  m4LayoutReady = true;
+}
+
+function applyMember4Customizations(memberId, data) {
+  initMember4Layout();
+
+  const isM4 = memberId === 4;
+  const section = document.getElementById('tab-inferential');
+  const grid = document.getElementById('block-inferential-grid');
+  const interpretation = document.getElementById('card-interpretation');
+  const hyper = document.getElementById('block-hyper');
+  const binom = document.getElementById('block-binom');
+
+  // Restaurar SIEMPRE el orden original antes de aplicar nada.
+  Object.keys(m4OriginalSiblings).forEach(id => {
+    const el = document.getElementById(id);
+    const ref = m4OriginalSiblings[id];
+    if (el && ref && ref.parentNode) ref.parentNode.insertBefore(el, ref);
+  });
+
+  // Integrante 4: Hipergeométrica arriba, Bayes + tabla después, interpretación al final.
+  if (isM4 && section && grid && interpretation && hyper) {
+    section.insertBefore(hyper, grid);
+    section.appendChild(interpretation);
+  }
+
+  // Dar separación entre la Hipergeométrica y el bloque Bayes/tabla solo en el Integrante 4.
+  if (hyper) hyper.style.marginBottom = isM4 ? '2rem' : '';
+
+  // Ocultar TODA la tarjeta Binomial solo en el Integrante 4.
+  if (binom) binom.style.display = isM4 ? 'none' : '';
+
+  // Ocultar Factor Bayes e IC 95% Posterior solo en el Integrante 4.
+  const factorBox = document.getElementById('bayes-factor')?.closest('.hyper-stat-box');
+  const ciBox = document.getElementById('bayes-ci')?.closest('.hyper-stat-box');
+  if (factorBox) factorBox.style.display = isM4 ? 'none' : '';
+  if (ciBox) ciBox.style.display = isM4 ? 'none' : '';
+
+  // Quitar también el intervalo del recuadro de Odds Ratio solo en el Integrante 4.
+  const orCiEl = document.getElementById('stat-or-ci');
+  if (orCiEl) orCiEl.style.display = isM4 ? 'none' : '';
+
+  // Definiciones e interpretaciones de χ², p-valor y OR, visibles solo en el Integrante 4.
+  const chiDef = document.getElementById('m4-chi2-def');
+  const pvalDef = document.getElementById('m4-pval-def');
+  const orDef = document.getElementById('m4-or-def');
+  const chiExplain = document.getElementById('m4-chi2-explain');
+  const orExplain = document.getElementById('m4-or-explain');
+  const jointExplain = document.getElementById('m4-joint-explain');
+  [chiDef, pvalDef, orDef, chiExplain, orExplain, jointExplain].forEach(el => { if (el) el.style.display = 'none'; });
+  ['m4-bayes-prior-note', 'm4-bayes-evidence-note', 'm4-bayes-posterior-note', 'm4-bayes-likelihood-note',
+   'm4-hyper-exact-note', 'm4-hyper-cdf-note', 'm4-hyper-sf-note', 'm4-hyper-mean-note', 'm4-hyper-var-note', 'm4-hyper-sd-note'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+
+  if (isM4 && data && data.stats) {
+    const ht = data.stats.hypothesis_test;
+    const or = data.stats.odds_ratio;
+    [chiDef, pvalDef, orDef].forEach(el => { if (el) el.style.display = 'block'; });
+    if (chiExplain) {
+      chiExplain.textContent = `Interpretación: χ² = ${ht.chi2_stat} con p = ${ht.p_value_formatted} permite rechazar la independencia entre HC > 6 y la victoria local.`;
+      chiExplain.style.display = 'block';
+    }
+    if (orExplain) {
+      orExplain.textContent = `Interpretación: OR = ${or.value} (< 1): la condición se asocia a menos probabilidad de victoria local.`;
+      orExplain.style.display = 'block';
+    }
+    if (jointExplain) {
+      jointExplain.textContent = `χ² = ${ht.chi2_stat} y p = ${ht.p_value_formatted} rechazan la independencia; OR = ${or.value} (< 1) indica que HC > 6 se asocia a menos victorias locales. Es asociación, no causalidad.`;
+      jointExplain.style.display = 'block';
+    }
+
+    // Interpretación dentro de cada card visible de la gráfica Bayesiana (solo Integrante 4).
+    const bayes = data.stats.bayes;
+    const pct = v => `${(v * 100).toFixed(1)}%`;
+    const delta = (bayes.posterior_P_A_given_B - bayes.prior_P_A) * 100;
+    const deltaText = `${Math.abs(delta).toFixed(1)} pp ${delta >= 0 ? 'más' : 'menos'} que la previa`;
+    const bayesNotes = [
+      ['m4-bayes-prior-note', `Previa histórica: ${pct(bayes.prior_P_A)} de los partidos son victoria local antes de considerar los córners.`],
+      ['m4-bayes-evidence-note', `Evidencia: ${pct(bayes.prob_evidence_P_B)} de los partidos superan los 6 córners (HC > 6).`],
+      ['m4-bayes-posterior-note', `Posteriori: al observar HC > 6 baja a ${pct(bayes.posterior_P_A_given_B)} (${deltaText}).`],
+      ['m4-bayes-likelihood-note', `Verosimilitud: ${pct(bayes.likelihood_P_B_given_A)} de las victorias locales tuvieron más de 6 córners.`]
+    ];
+    bayesNotes.forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = text; el.style.display = 'block'; }
+    });
+
+    if (data.hypergeometric_scenario && data.hypergeometric_scenario.calc) {
+      updateMember4HyperNotes(data.hypergeometric_scenario.calc);
+    }
+  }
+}
+
 function setupMemberTabs() {
   const memberBtns = document.querySelectorAll('.member-btn');
   memberBtns.forEach(btn => {
@@ -595,6 +700,9 @@ async function loadMemberData(memberId) {
       if (memberId === 1) {
         noEventEl.textContent = "No Gana Local (Empate/Derrota)";
         noCondEl.textContent = "5 o menos Tiros a Puerta (HST ≤ 5)";
+      } else if (memberId === 4) {
+        noEventEl.textContent = "No Victoria Local (FTR ≠ 'H')";
+        noCondEl.textContent = "6 Córners o Menos (HC ≤ 6)";
       } else {
         noEventEl.textContent = "No Evento A";
         noCondEl.textContent = "No Condición B";
@@ -655,6 +763,8 @@ async function loadMemberData(memberId) {
         mathBlock.style.display = 'none';
       }
     }
+
+    applyMember4Customizations(memberId, data);
 
   } catch (err) {
     console.error('Error al cargar datos del integrante:', err);
@@ -812,6 +922,28 @@ function renderMember1MathFormulas() {
   }
 }
 
+function updateMember4HyperNotes(calc) {
+  if (currentMemberId !== 4 || !calc) return;
+  const N = parseInt(document.getElementById('slider-N').value);
+  const r = parseInt(document.getElementById('slider-r').value);
+  const n = parseInt(document.getElementById('slider-n').value);
+  const x = parseInt(document.getElementById('slider-x').value);
+  const pct = v => `${(v * 100).toFixed(2)}%`;
+  const fc = calc.finite_correction_factor ?? '—';
+  const notes = [
+    ['m4-hyper-exact-note', `Exactitud: ${pct(calc.pmf_exact)} de obtener exactamente ${x} córners en ${n} acciones, si hay ${r} en ${N}.`],
+    ['m4-hyper-cdf-note', `Acumulada: ${pct(calc.cdf_leq)} de obtener ${x} córners o menos.`],
+    ['m4-hyper-sf-note', `Supervivencia: ${pct(calc.sf_geq)} de obtener ${x} córners o más.`],
+    ['m4-hyper-mean-note', `Esperanza: en promedio ${calc.expected_value} córners por muestra de ${n} de ${N} acciones.`],
+    ['m4-hyper-var-note', `Varianza ${calc.variance}, atenuada por el factor finito ${fc} (n/N = ${(n / N).toFixed(2)}).`],
+    ['m4-hyper-sd-note', `Desviación: ${calc.std_dev} córners alrededor de la esperanza ${calc.expected_value}.`]
+  ];
+  notes.forEach(([id, text]) => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = text; el.style.display = 'block'; }
+  });
+}
+
 function updateHypergeometricResults(calc) {
   document.getElementById('hyper-exact').textContent = `${(calc.pmf_exact * 100).toFixed(2)}%`;
   document.getElementById('hyper-cdf').textContent = `${(calc.cdf_leq * 100).toFixed(2)}%`;
@@ -819,6 +951,8 @@ function updateHypergeometricResults(calc) {
   document.getElementById('hyper-mean').textContent = calc.expected_value;
   document.getElementById('hyper-var').textContent = calc.variance;
   document.getElementById('hyper-sd').textContent = calc.std_dev;
+
+  updateMember4HyperNotes(calc);
 
   ChartManager.renderHypergeometricChart(
     'chart-hyper-pmf',

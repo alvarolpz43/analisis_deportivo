@@ -13,12 +13,12 @@ class TestNotebookRunner(unittest.TestCase):
         nb = self.runner.get_notebook()
         self.assertEqual(nb["filename"], "LaLigaScrap.ipynb")
         self.assertGreater(nb["total_cells"], 10)
-        self.assertGreaterEqual(nb["code_cells"], 6)
+        self.assertGreaterEqual(nb["code_cells"], 8)
         self.assertIn("colab.research.google.com", nb["colab_url"])
 
     def test_execute_all_cells_and_outputs(self):
         results = self.runner.execute_all()
-        self.assertGreaterEqual(len(results), 6)
+        self.assertGreaterEqual(len(results), 8)
         for res in results:
             self.assertEqual(res["status"], "ok", f"Error en celda {res['cell_index']}: {res.get('error')}")
 
@@ -28,13 +28,15 @@ class TestNotebookRunner(unittest.TestCase):
         self.assertIn("RESULTADOS PREGUNTA 1", all_stdout)
         self.assertIn("RESULTADOS PREGUNTA 2", all_stdout)
         self.assertIn("RESULTADOS PREGUNTA 3", all_stdout)
+        self.assertIn("EVALUACIÓN DEL MODELO PREDICTIVO", all_stdout)
+        self.assertIn("Predicción: Real Madrid vs Barcelona", all_stdout)
 
         all_html = [h for r in results for h in r["html_outputs"]]
-        self.assertGreaterEqual(len(all_html), 1)
+        self.assertGreaterEqual(len(all_html), 2)
         self.assertTrue(any("<table" in h for h in all_html))
 
         all_images = [img for r in results for img in r["images"]]
-        self.assertEqual(len(all_images), 2)
+        self.assertEqual(len(all_images), 3)
         for img in all_images:
             self.assertTrue(img.startswith("data:image/png;base64,"))
 

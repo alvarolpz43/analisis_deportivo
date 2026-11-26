@@ -354,7 +354,6 @@ async function loadReliabilityMetrics() {
     const elMeanH = document.getElementById('rel-mean-home-goals');
     const elStdA = document.getElementById('rel-std-away-goals');
     const elMeanA = document.getElementById('rel-mean-away-goals');
-    const elZ = document.getElementById('rel-z-stat');
     const elGap = document.getElementById('rel-advantage-gap');
     const elBox = document.getElementById('rel-conclusion-box');
 
@@ -362,10 +361,11 @@ async function loadReliabilityMetrics() {
     if (elMeanH) elMeanH.textContent = `Media: ${disp.mean_fthg} goles/partido`;
     if (elStdA) elStdA.textContent = disp.std_ftag.toFixed(2);
     if (elMeanA) elMeanA.textContent = `Media: ${disp.mean_ftag} goles/partido`;
-    if (elZ) elZ.textContent = test.z_statistic;
     if (elGap) elGap.textContent = `+${test.home_advantage_gap_pct}%`;
     if (elBox) {
-      elBox.innerHTML = `<strong>Dictamen de Confiabilidad:</strong> Las desviaciones estándar de goles (s = ${disp.std_fthg} en casa y s = ${disp.std_ftag} fuera) evidencian baja dispersión e idoneidad muestral. La prueba bilateral arroja Z = ${test.z_statistic} (${test.decision}), validando que el factor localía es un fenómeno estructural no atribuible al azar.`;
+      const decisionText = (test.decision || '').replace(/\.$/, '');
+      const decisionFormatted = decisionText ? `${decisionText.charAt(0).toLowerCase()}${decisionText.slice(1)}` : 'rechazar H0';
+      elBox.innerHTML = `<strong>Dictamen de Confiabilidad:</strong> Las desviaciones estándar de goles (s = ${disp.std_fthg} en casa y s = ${disp.std_ftag} fuera) evidencian baja dispersión e idoneidad muestral. La prueba de hipótesis bilateral concluye ${decisionFormatted}, validando que el factor localía es un fenómeno estructural no atribuible al azar.`;
     }
   } catch (err) {
     console.error('Error al cargar métricas de confiabilidad:', err);
@@ -698,12 +698,15 @@ async function loadMemberData(memberId) {
     document.getElementById('ct-event-label').textContent = data.event_label;
     document.getElementById('ct-cond-label').textContent = data.condition_label;
 
-    // Etiquetas mejoradas exclusivas para Integrante 1
+    // Etiquetas mejoradas para Integrantes 1, 2 y 4
     const noEventEl = document.getElementById('ct-noevent-label');
     const noCondEl = document.getElementById('ct-nocond-label');
     if (noEventEl && noCondEl) {
       if (memberId === 1) {
         noEventEl.textContent = "No Gana Local (Empate/Derrota)";
+        noCondEl.textContent = "5 o menos Tiros a Puerta (HST ≤ 5)";
+      } else if (memberId === 2) {
+        noEventEl.textContent = "Menos de 2 Goles Local (FTHG < 2)";
         noCondEl.textContent = "5 o menos Tiros a Puerta (HST ≤ 5)";
       } else if (memberId === 4) {
         noEventEl.textContent = "No Victoria Local (FTR ≠ 'H')";
@@ -740,28 +743,29 @@ async function loadMemberData(memberId) {
     // Renderizar gráfico hipergeométrico
     updateHypergeometricResults(hScenario.calc);
 
-    // Flujo narrativo de ingeniería en 3 pasos: Visibilidad condicional exclusiva para Integrante 1
-    const isMember1 = (memberId === 1);
+    // Flujo narrativo de ingeniería en 3 pasos: Visibilidad para Integrantes 1 y 2
+    const hasStepByStep = (memberId === 1 || memberId === 2);
 
     // 1. Encabezados de pasos secuenciales (Paso 1, Paso 2, Paso 3)
     const step1El = document.getElementById('step1-header-member1');
     const step2El = document.getElementById('step2-header-member1');
     const step3El = document.getElementById('step3-header-member1');
-    if (step1El) step1El.style.display = isMember1 ? 'flex' : 'none';
-    if (step2El) step2El.style.display = isMember1 ? 'flex' : 'none';
-    if (step3El) step3El.style.display = isMember1 ? 'flex' : 'none';
+    if (step1El) step1El.style.display = hasStepByStep ? 'flex' : 'none';
+    if (step2El) step2El.style.display = hasStepByStep ? 'flex' : 'none';
+    if (step3El) step3El.style.display = hasStepByStep ? 'flex' : 'none';
 
     // 2. Limpieza visual en Inferencia Bayesiana y Tabla 2x2
     const bayesSec = document.getElementById('bayes-secondary-metrics');
     const ctSec = document.getElementById('ct-secondary-metrics');
-    if (bayesSec) bayesSec.style.display = isMember1 ? 'none' : 'grid';
-    if (ctSec) ctSec.style.display = (isMember1 || memberId === 2) ? 'none' : 'grid';
+    if (bayesSec) bayesSec.style.display = hasStepByStep ? 'none' : 'grid';
+    if (ctSec) ctSec.style.display = hasStepByStep ? 'none' : 'grid';
 
     // 3. Contenedor de Desarrollo Matemático Paso a Paso (Paso 2)
     const mathBlock = document.getElementById('member1-math-step-by-step');
     if (mathBlock) {
-      if (isMember1) {
+      if (hasStepByStep) {
         mathBlock.style.display = 'block';
+        updateStepByStepMathSection(memberId, data);
         updateMember1DynamicHyperFormula(hScenario.default_N, hScenario.default_r, hScenario.default_n, hScenario.default_x, hScenario.calc);
         renderMember1MathFormulas();
       } else {
@@ -827,7 +831,7 @@ function syncHyperSliders() {
   document.getElementById('val-slider-n').textContent = n;
   document.getElementById('val-slider-x').textContent = xEl.value;
 
-  if (currentMemberId === 1) {
+  if (currentMemberId === 1 || currentMemberId === 2) {
     updateMember1DynamicHyperFormula(N, r, n, parseInt(xEl.value), null);
   }
 }
@@ -841,7 +845,7 @@ async function calculateAndRenderHyper() {
   try {
     const calc = await SportsAPI.calculateHypergeometric(N, r, n, x);
     updateHypergeometricResults(calc);
-    if (currentMemberId === 1) {
+    if (currentMemberId === 1 || currentMemberId === 2) {
       updateMember1DynamicHyperFormula(N, r, n, x, calc);
     }
   } catch (err) {
@@ -850,8 +854,94 @@ async function calculateAndRenderHyper() {
 }
 
 // =========================================================================
-// Módulo de Desarrollo Matemático Paso a Paso (Exclusivo Integrante 1)
+// Módulo de Desarrollo Matemático Paso a Paso (Integrantes 1 y 2)
 // =========================================================================
+const STEP_BY_STEP_CONFIG = {
+  1: {
+    title: 'Desarrollo Matemático Paso a Paso (Integrante 1)',
+    subtitle: 'Formalización axiomática y sustento inferencial en vivo para la Eficacia Ofensiva Local',
+    badge: 'Exclusivo Integrante 1',
+    eventATitle: "Victoria Local (<code>FTR = 'H'</code>)",
+    eventBTitle: 'Más de 5 tiros al arco (<code>HST &gt; 5</code>)',
+    hyperParamsTitle: '1. Parámetros del Integrante 1:',
+    hyperDescs: {
+      N: '<code>HS</code> (Tiros Totales)',
+      r: '<code>HST</code> (Tiros a Puerta)',
+      n: 'Remates auditados',
+      x: 'Aciertos buscados'
+    }
+  },
+  2: {
+    title: 'Desarrollo Matemático Paso a Paso (Integrante 2)',
+    subtitle: 'Formalización axiomática y sustento inferencial en vivo para la Conversión de Gol desde Tiros a Puerta',
+    badge: 'Exclusivo Integrante 2',
+    eventATitle: 'Local Anota 2 o más Goles (<code>FTHG ≥ 2</code>)',
+    eventBTitle: 'Más de 5 tiros a puerta (<code>HST &gt; 5</code>)',
+    hyperParamsTitle: '1. Parámetros del Integrante 2:',
+    hyperDescs: {
+      N: '<code>HST</code> (Tiros a Puerta)',
+      r: '<code>FTHG</code> (Goles Anotados)',
+      n: 'Tiros auditados',
+      x: 'Goles encontrados'
+    }
+  }
+};
+
+function updateStepByStepMathSection(memberId, data) {
+  const cfg = STEP_BY_STEP_CONFIG[memberId];
+  if (!cfg || !data || !data.stats) return;
+
+  const setText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+  const setHtml = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val;
+  };
+
+  setText('math-section-title', cfg.title);
+  setText('math-section-subtitle', cfg.subtitle);
+  setText('math-section-badge', cfg.badge);
+  setHtml('math-event-a-title', cfg.eventATitle);
+  setHtml('math-event-b-title', cfg.eventBTitle);
+  setText('math-hyper-params-title', cfg.hyperParamsTitle);
+  setHtml('math-hyper-desc-N', cfg.hyperDescs.N);
+  setHtml('math-hyper-desc-r', cfg.hyperDescs.r);
+  setHtml('math-hyper-desc-n', cfg.hyperDescs.n);
+  setHtml('math-hyper-desc-x', cfg.hyperDescs.x);
+
+  const ct = data.stats.contingency_table;
+  const b = data.stats.bayes;
+  const nTotal = ct.total_samples;
+  const nA = ct.total_event;
+  const nB = ct.total_condition;
+  const nAB = ct.a_event_and_cond;
+
+  const pA = b.prior_P_A;
+  const pB = b.prob_evidence_P_B;
+  const pBgivenA = b.likelihood_P_B_given_A;
+  const pAgivenB = b.posterior_P_A_given_B;
+  const exactPosteriorPct = nB > 0 ? ((nAB / nB) * 100).toFixed(2) : '0.00';
+
+  setHtml('math-event-a-prob', `$$P(A) = \\frac{${nA}}{${nTotal}} = ${(pA * 100).toFixed(1)}\\%$$`);
+  setHtml('math-event-b-prob', `$$P(B) = \\frac{${nB}}{${nTotal}} = ${(pB * 100).toFixed(1)}\\%$$`);
+  setHtml(
+    'member1-bayes-formula',
+    `$$P(A \\mid B) = \\frac{P(B \\mid A) \\cdot P(A)}{P(B)} = \\frac{${pBgivenA.toFixed(3)} \\times ${pA.toFixed(3)}}{${pB.toFixed(3)}} = ${(pAgivenB * 100).toFixed(1)}\\%$$`
+  );
+  setHtml(
+    'math-bayes-legend',
+    `<span><strong>P(A):</strong> ${pA.toFixed(3)} (Previa)</span>` +
+    `<span><strong>P(B):</strong> ${pB.toFixed(3)} (Evidencia)</span>` +
+    `<span><strong>P(B|A):</strong> ${pBgivenA.toFixed(3)} (Verosimilitud = $\\frac{${nAB}}{${nA}}$)</span>`
+  );
+  setHtml(
+    'member1-bayes-verification',
+    `$$P(A \\mid B) = \\frac{\\text{Casos } (A \\cap B)}{\\text{Total } B} = \\frac{${nAB}}{${nB}} = ${exactPosteriorPct}\\%$$`
+  );
+}
+
 function combinations(n, k) {
   if (k < 0 || k > n) return 0;
   if (k === 0 || k === n) return 1;
@@ -864,7 +954,7 @@ function combinations(n, k) {
 }
 
 function updateMember1DynamicHyperFormula(N, r, n, x, calc) {
-  if (currentMemberId !== 1) return;
+  if (currentMemberId !== 1 && currentMemberId !== 2) return;
 
   const dynN = document.getElementById('dyn-state-N');
   const dynR = document.getElementById('dyn-state-r');

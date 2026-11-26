@@ -443,18 +443,13 @@
             <span class="kpi-subtext" id="rel-mean-away-goals">Media: 1.10 goles/partido</span>
           </div>
           <div class="kpi-card" style="padding: 1rem;">
-            <span class="kpi-label">Estadístico Z de Localía</span>
-            <div class="kpi-value" style="font-size: 1.5rem; color: #fbbf24;" id="rel-z-stat">-5.59</div>
-            <span class="kpi-subtext">H0: p = 0.5 (Sin ventaja local)</span>
-          </div>
-          <div class="kpi-card" style="padding: 1rem;">
             <span class="kpi-label">Brecha Local vs Visitante</span>
             <div class="kpi-value" style="font-size: 1.5rem; color: #a78bfa;" id="rel-advantage-gap">+17.2%</div>
             <span class="kpi-subtext">Local 45.5% vs Visitante 28.3%</span>
           </div>
         </div>
         <div style="background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary); border-left: 3px solid var(--accent-green);" id="rel-conclusion-box">
-          <strong>Dictamen de Confiabilidad:</strong> Las desviaciones estándar cercanas a s ≈ 1.2 demuestran baja dispersión y homogeneidad. El estadístico Z = -5.59 (p &lt; 0.0001) rechaza contundentemente la hipótesis nula, validando que el factor localía es un fenómeno estructural no atribuible al azar.
+          <strong>Dictamen de Confiabilidad:</strong> Las desviaciones estándar cercanas a s ≈ 1.2 demuestran baja dispersión y homogeneidad. La prueba de hipótesis bilateral (p &lt; 0.0001) rechaza contundentemente la hipótesis nula, validando que el factor localía es un fenómeno estructural no atribuible al azar.
         </div>
       </div>
 
@@ -779,14 +774,14 @@
                 </svg>
               </div>
               <div>
-                <h2 class="math-section-title">Desarrollo Matemático Paso a Paso (Integrante 1)</h2>
-                <p class="math-section-subtitle">
+                <h2 class="math-section-title" id="math-section-title">Desarrollo Matemático Paso a Paso (Integrante 1)</h2>
+                <p class="math-section-subtitle" id="math-section-subtitle">
                   Formalización axiomática y sustento inferencial en vivo para la Eficacia Ofensiva Local
                 </p>
               </div>
             </div>
             <div class="math-header-badges">
-              <span class="math-badge-emerald">Exclusivo Integrante 1</span>
+              <span class="math-badge-emerald" id="math-section-badge">Exclusivo Integrante 1</span>
               <span class="math-badge-cyan">Sustentación en Vivo</span>
             </div>
           </div>
@@ -821,15 +816,15 @@
                   <div class="event-def-item">
                     <span class="event-badge badge-event-a">Evento A</span>
                     <div class="event-details">
-                      <div class="event-title-line">Victoria Local (<code>FTR = 'H'</code>)</div>
-                      <div class="event-prob-calc">$$P(A) = \frac{1729}{3800} = 45.5\%$$</div>
+                      <div class="event-title-line" id="math-event-a-title">Victoria Local (<code>FTR = 'H'</code>)</div>
+                      <div class="event-prob-calc" id="math-event-a-prob">$$P(A) = \frac{1729}{3800} = 45.5\%$$</div>
                     </div>
                   </div>
                   <div class="event-def-item">
                     <span class="event-badge badge-event-b">Evento B (Condición)</span>
                     <div class="event-details">
-                      <div class="event-title-line">Más de 5 tiros al arco (<code>HST &gt; 5</code>)</div>
-                      <div class="event-prob-calc">$$P(B) = \frac{1215}{3800} = 32.0\%$$</div>
+                      <div class="event-title-line" id="math-event-b-title">Más de 5 tiros al arco (<code>HST &gt; 5</code>)</div>
+                      <div class="event-prob-calc" id="math-event-b-prob">$$P(B) = \frac{1215}{3800} = 32.0\%$$</div>
                     </div>
                   </div>
                 </div>
@@ -841,7 +836,7 @@
                 <div class="math-formula-box" id="member1-bayes-formula">
                   $$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)} = \frac{0.458 \times 0.455}{0.320} = 65.2\%$$
                 </div>
-                <div class="math-variables-legend">
+                <div class="math-variables-legend" id="math-bayes-legend">
                   <span><strong>P(A):</strong> 0.455 (Previa)</span>
                   <span><strong>P(B):</strong> 0.320 (Evidencia)</span>
                   <span><strong>P(B|A):</strong> 0.458 (Verosimilitud = $\frac{792}{1729}$)</span>
@@ -883,28 +878,28 @@
             </div>
 
             <div class="math-card-body">
-              <!-- Parámetros del Integrante 1 -->
+              <!-- Parámetros del Integrante -->
               <div class="math-step-block">
-                <span class="math-step-label">1. Parámetros del Integrante 1:</span>
+                <span class="math-step-label" id="math-hyper-params-title">1. Parámetros del Integrante 1:</span>
                 <div class="hyper-params-grid">
                   <div class="param-box">
                     <span class="param-name">Población (N)</span>
-                    <span class="param-desc"><code>HS</code> (Tiros Totales)</span>
+                    <span class="param-desc" id="math-hyper-desc-N"><code>HS</code> (Tiros Totales)</span>
                     <strong class="param-val" id="dyn-state-N">17</strong>
                   </div>
                   <div class="param-box">
                     <span class="param-name">Éxitos Población (r)</span>
-                    <span class="param-desc"><code>HST</code> (Tiros a Puerta)</span>
+                    <span class="param-desc" id="math-hyper-desc-r"><code>HST</code> (Tiros a Puerta)</span>
                     <strong class="param-val" id="dyn-state-r">8</strong>
                   </div>
                   <div class="param-box">
                     <span class="param-name">Muestra Extraída (n)</span>
-                    <span class="param-desc">Remates auditados</span>
+                    <span class="param-desc" id="math-hyper-desc-n">Remates auditados</span>
                     <strong class="param-val" id="dyn-state-n">5</strong>
                   </div>
                   <div class="param-box">
                     <span class="param-name">Éxitos Observados (x)</span>
-                    <span class="param-desc">Aciertos buscados</span>
+                    <span class="param-desc" id="math-hyper-desc-x">Aciertos buscados</span>
                     <strong class="param-val" id="dyn-state-x">3</strong>
                   </div>
                 </div>
